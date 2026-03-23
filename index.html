@@ -397,8 +397,8 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   animation: sceneBreath 12s ease-in-out infinite;
 }
 @keyframes sceneBreath {
-  0%, 100% { transform: scale(1); filter: brightness(0.95); }
-  50% { transform: scale(1.03); filter: brightness(1.05); }
+  0%, 100% { filter: brightness(0.95); }
+  50% { filter: brightness(1.05); }
 }
 .scene-image::after {
   content: ''; position: absolute; inset: 0;
@@ -880,6 +880,112 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   #references { padding-bottom: calc(clamp(4rem,10vw,6rem) + env(safe-area-inset-bottom)); }
 }
+
+/* ======================== GOLD SHIMMER ON STATS ======================== */
+@keyframes goldShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.stat-number.shimmer-active {
+  background: linear-gradient(
+    90deg,
+    var(--gold) 0%,
+    var(--gold) 35%,
+    var(--gold-light) 50%,
+    var(--gold) 65%,
+    var(--gold) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: goldShimmer 1.8s ease-in-out 1;
+}
+
+/* ======================== PARALLAX IMAGES ======================== */
+.scene-image, .section-feature-image {
+  overflow: hidden;
+}
+.scene-image img, .section-feature-image img {
+  transition: transform 0.1s linear;
+  will-change: transform;
+}
+
+/* ======================== IMAGE GLOW ON TOUCH ======================== */
+.scene-image, .section-feature-image {
+  transition: box-shadow 0.6s ease, border-color 0.6s ease;
+}
+.scene-image:active, .section-feature-image:active {
+  box-shadow: 0 0 40px rgba(201,168,76,0.12), 0 0 80px rgba(201,168,76,0.06);
+  border-color: rgba(201,168,76,0.18);
+}
+
+/* ======================== HERO MONOGRAM ======================== */
+.hero-monogram {
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 2.5rem;
+}
+.hero-monogram-inner {
+  width: 56px; height: 56px;
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.hero-monogram-inner::before {
+  content: '';
+  position: absolute; inset: -6px;
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 50%;
+}
+.hero-monogram-inner span {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  opacity: 0.85;
+}
+
+/* ======================== SECTION GRADIENT TRANSITIONS ======================== */
+.section-blend {
+  height: clamp(80px, 12vw, 140px);
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+}
+.section-blend--to-alt {
+  background: linear-gradient(180deg, var(--deep) 0%, var(--deep-alt) 100%);
+}
+.section-blend--to-deep {
+  background: linear-gradient(180deg, var(--deep-alt) 0%, var(--deep) 100%);
+}
+.section-blend::after {
+  content: ''; position: absolute;
+  left: 10%; right: 10%;
+  top: 50%; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(201,168,76,0.15) 30%, rgba(201,168,76,0.35) 50%, rgba(201,168,76,0.15) 70%, transparent 100%);
+  animation: shimmer-line 4s ease-in-out infinite;
+}
+
+/* ======================== CLOSING REDESIGN ======================== */
+#closing {
+  padding-top: clamp(8rem, 20vw, 14rem);
+  padding-bottom: clamp(8rem, 20vw, 14rem);
+}
+#closing h2 {
+  font-size: clamp(2.8rem, 10vw, 5.5rem);
+  margin-bottom: 3.5rem;
+  line-height: 1.05;
+}
+.closing-lines p {
+  font-size: clamp(1.1rem, 3.2vw, 1.35rem);
+  margin-bottom: 1.75rem;
+}
+.closing-lines p:last-child {
+  font-size: clamp(1.2rem, 3.5vw, 1.45rem);
+  margin-top: 3rem;
+}
 </style>
 </head>
 <body>
@@ -909,12 +1015,13 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 <section id="hero">
   <div id="hero-bg"></div>
   <div class="hero-content">
-    <div class="prepared-for fade-up">Prepared exclusively for<strong>Frank McCourt &amp; The McCourt Foundation</strong></div>
-    <div class="foundation-tag fade-up fade-up-d1">The McCourt Foundation</div>
-    <h1 class="fade-up fade-up-d2">The Bitter Truth</h1>
-    <p class="subtitle fade-up fade-up-d3">How sugar destroys the brain, why nicotine research still matters, and what the McCourt Foundation is positioned to do about it.</p>
-    <span class="brief-tag fade-up fade-up-d4">Research Brief 2026</span>
-    <div class="scroll-indicator fade-up fade-up-d5"><span></span></div>
+    <div class="hero-monogram fade-up"><div class="hero-monogram-inner"><span>MF</span></div></div>
+    <div class="prepared-for fade-up fade-up-d1">Prepared exclusively for<strong>Frank McCourt &amp; The McCourt Foundation</strong></div>
+    <div class="foundation-tag fade-up fade-up-d2">The McCourt Foundation</div>
+    <h1 class="fade-up fade-up-d3">The Bitter Truth</h1>
+    <p class="subtitle fade-up fade-up-d4">How sugar destroys the brain, why nicotine research still matters, and what the McCourt Foundation is positioned to do about it.</p>
+    <span class="brief-tag fade-up fade-up-d5">Research Brief 2026</span>
+    <div class="scroll-indicator fade-up fade-up-d6"><span></span></div>
   </div>
 </section>
 
@@ -959,7 +1066,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   </div>
 </section>
 
-<div class="section-divider"></div>
+<div class="section-blend section-blend--to-alt"></div>
 
 <!-- ======================== SECTION 02: THE CAUSE ======================== -->
 <section id="cause" class="section-wrap">
@@ -1041,7 +1148,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   </div>
 </section>
 
-<div class="section-divider"></div>
+<div class="section-blend section-blend--to-deep"></div>
 
 <!-- ======================== SECTION 03: THE MECHANISM ======================== -->
 <section id="mechanism" class="section-wrap">
@@ -1101,7 +1208,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   </div>
 </section>
 
-<div class="section-divider"></div>
+<div class="section-blend section-blend--to-alt"></div>
 
 <!-- ======================== SECTION 04: NICOTINE ======================== -->
 <section id="nicotine" class="section-wrap">
@@ -1150,7 +1257,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   </div>
 </section>
 
-<div class="section-divider"></div>
+<div class="section-blend section-blend--to-deep"></div>
 
 <!-- ======================== SECTION 05: PREVENTION ======================== -->
 <section id="prevention" class="section-wrap">
@@ -1242,7 +1349,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   </div>
 </section>
 
-<div class="section-divider"></div>
+<div class="section-blend section-blend--to-alt"></div>
 
 <!-- ======================== SECTION 06: MOVEMENT ======================== -->
 <section id="movement" class="section-wrap">
@@ -1279,7 +1386,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   </div>
 </section>
 
-<div class="section-divider"></div>
+<div class="section-blend section-blend--to-deep"></div>
 
 <!-- ======================== SECTION 07: THE OPPORTUNITY ======================== -->
 <section id="opportunity" class="section-wrap">
@@ -1351,23 +1458,24 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   </div>
 </section>
 
-<div class="section-divider"></div>
+<div class="section-blend section-blend--to-alt"></div>
 
 <!-- ======================== CLOSING ======================== -->
 <section id="closing" class="section-wrap">
   <div class="closing-glow"></div>
-    <div style="position:absolute;inset:0;z-index:0;opacity:0.12;">
-      <img src="images/brain-split.jpg" alt="" style="width:100%;height:100%;object-fit:cover;">
+    <div style="position:absolute;inset:0;z-index:0;opacity:0.18;">
+      <img src="images/brain-split.jpg" alt="" style="width:100%;height:100%;object-fit:cover;filter:blur(2px);">
     </div>
+    <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at center 40%, transparent 20%, var(--deep-alt) 70%);pointer-events:none;"></div>
   <div class="section-inner">
     <h2 class="fade-up">The future is preventable.</h2>
     <div class="closing-lines">
       <p class="fade-up fade-up-d1">57 million people. 45% of cases involve modifiable risk factors.</p>
       <p class="fade-up fade-up-d2">The evidence from 580,000+ participants linking sugar to neurodegeneration is overwhelming.</p>
       <p class="fade-up fade-up-d3">Exercise reduces risk by up to 45%&#8202;&#8212;&#8202;and the McCourt Foundation already runs the platform.</p>
-      <p class="fade-up fade-up-d4">The science is clear. The mission is aligned. The time to act is now.</p>
+      <p class="fade-up fade-up-d5">The science is clear. The mission is aligned. The time to act is now.</p>
     </div>
-    <div class="closing-cta fade-up fade-up-d5">
+    <div class="closing-cta fade-up fade-up-d6">
       <div class="cta-divider"></div>
       <div class="cta-label">Begin the conversation</div>
       <div class="cta-contact">mccourtfoundation.org</div>
@@ -1375,7 +1483,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   </div>
 </section>
 
-<div class="section-divider"></div>
+<div class="section-blend section-blend--to-deep"></div>
 
 <!-- ======================== REFERENCES ======================== -->
 <section id="references" class="section-wrap" style="padding-top:clamp(3.5rem,8vw,5.5rem);padding-bottom:clamp(4.5rem,10vw,7rem);">
@@ -1479,21 +1587,27 @@ window.addEventListener('scroll', () => {
   }, { passive: true });
 })();
 
-// ======================== COUNTERS ========================
+// ======================== COUNTERS (spring easing) ========================
 const counterObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       const el = entry.target;
       const target = parseFloat(el.dataset.target);
       const decimals = parseInt(el.dataset.decimals) || 0;
-      const duration = 2200;
+      const duration = 2400;
       const start = performance.now();
+
+      function springEase(t) {
+        // Slight overshoot then settle — feels alive, not mechanical
+        const c4 = (2 * Math.PI) / 4.5;
+        return t === 0 ? 0 : t === 1 ? 1
+          : Math.pow(2, -12 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+      }
 
       function update(now) {
         const elapsed = now - start;
         const progress = Math.min(elapsed / duration, 1);
-        // Quintic ease-out for more dramatic deceleration
-        const eased = 1 - Math.pow(1 - progress, 5);
+        const eased = springEase(progress);
         el.textContent = (target * eased).toFixed(decimals);
         if (progress < 1) requestAnimationFrame(update);
       }
@@ -1504,6 +1618,39 @@ const counterObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.5 });
 
 document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+// ======================== GOLD SHIMMER ON STAT NUMBERS ========================
+const shimmerObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('shimmer-active');
+      shimmerObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.stat-number').forEach(el => shimmerObserver.observe(el));
+
+// ======================== PARALLAX ON IMAGES ========================
+(function initParallax() {
+  const images = document.querySelectorAll('.scene-image img, .section-feature-image img');
+  if (!images.length) return;
+
+  function updateParallax() {
+    images.forEach(img => {
+      const rect = img.parentElement.getBoundingClientRect();
+      const vh = window.innerHeight;
+      if (rect.top < vh && rect.bottom > 0) {
+        const center = (rect.top + rect.height / 2 - vh / 2) / vh;
+        const shift = center * -20; // subtle 20px max shift
+        img.style.transform = 'scale(1.08) translateY(' + shift + 'px)';
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateParallax, { passive: true });
+  updateParallax();
+})();
 
 // ======================== RISK CHART ANIMATION ========================
 const chartObserver = new IntersectionObserver((entries) => {
