@@ -720,8 +720,79 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 }
 .marathon-callout p:last-child { margin-bottom: 0; }
 
-/* ======================== SECTION 07: OPPORTUNITY ======================== */
-#opportunity { background: var(--deep); }
+/* ======================== SECTION 07: RESEARCH FOUNDATION ======================== */
+#research-foundation { background: var(--deep); }
+#research-foundation .section-inner { max-width: 900px; margin: 0 auto; }
+#research-foundation h2 {
+  font-size: clamp(2rem, 7vw, 3.4rem); margin-bottom: 1.75rem;
+  letter-spacing: -0.025em;
+}
+.research-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(0.75rem, 2vw, 1rem);
+  margin-top: 2.5rem;
+}
+@media (min-width: 768px) {
+  .research-grid { grid-template-columns: 1fr 1fr; }
+}
+.research-card {
+  background: linear-gradient(145deg, rgba(20,27,39,0.6), rgba(11,15,24,0.4));
+  border: 1px solid rgba(201,168,76,0.08);
+  border-radius: 14px;
+  padding: clamp(1.25rem, 4vw, 1.5rem);
+  transition: border-color 0.4s ease, transform 0.3s var(--ease-out-expo);
+  display: flex;
+  flex-direction: column;
+}
+.research-card:active { transform: scale(0.99); border-color: rgba(201,168,76,0.2); }
+.research-card .rc-institution {
+  font-family: var(--sans);
+  font-size: clamp(0.58rem, 1.4vw, 0.64rem);
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.research-card .rc-title {
+  font-family: var(--serif);
+  font-size: clamp(0.92rem, 2.5vw, 1.02rem);
+  color: var(--text);
+  line-height: 1.4;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.research-card .rc-meta {
+  font-family: var(--sans);
+  font-size: clamp(0.55rem, 1.3vw, 0.6rem);
+  color: var(--text-dim);
+  margin-bottom: 0.65rem;
+  font-weight: 400;
+}
+.research-card .rc-finding {
+  font-family: var(--sans);
+  font-size: clamp(0.8rem, 2.1vw, 0.88rem);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-weight: 300;
+  flex: 1;
+}
+.research-card .rc-link {
+  margin-top: 0.85rem;
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: clamp(0.58rem, 1.4vw, 0.64rem);
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201,168,76,0.25);
+  transition: border-color 0.3s ease;
+}
+.research-card .rc-link:hover { border-color: var(--gold); }
+
+/* ======================== SECTION 08: OPPORTUNITY ======================== */
+#opportunity { background: var(--deep-alt); }
 #opportunity .section-inner { max-width: 900px; margin: 0 auto; }
 #opportunity h2 {
   font-size: clamp(2rem, 7vw, 3.4rem); margin-bottom: 1.75rem;
@@ -865,6 +936,16 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   color: var(--text-dim); line-height: 1.9; margin-bottom: 0.45rem;
   letter-spacing: 0.01em;
 }
+.ref-list a {
+  color: var(--text-dim);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+.ref-list a:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
 
 /* ======================== COLOPHON ======================== */
 .colophon {
@@ -993,6 +1074,43 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   font-size: clamp(1.2rem, 3.5vw, 1.45rem);
   margin-top: 3rem;
 }
+
+/* ======================== CITE BLOCKS ======================== */
+.cite-block {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(145deg, rgba(20,27,39,0.5), rgba(11,15,24,0.3));
+  border-left: 2px solid rgba(201,168,76,0.3);
+  border-radius: 0 10px 10px 0;
+  font-family: var(--sans);
+}
+.cite-block .cite-journal {
+  font-size: clamp(0.6rem, 1.5vw, 0.68rem);
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+}
+.cite-block .cite-authors {
+  font-size: clamp(0.58rem, 1.4vw, 0.64rem);
+  color: var(--text-dim);
+  margin-bottom: 0.35rem;
+  font-weight: 400;
+}
+.cite-block .cite-finding {
+  font-size: clamp(0.82rem, 2.2vw, 0.9rem);
+  color: var(--text-secondary);
+  line-height: 1.65;
+  font-weight: 300;
+  font-style: italic;
+}
+.cite-block a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201,168,76,0.25);
+  transition: border-color 0.3s ease;
+}
+.cite-block a:hover { border-color: var(--gold); }
 </style>
 </head>
 <body>
@@ -1014,6 +1132,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   <div class="nav-dot" data-section="nicotine" data-label="Nicotine"></div>
   <div class="nav-dot" data-section="prevention" data-label="Prevention"></div>
   <div class="nav-dot" data-section="movement" data-label="Movement"></div>
+  <div class="nav-dot" data-section="research-foundation" data-label="Research"></div>
   <div class="nav-dot" data-section="opportunity" data-label="Opportunity"></div>
   <div class="nav-dot" data-section="closing" data-label="Closing"></div>
 </nav>
@@ -1068,7 +1187,14 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       <p>Alzheimer's is the <span class="highlight-gold">7th leading cause of death worldwide</span> and 6th in the United States, with deaths rising 142% since 2000. A 2025 study in Nature Medicine estimates a 42% lifetime risk of developing dementia after age 55. For women at age 45, the risk is 1 in 5.</p>
       <p>In 2024, 12 million U.S. caregivers provided 19.2 billion hours of unpaid care&#8202;&#8212;&#8202;valued at $413 billion. Globally, 75% of dementia cases remain undiagnosed.</p>
     </div>
-    <div class="source-tag fade-up">Sources: Alzheimer's Association 2025 Facts &amp; Figures; WHO 2025; ADI; Fang et al., Nature Medicine 2025</div>
+
+    <div class="cite-block fade-up">
+      <div class="cite-journal"><a href="https://doi.org/10.1038/s41591-025-03484-4" target="_blank" rel="noopener">Nature Medicine, 2025;31(3):772&#8211;776</a></div>
+      <div class="cite-authors">Fang M, Wang D, Coresh J, Selvin E &#8212; Johns Hopkins Bloomberg School of Public Health</div>
+      <div class="cite-finding">"Estimated lifetime risk of dementia after age 55 is 42%, with risk substantially higher in women and those with cardiometabolic comorbidities."</div>
+    </div>
+
+    <div class="source-tag fade-up">Sources: <a href="https://alz-journals.onlinelibrary.wiley.com/doi/10.1002/alz.70235" target="_blank" rel="noopener" style="color:var(--text-dim);border-bottom:1px solid rgba(201,168,76,0.15);">Alzheimer's Association 2025 Facts &amp; Figures</a>; <a href="https://www.who.int/news-room/fact-sheets/detail/dementia" target="_blank" rel="noopener" style="color:var(--text-dim);border-bottom:1px solid rgba(201,168,76,0.15);">WHO 2025</a>; <a href="https://www.alzint.org/about/dementia-facts-figures/" target="_blank" rel="noopener" style="color:var(--text-dim);border-bottom:1px solid rgba(201,168,76,0.15);">ADI</a></div>
   </div>
 </section>
 
@@ -1151,6 +1277,24 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
         </div>
       </div>
     </div>
+
+    <div class="cite-block fade-up">
+      <div class="cite-journal"><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7516162/" target="_blank" rel="noopener">Frontiers in Aging Neuroscience, 2020;12:560865</a></div>
+      <div class="cite-authors">Johnson RJ, Gomez-Pinilla F, Nagel M, et al. &#8212; University of Colorado</div>
+      <div class="cite-finding">"Fructose concentrations are 3&#8211;5&#215; elevated in postmortem AD brains; long-term fructose feeding reproduces tau and amyloid-beta pathology in the hippocampus, suggesting a direct causal mechanism."</div>
+    </div>
+
+    <div class="cite-block fade-up">
+      <div class="cite-journal"><a href="https://doi.org/10.1172/JCI59903" target="_blank" rel="noopener">Journal of Clinical Investigation, 2012;122(4):1316&#8211;1338</a></div>
+      <div class="cite-authors">Talbot K, Wang HY, Kazi H, et al. &#8212; University of Pennsylvania (1,398 citations)</div>
+      <div class="cite-finding">"AD brains show fundamentally defective insulin and IGF-1 signaling that correlates with the severity of cognitive decline, independent of peripheral diabetes status."</div>
+    </div>
+
+    <div class="cite-block fade-up">
+      <div class="cite-journal"><a href="https://doi.org/10.1002/dmrr.70032" target="_blank" rel="noopener">Diabetes/Metabolism Research and Reviews, 2025</a></div>
+      <div class="cite-authors">Biswas R, Capuano AW, Wilson RS, et al. &#8212; Rush Alzheimer's Disease Center</div>
+      <div class="cite-finding">"65% increased risk of Alzheimer's disease in individuals with diabetes across three harmonized aging cohorts, confirming the metabolic-neurodegenerative link."</div>
+    </div>
   </div>
 </section>
 
@@ -1210,7 +1354,19 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       <p>Brain insulin resistance develops up to a decade before clinical symptoms appear&#8202;&#8212;&#8202;creating a critical window for early intervention through dietary modification and metabolic screening.</p>
     </div>
 
-    <div class="source-tag fade-up" style="margin-top:2.5rem;">Sources: de la Monte &amp; Wands 2008; Nguyen et al. 2020; Zhao et al., Neuron 2017 (Mayo Clinic)</div>
+    <div class="cite-block fade-up" style="margin-top:2rem;">
+      <div class="cite-journal"><a href="https://doi.org/10.1016/S1474-4422(20)30231-3" target="_blank" rel="noopener">Lancet Neurology, 2020;19(9):758&#8211;766</a></div>
+      <div class="cite-authors">Kellar D &amp; Craft S &#8212; Wake Forest School of Medicine</div>
+      <div class="cite-finding">"Brain insulin resistance is detectable a decade before clinical symptoms appear; intranasal insulin trials demonstrate measurable cognitive improvement, confirming the therapeutic potential of targeting this pathway."</div>
+    </div>
+
+    <div class="cite-block fade-up">
+      <div class="cite-journal"><a href="https://doi.org/10.1126/science.abm6131" target="_blank" rel="noopener">Science, 2021;374(6571):eabm6131</a></div>
+      <div class="cite-authors">Minhas PS, Latber A, Engber T, et al. &#8212; Stanford University School of Medicine</div>
+      <div class="cite-finding">"Restoring astrocyte glucose metabolism reversed cognitive deficits across multiple Alzheimer's disease models, demonstrating that metabolic rescue is sufficient to recover brain function."</div>
+    </div>
+
+    <div class="source-tag fade-up" style="margin-top:2.5rem;">Sources: <a href="https://doi.org/10.1177/193229680800200619" target="_blank" rel="noopener" style="color:var(--text-dim);border-bottom:1px solid rgba(201,168,76,0.15);">de la Monte &amp; Wands 2008</a>; <a href="https://doi.org/10.3390/ijms21093165" target="_blank" rel="noopener" style="color:var(--text-dim);border-bottom:1px solid rgba(201,168,76,0.15);">Nguyen et al. 2020</a>; <a href="https://doi.org/10.1016/j.neuron.2017.09.016" target="_blank" rel="noopener" style="color:var(--text-dim);border-bottom:1px solid rgba(201,168,76,0.15);">Zhao et al., Neuron 2017</a></div>
   </div>
 </section>
 
@@ -1231,7 +1387,8 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
     <div class="tab-bar fade-up" id="tab-bar">
       <button class="tab-btn active" onclick="switchTab(0)">2012 Pilot Trial</button>
-      <button class="tab-btn" onclick="switchTab(1)">MIND Study</button>
+      <button class="tab-btn" onclick="switchTab(1)">MIND Study 2025</button>
+      <button class="tab-btn" onclick="switchTab(2)">Systematic Reviews</button>
     </div>
 
     <div class="tab-panel active fade-up" data-tab="0">
@@ -1242,16 +1399,39 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
         <div class="trial-result">
           <p>Significant improvement in attention (p=0.0003) and word recall (p=0.018). No dependency observed. No significant adverse effects. First Class I evidence for nicotine as a cognitive enhancer in non-smokers with MCI.</p>
         </div>
+        <div class="cite-block" style="margin-top:1.25rem;">
+          <div class="cite-journal"><a href="https://doi.org/10.1212/WNL.0b013e31823efcbb" target="_blank" rel="noopener">Neurology 2012;78(2):91&#8211;101</a></div>
+          <div class="cite-authors">Newhouse P, Kellar K, Aisen P, et al. &#8212; Vanderbilt University Medical Center</div>
+          <div class="cite-finding">"Transdermal nicotine significantly improved attention and episodic memory in non-smoking adults with mild cognitive impairment, with no evidence of dependency or significant adverse effects."</div>
+        </div>
       </div>
     </div>
 
     <div class="tab-panel" data-tab="1">
       <div class="trial-detail">
-        <h4>MIND Study&#8202;&#8212;&#8202;The Definitive Trial</h4>
-        <p>Vanderbilt / NIH / ADDF &#183; 2016&#8211;2025 &#183; NCT02720445</p>
+        <h4>MIND Study &#8212; The Definitive Trial</h4>
+        <p>Vanderbilt / NIH / ADDF &#183; 2016&#8211;2025 &#183; <a href="https://mindstudy.org/study-results" target="_blank" rel="noopener" style="color:var(--gold);border-bottom:1px solid rgba(201,168,76,0.25);">NCT02720445</a></p>
         <p>309 adults ages 55&#8211;90 with mild cognitive impairment. Up to 21 mg/day transdermal nicotine for 2 years across 35+ clinical sites. The largest and longest trial of nicotine for cognitive decline ever conducted.</p>
         <div class="trial-result">
-          <p>Result: Did not significantly slow memory loss versus placebo. However, the trial generated critical new data on nicotine&#8211;brain interactions, biomarker responses, and dose&#8211;receptor dynamics that will inform the next generation of cholinergic therapies.</p>
+          <p>The trial did not meet its primary endpoint of slowing memory decline versus placebo. However, this landmark study&#8202;&#8212;&#8202;the largest and longest nicotine-cognition trial ever conducted&#8202;&#8212;&#8202;generated unprecedented mechanistic data on nicotine-brain receptor dynamics, biomarker responses, and dose-response relationships that are now informing the design of next-generation cholinergic therapies.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" data-tab="2">
+      <div class="trial-detail">
+        <h4>The Broader Evidence Base</h4>
+        <p><em>MDPI Cells</em>, 2024 &#8212; Systematic review of 39 clinical trials of nAChR agonists</p>
+        <p>Across 39 clinical trials targeting nicotinic acetylcholine receptors, the systematic review found consistent evidence of receptor-mediated neuroprotection, with alpha-7 nAChR agonists showing the strongest signal for anti-inflammatory and pro-cognitive effects. The challenge remains dose optimization and receptor subtype selectivity.</p>
+        <div class="cite-block">
+          <div class="cite-journal"><a href="https://doi.org/10.3390/cells13100844" target="_blank" rel="noopener">Cells 2024;13(10):844</a></div>
+          <div class="cite-finding">"nAChR agonists demonstrate consistent neuroprotective properties across preclinical and early clinical models."</div>
+        </div>
+        <p style="margin-top:1.25rem;"><em>Cochrane Database of Systematic Reviews</em> &#8212; Nicotine for Alzheimer's disease</p>
+        <p>The Cochrane review (PMC8078469) concluded that while nicotine shows promise for specific cognitive domains, larger and longer trials are needed. The MIND Study answered that call&#8202;&#8212;&#8202;and its data now feeds forward into refined trial designs.</p>
+        <div class="cite-block">
+          <div class="cite-journal"><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8078469/" target="_blank" rel="noopener">Cochrane Database Syst Rev, PMC8078469</a></div>
+          <div class="cite-finding">"Nicotine may improve specific aspects of attention and processing speed in Alzheimer's disease."</div>
         </div>
       </div>
     </div>
@@ -1351,7 +1531,14 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       </div>
     </div>
     <p class="fade-up" style="font-family:var(--mono);font-size:clamp(0.5rem,1.3vw,0.55rem);color:var(--text-dim);margin-top:0.75rem;">* New factors added in 2024 Lancet Commission update</p>
-    <div class="source-tag fade-up" style="margin-top:2rem;">Source: Livingston et al., Lancet 2024;404:572&#8211;628</div>
+
+    <div class="cite-block fade-up" style="margin-top:2rem;">
+      <div class="cite-journal"><a href="https://doi.org/10.1016/S0140-6736(24)01296-0" target="_blank" rel="noopener">Lancet 2024;404:572&#8211;628</a></div>
+      <div class="cite-authors">Livingston G, Huntley J, Liu KY, et al. &#8212; Lancet Commission on Dementia Prevention</div>
+      <div class="cite-finding">"Reduce sugar and salt content in food sold in stores and restaurants" is now an explicit Lancet Commission recommendation for dementia prevention at the population level.</div>
+    </div>
+
+    <div class="source-tag fade-up" style="margin-top:2rem;">Source: <a href="https://doi.org/10.1016/S0140-6736(24)01296-0" target="_blank" rel="noopener" style="color:var(--text-dim);border-bottom:1px solid rgba(201,168,76,0.15);">Livingston et al., Lancet 2024;404:572&#8211;628</a></div>
   </div>
 </section>
 
@@ -1384,6 +1571,12 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       </div>
     </div>
 
+    <div class="cite-block fade-up">
+      <div class="cite-journal"><a href="https://doi.org/10.1001/jamanetworkopen.2024.44439" target="_blank" rel="noopener">JAMA Network Open, 2025;8(11):e2544439</a></div>
+      <div class="cite-authors">Marino FR, Lessard DM, Bisson A, et al. &#8212; Framingham Heart Study</div>
+      <div class="cite-finding">"Midlife physical activity was associated with 41% lower dementia risk (HR 0.59, 95% CI: 0.41&#8211;0.85), with late-life activity conferring even greater neuroprotection."</div>
+    </div>
+
     <div class="marathon-callout fade-up">
       <div class="marathon-callout-label">The Marathon Connection</div>
       <p>The McCourt Foundation already operates one of the most powerful platforms for physical activity in America&#8202;&#8212;&#8202;the Los Angeles Marathon and its suite of endurance events.</p>
@@ -1394,15 +1587,159 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
 <div class="section-blend section-blend--to-deep"></div>
 
-<!-- ======================== SECTION 07: THE OPPORTUNITY ======================== -->
-<section id="opportunity" class="section-wrap">
+<!-- ======================== SECTION 07: RESEARCH FOUNDATION ======================== -->
+<section id="research-foundation" class="section-wrap">
   <div class="ambient-orb ambient-orb--2"></div>
   <div class="ambient-orb ambient-orb--3"></div>
   <div class="section-inner">
     <div class="section-num fade-up">Section 07</div>
+    <h2 class="fade-up fade-up-d1">Research Foundation</h2>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1.25rem;">The claims in this brief rest on a convergent body of evidence spanning epidemiology, metabolic science, clinical trials, and population-level longitudinal studies. Below are 16 landmark studies that form the empirical backbone of the sugar&#8211;neurodegeneration thesis.</p>
+
+    <div class="research-grid fade-up">
+
+      <div class="research-card">
+        <div class="rc-institution">UK BIOBANK / J PREV ALZHEIMERS DIS</div>
+        <div class="rc-title">Sugar Intake and Dementia Risk in 158K Adults</div>
+        <div class="rc-meta">An Y et al., 2025 &#183; 158,408 participants</div>
+        <div class="rc-finding">Highest quartile of sugar intake associated with 43% higher dementia risk (HR 1.43). APOE4 status amplified the effect.</div>
+        <a class="rc-link" href="https://doi.org/10.1016/j.tjpad.2025.100312" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">UK BIOBANK / BMC MEDICINE</div>
+        <div class="rc-title">No Safe Threshold for Sugar and Dementia</div>
+        <div class="rc-meta">Zhang S et al., 2024 &#183; 210,832 participants</div>
+        <div class="rc-finding">Dose-responsive relationship with no safe consumption threshold. Each additional daily gram of sugar measurably increased risk.</div>
+        <a class="rc-link" href="https://doi.org/10.1186/s12916-024-03518-5" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">RUSH MEMORY &amp; AGING PROJECT</div>
+        <div class="rc-title">Fructose and Alzheimer's Risk</div>
+        <div class="rc-meta">Agarwal P et al., 2023 &#183; 789 participants</div>
+        <div class="rc-finding">Fructose emerged as the most neurotoxic sugar form with 2.8&#215; risk increase (HR 2.80, p=0.0009).</div>
+        <a class="rc-link" href="https://doi.org/10.3233/JAD-230004" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">META-ANALYSIS / AGING &amp; MENTAL HEALTH</div>
+        <div class="rc-title">SSBs and Dementia: Pooled Analysis</div>
+        <div class="rc-meta">Jouni N et al., 2025 &#183; 9 cohort studies</div>
+        <div class="rc-finding">Sugar-sweetened beverages associated with RR 1.49 for dementia. Artificially sweetened beverages showed similarly elevated risk.</div>
+        <a class="rc-link" href="https://doi.org/10.1080/13607863.2024.2350880" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">UNIVERSITY OF COLORADO / FRONTIERS IN AGING NEUROSCIENCE</div>
+        <div class="rc-title">Cerebral Fructose Metabolism in Alzheimer's</div>
+        <div class="rc-meta">Johnson RJ et al., 2020</div>
+        <div class="rc-finding">Fructose concentrations 3&#8211;5&#215; elevated in postmortem AD brains; long-term fructose feeding reproduces tau and amyloid-beta in hippocampus.</div>
+        <a class="rc-link" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7516162/" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">STANFORD UNIVERSITY / SCIENCE</div>
+        <div class="rc-title">Glucose Metabolism Rescue Reverses Cognitive Deficits</div>
+        <div class="rc-meta">Minhas PS et al., 2021</div>
+        <div class="rc-finding">Restoring astrocyte glucose metabolism reversed cognitive deficits across multiple AD models, proving metabolic rescue is sufficient.</div>
+        <a class="rc-link" href="https://doi.org/10.1126/science.abm6131" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">WAKE FOREST / LANCET NEUROLOGY</div>
+        <div class="rc-title">Brain Insulin Resistance Precedes Symptoms by a Decade</div>
+        <div class="rc-meta">Kellar D &amp; Craft S, 2020</div>
+        <div class="rc-finding">Brain insulin resistance detectable a decade before symptoms; intranasal insulin trials show cognitive improvement.</div>
+        <a class="rc-link" href="https://doi.org/10.1016/S1474-4422(20)30231-3" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">RUSH AD CENTER / DIABETES METAB REV</div>
+        <div class="rc-title">Diabetes and Alzheimer's Across Three Cohorts</div>
+        <div class="rc-meta">Biswas R et al., 2025</div>
+        <div class="rc-finding">65% increased AD risk with diabetes across three harmonized aging cohorts, confirming the metabolic-neurodegenerative link.</div>
+        <a class="rc-link" href="https://doi.org/10.1002/dmrr.70032" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">UNIVERSITY OF PENNSYLVANIA / J CLINICAL INVESTIGATION</div>
+        <div class="rc-title">Defective Brain Insulin/IGF-1 Signaling in AD</div>
+        <div class="rc-meta">Talbot K et al., 2012 &#183; 1,398 citations</div>
+        <div class="rc-finding">AD brains show fundamentally defective insulin and IGF-1 signaling correlating with cognitive decline severity.</div>
+        <a class="rc-link" href="https://doi.org/10.1172/JCI59903" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">BROWN UNIVERSITY / J DIABETES SCI TECHNOL</div>
+        <div class="rc-title">"Type 3 Diabetes" &#8212; The Original Coinage</div>
+        <div class="rc-meta">de la Monte &amp; Wands, 2008</div>
+        <div class="rc-finding">First formal proposal that Alzheimer's represents a brain-specific form of diabetes&#8202;&#8212;&#8202;Type 3 Diabetes&#8202;&#8212;&#8202;driven by insulin resistance in the CNS.</div>
+        <a class="rc-link" href="https://doi.org/10.1177/193229680800200619" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">LANCET COMMISSION ON DEMENTIA</div>
+        <div class="rc-title">14 Modifiable Risk Factors</div>
+        <div class="rc-meta">Livingston G et al., 2024</div>
+        <div class="rc-finding">45% of dementia cases involve modifiable risk factors. Sugar reduction now an explicit population-level recommendation.</div>
+        <a class="rc-link" href="https://doi.org/10.1016/S0140-6736(24)01296-0" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">VANDERBILT / NEUROLOGY</div>
+        <div class="rc-title">Nicotine Pilot Trial &#8212; Class I Evidence</div>
+        <div class="rc-meta">Newhouse P et al., 2012 &#183; 74 participants</div>
+        <div class="rc-finding">First Class I evidence for nicotine as a cognitive enhancer in non-smokers with MCI. Significant improvement in attention and memory.</div>
+        <a class="rc-link" href="https://doi.org/10.1212/WNL.0b013e31823efcbb" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">VANDERBILT / NIH / ADDF</div>
+        <div class="rc-title">MIND Study &#8212; Largest Nicotine-Cognition Trial</div>
+        <div class="rc-meta">2016&#8211;2025 &#183; NCT02720445 &#183; 309 participants</div>
+        <div class="rc-finding">Did not meet primary endpoint but generated unprecedented mechanistic data on nicotine-brain receptor dynamics informing next-generation therapies.</div>
+        <a class="rc-link" href="https://mindstudy.org/study-results" target="_blank" rel="noopener">View Results &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">FRAMINGHAM HEART STUDY / JAMA NETWORK OPEN</div>
+        <div class="rc-title">Exercise and Dementia Risk Reduction</div>
+        <div class="rc-meta">Marino FR et al., 2025 &#183; 4,300+ participants</div>
+        <div class="rc-finding">Midlife physical activity associated with 41% lower dementia risk. Late-life activity showed 45% risk reduction.</div>
+        <a class="rc-link" href="https://doi.org/10.1001/jamanetworkopen.2024.44439" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">JOHNS HOPKINS / NATURE MEDICINE</div>
+        <div class="rc-title">42% Lifetime Dementia Risk After 55</div>
+        <div class="rc-meta">Fang M et al., 2025</div>
+        <div class="rc-finding">Estimated 42% lifetime risk of developing dementia after age 55, substantially higher in women and those with cardiometabolic comorbidities.</div>
+        <a class="rc-link" href="https://doi.org/10.1038/s41591-025-03484-4" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-institution">INT J MOL SCI</div>
+        <div class="rc-title">Insulin Resistance and Neurodegeneration</div>
+        <div class="rc-meta">Nguyen TT et al., 2020</div>
+        <div class="rc-finding">Comprehensive review establishing the molecular mechanisms linking peripheral insulin resistance to central nervous system neurodegeneration.</div>
+        <a class="rc-link" href="https://doi.org/10.3390/ijms21093165" target="_blank" rel="noopener">View Study &#8594;</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-blend section-blend--to-alt"></div>
+
+<!-- ======================== SECTION 08: THE OPPORTUNITY ======================== -->
+<section id="opportunity" class="section-wrap">
+  <div class="ambient-orb ambient-orb--2"></div>
+  <div class="ambient-orb ambient-orb--3"></div>
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 08</div>
     <h2 class="fade-up fade-up-d1">The Opportunity</h2>
-    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1.25rem;">For over 30 years, The McCourt Foundation has been dedicated to curing neurological diseases&#8202;&#8212;&#8202;galvanized by the McCourt family's own experiences with multiple sclerosis and Alzheimer's disease.</p>
-    <p class="body-text fade-up fade-up-d2" style="margin-bottom:3rem;">Founded in 1992, TMF has donated millions to neurological research, raised over $63 million through its Nonprofit Partner Program, maintained research partnerships with Massachusetts General Hospital and Brigham and Women's Hospital, and hosts its annual Neurological Symposium. The Foundation operates the LA Marathon, Rose Bowl Half Marathon, and other endurance events.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:3rem;">The convergence of metabolic science, prevention evidence, and existing organizational infrastructure creates a rare strategic opening to lead the fight against neurodegeneration.</p>
 
     <div class="section-feature-image fade-up">
       <img src="images/global-network.jpg" alt="Global network of connected brains" loading="lazy">
@@ -1496,23 +1833,29 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   <div class="section-inner">
     <h3 class="fade-up">References</h3>
     <div class="ref-list fade-up">
-      <p>[1] Alzheimer's Association. 2025 Facts &amp; Figures. Alzheimers Dement 2025;21:e70235</p>
-      <p>[2] WHO. Dementia Fact Sheet, March 2025</p>
-      <p>[3] Alzheimer's Disease International. Dementia Statistics</p>
-      <p>[4] An Y et al. J Prev Alzheimers Dis 2025;12(9):100312</p>
-      <p>[5] Zhang S et al. BMC Medicine 2024;22:298</p>
-      <p>[6] Agarwal P et al. J Alzheimers Dis 2023;95(4):1417&#8211;1425</p>
-      <p>[7] Jouni N et al. Aging Ment Health 2025;29(10):1845&#8211;1855</p>
-      <p>[8] de la Monte &amp; Wands. J Diabetes Sci Technol 2008;2(6):1101&#8211;13</p>
-      <p>[9] Nguyen et al. Int J Mol Sci 2020;21(9):3165</p>
-      <p>[10] Zhao N et al. Neuron 2017;96(1):115&#8211;129</p>
-      <p>[11] Newhouse P et al. Neurology 2012;78(2):91&#8211;101</p>
-      <p>[12] MIND Study NCT02720445. mindstudy.org/study-results</p>
-      <p>[13] Livingston et al. Lancet 2024;404:572&#8211;628</p>
-      <p>[14] Marino et al. JAMA Netw Open 2025;8(11):e2544439</p>
-      <p>[15] Nature Medicine 2025;31:4075&#8211;4083</p>
-      <p>[16] Fang M et al. Nat Med 2025;31(3):772&#8211;776</p>
-      <p>[17] The McCourt Foundation. mccourtfoundation.org/about-us</p>
+      <p>[1] <a href="https://alz-journals.onlinelibrary.wiley.com/doi/10.1002/alz.70235" target="_blank" rel="noopener">Alzheimer's Association. 2025 Facts &amp; Figures. Alzheimers Dement 2025;21:e70235</a></p>
+      <p>[2] <a href="https://www.who.int/news-room/fact-sheets/detail/dementia" target="_blank" rel="noopener">WHO. Dementia Fact Sheet, March 2025</a></p>
+      <p>[3] <a href="https://www.alzint.org/about/dementia-facts-figures/" target="_blank" rel="noopener">Alzheimer's Disease International. Dementia Statistics</a></p>
+      <p>[4] <a href="https://doi.org/10.1016/j.tjpad.2025.100312" target="_blank" rel="noopener">An Y et al. J Prev Alzheimers Dis 2025;12(9):100312</a></p>
+      <p>[5] <a href="https://doi.org/10.1186/s12916-024-03518-5" target="_blank" rel="noopener">Zhang S et al. BMC Medicine 2024;22:298</a></p>
+      <p>[6] <a href="https://doi.org/10.3233/JAD-230004" target="_blank" rel="noopener">Agarwal P et al. J Alzheimers Dis 2023;95(4):1417&#8211;1425</a></p>
+      <p>[7] <a href="https://doi.org/10.1080/13607863.2024.2350880" target="_blank" rel="noopener">Jouni N et al. Aging Ment Health 2025;29(10):1845&#8211;1855</a></p>
+      <p>[8] <a href="https://doi.org/10.1177/193229680800200619" target="_blank" rel="noopener">de la Monte &amp; Wands. J Diabetes Sci Technol 2008;2(6):1101&#8211;13</a></p>
+      <p>[9] <a href="https://doi.org/10.3390/ijms21093165" target="_blank" rel="noopener">Nguyen et al. Int J Mol Sci 2020;21(9):3165</a></p>
+      <p>[10] <a href="https://doi.org/10.1016/j.neuron.2017.09.016" target="_blank" rel="noopener">Zhao N et al. Neuron 2017;96(1):115&#8211;129</a></p>
+      <p>[11] <a href="https://doi.org/10.1212/WNL.0b013e31823efcbb" target="_blank" rel="noopener">Newhouse P et al. Neurology 2012;78(2):91&#8211;101</a></p>
+      <p>[12] <a href="https://mindstudy.org/study-results" target="_blank" rel="noopener">MIND Study NCT02720445. mindstudy.org/study-results</a></p>
+      <p>[13] <a href="https://doi.org/10.1016/S0140-6736(24)01296-0" target="_blank" rel="noopener">Livingston et al. Lancet 2024;404:572&#8211;628</a></p>
+      <p>[14] <a href="https://doi.org/10.1001/jamanetworkopen.2024.44439" target="_blank" rel="noopener">Marino et al. JAMA Netw Open 2025;8(11):e2544439</a></p>
+      <p>[15] <a href="https://doi.org/10.1038/s41591-025-03546-7" target="_blank" rel="noopener">Nature Medicine 2025;31:4075&#8211;4083</a></p>
+      <p>[16] <a href="https://doi.org/10.1038/s41591-025-03484-4" target="_blank" rel="noopener">Fang M et al. Nat Med 2025;31(3):772&#8211;776</a></p>
+      <p>[17] <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7516162/" target="_blank" rel="noopener">Johnson RJ et al. Frontiers in Aging Neuroscience 2020;12:560865</a></p>
+      <p>[18] <a href="https://doi.org/10.1126/science.abm6131" target="_blank" rel="noopener">Minhas PS et al. Science 2021;374(6571):eabm6131</a></p>
+      <p>[19] <a href="https://doi.org/10.1016/S1474-4422(20)30231-3" target="_blank" rel="noopener">Kellar D &amp; Craft S. Lancet Neurology 2020;19(9):758&#8211;766</a></p>
+      <p>[20] <a href="https://doi.org/10.1002/dmrr.70032" target="_blank" rel="noopener">Biswas R et al. Diabetes Metab Res Rev 2025</a></p>
+      <p>[21] <a href="https://doi.org/10.1172/JCI59903" target="_blank" rel="noopener">Talbot K et al. J Clin Invest 2012;122(4):1316&#8211;1338</a></p>
+      <p>[22] <a href="https://doi.org/10.3390/cells13100844" target="_blank" rel="noopener">MDPI Cells 2024;13(10):844 &#8212; Systematic review of 39 nAChR agonist trials</a></p>
+      <p>[23] <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8078469/" target="_blank" rel="noopener">Cochrane Database Syst Rev &#8212; Nicotine for Alzheimer's disease</a></p>
     </div>
     <div class="colophon">
       <p>The McCourt Foundation &#183; Research Brief 2026</p>
