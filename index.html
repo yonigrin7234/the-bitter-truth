@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The Bitter Truth — McCourt Foundation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --deep: #070a10;
+  --deep-alt: #0b0f18;
+  --navy: #0d1117;
+  --navy-light: #141b27;
+  --charcoal: #1a2233;
+  --gold: #c9a84c;
+  --gold-light: #dfc47a;
+  --gold-dim: rgba(201,168,76,0.15);
+  --gold-glow: rgba(201,168,76,0.08);
+  --text: #e8e4dd;
+  --text-secondary: rgba(232,228,221,0.72);
+  --text-dim: rgba(232,228,221,0.45);
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  background: var(--deep);
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--deep);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.65;
+}
+
+body::-webkit-scrollbar { display: none; }
+body { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ======================== PROGRESS BAR ======================== */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  z-index: 9999; transition: width 0.1s linear;
+  box-shadow: 0 0 12px rgba(201,168,76,0.5);
+}
+
+/* ======================== TYPOGRAPHY ======================== */
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15; }
+.label {
+  font-family: var(--mono); font-size: clamp(0.625rem, 2vw, 0.75rem);
+  text-transform: uppercase; letter-spacing: 0.2em; color: var(--gold);
+  font-weight: 400;
+}
+.body-text {
+  font-family: var(--sans); font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
+}
+
+/* ======================== LAYOUT ======================== */
+.section-wrap {
+  width: 100%; max-width: 100vw; overflow: hidden;
+  padding: clamp(4rem, 12vw, 8rem) clamp(1.25rem, 5vw, 3rem);
+  position: relative;
+}
+
+/* ======================== FADE ANIMATIONS ======================== */
+.fade-up {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.fade-up-d1 { transition-delay: 0.1s; }
+.fade-up-d2 { transition-delay: 0.2s; }
+.fade-up-d3 { transition-delay: 0.35s; }
+.fade-up-d4 { transition-delay: 0.5s; }
+.fade-up-d5 { transition-delay: 0.65s; }
+
+/* ======================== HERO ======================== */
+#hero {
+  min-height: 100svh; display: flex; flex-direction: column;
+  justify-content: flex-end; align-items: center;
+  padding: 0 clamp(1.5rem, 5vw, 3rem) clamp(3rem, 8vw, 5rem);
+  position: relative; text-align: center; overflow: hidden;
+}
+#hero-canvas {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0; opacity: 0.7;
+}
+#hero .hero-content { position: relative; z-index: 2; max-width: 680px; }
+#hero .foundation-tag {
+  font-family: var(--mono); font-size: clamp(0.6rem, 1.8vw, 0.7rem);
+  letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 2rem; opacity: 0.9;
+}
+#hero h1 {
+  font-size: clamp(2.8rem, 10vw, 5.5rem); font-weight: 700;
+  letter-spacing: -0.025em; margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--text) 0%, rgba(232,228,221,0.8) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+#hero .subtitle {
+  font-family: var(--sans); font-size: clamp(0.9rem, 2.8vw, 1.15rem);
+  color: var(--text-secondary); line-height: 1.7;
+  font-weight: 300; margin-bottom: 2.5rem; max-width: 540px; margin-inline: auto;
+}
+#hero .brief-tag {
+  font-family: var(--mono); font-size: clamp(0.6rem, 1.6vw, 0.65rem);
+  letter-spacing: 0.25em; color: var(--text-dim);
+  border: 1px solid rgba(201,168,76,0.2);
+  padding: 0.5em 1.5em; display: inline-block;
+}
+.scroll-indicator {
+  margin-top: 3rem; opacity: 0.4;
+  animation: pulse-down 2.5s ease-in-out infinite;
+}
+.scroll-indicator span {
+  display: block; width: 1px; height: 40px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  margin: 0 auto;
+}
+@keyframes pulse-down {
+  0%, 100% { opacity: 0.2; transform: translateY(0); }
+  50% { opacity: 0.5; transform: translateY(8px); }
+}
+
+/* ======================== DIVIDERS ======================== */
+.section-divider {
+  width: 100%; height: 1px; position: relative; overflow: hidden;
+  margin: 0;
+}
+.section-divider::after {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent 0%, var(--gold-dim) 20%, var(--gold) 50%, var(--gold-dim) 80%, transparent 100%);
+  animation: shimmer-line 4s ease-in-out infinite;
+}
+@keyframes shimmer-line {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* ======================== SECTION 01: THE CRISIS ======================== */
+#crisis { background: var(--deep); }
+#crisis .section-inner { max-width: 900px; margin: 0 auto; }
+.section-num {
+  font-family: var(--mono); font-size: clamp(0.6rem, 1.5vw, 0.65rem);
+  letter-spacing: 0.3em; color: var(--gold); opacity: 0.6;
+  margin-bottom: 0.75rem;
+}
+#crisis h2 {
+  font-size: clamp(2rem, 7vw, 3.5rem); margin-bottom: 1.5rem;
+  letter-spacing: -0.02em; color: var(--text);
+}
+#crisis .lead-text {
+  font-family: var(--serif); font-size: clamp(1.1rem, 3.2vw, 1.4rem);
+  color: var(--text-secondary); line-height: 1.6;
+  margin-bottom: 3rem; font-weight: 400; font-style: italic;
+}
+
+/* Stat Grid */
+.stat-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 4vw, 1.5rem);
+  margin-bottom: 3rem;
+}
+.stat-card {
+  background: linear-gradient(135deg, rgba(20,27,39,0.8), rgba(13,17,23,0.6));
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 12px; padding: clamp(1.25rem, 4vw, 1.75rem);
+  position: relative; overflow: hidden;
+}
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+.stat-number {
+  font-family: var(--serif); font-size: clamp(1.6rem, 5.5vw, 2.5rem);
+  font-weight: 700; color: var(--gold); line-height: 1.1; margin-bottom: 0.5rem;
+}
+.stat-unit {
+  font-family: var(--mono); font-size: clamp(0.55rem, 1.5vw, 0.65rem);
+  letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase;
+}
+.stat-desc {
+  font-family: var(--sans); font-size: clamp(0.75rem, 2.2vw, 0.85rem);
+  color: var(--text-secondary); line-height: 1.5; margin-top: 0.5rem; font-weight: 300;
+}
+
+/* Context paragraphs */
+.context-block {
+  margin-top: 2rem; position: relative;
+  padding-left: clamp(1rem, 3vw, 1.5rem);
+  border-left: 2px solid rgba(201,168,76,0.2);
+}
+.context-block p {
+  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
+  margin-bottom: 1rem;
+}
+.context-block p:last-child { margin-bottom: 0; }
+.highlight-gold { color: var(--gold); font-weight: 500; }
+
+.source-tag {
+  font-family: var(--mono); font-size: clamp(0.55rem, 1.4vw, 0.6rem);
+  color: var(--text-dim); margin-top: 2rem; letter-spacing: 0.05em;
+  line-height: 1.7;
+}
+
+/* ======================== SECTION 02: THE CAUSE ======================== */
+#cause { background: var(--deep-alt); }
+#cause .section-inner { max-width: 900px; margin: 0 auto; }
+#cause h2 {
+  font-size: clamp(2rem, 7vw, 3.5rem); margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+.cause-headline-stat {
+  font-family: var(--mono); font-size: clamp(0.7rem, 2vw, 0.8rem);
+  color: var(--gold); letter-spacing: 0.1em; margin-bottom: 2rem;
+}
+#cause .lead-text {
+  font-family: var(--sans); font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+  color: var(--text-secondary); line-height: 1.75; margin-bottom: 3rem;
+  font-weight: 300;
+}
+
+.three-canvas-inline {
+  width: 100%; height: clamp(220px, 50vw, 340px);
+  border-radius: 16px; overflow: hidden; margin-bottom: 2.5rem;
+  background: radial-gradient(ellipse at center, rgba(201,168,76,0.03) 0%, rgba(7,10,16,0.95) 70%);
+  position: relative;
+  border: 1px solid rgba(201,168,76,0.06);
+  box-shadow: 0 0 60px rgba(201,168,76,0.04), inset 0 0 40px rgba(0,0,0,0.3);
+}
+
+/* Study Cards */
+.study-card {
+  background: linear-gradient(145deg, rgba(20,27,39,0.7), rgba(11,15,24,0.5));
+  border: 1px solid rgba(201,168,76,0.08);
+  border-radius: 14px; margin-bottom: clamp(0.75rem, 2vw, 1rem);
+  overflow: hidden; transition: border-color 0.3s ease;
+}
+.study-card:active { border-color: rgba(201,168,76,0.25); }
+.study-header {
+  padding: clamp(1rem, 3.5vw, 1.5rem); cursor: pointer;
+  display: flex; align-items: flex-start; gap: 1rem;
+  -webkit-tap-highlight-color: transparent;
+}
+.study-num {
+  font-family: var(--serif); font-size: clamp(1.4rem, 4vw, 1.8rem);
+  color: var(--gold); opacity: 0.5; line-height: 1; flex-shrink: 0;
+  min-width: 2rem; padding-top: 0.1em;
+}
+.study-title-block { flex: 1; }
+.study-title {
+  font-family: var(--serif); font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+  color: var(--text); line-height: 1.4; font-weight: 500; margin-bottom: 0.25rem;
+}
+.study-meta {
+  font-family: var(--mono); font-size: clamp(0.55rem, 1.5vw, 0.6rem);
+  color: var(--text-dim); letter-spacing: 0.08em;
+}
+.study-toggle {
+  color: var(--gold); opacity: 0.4; font-size: 1.2rem;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  flex-shrink: 0; padding-top: 0.2em;
+}
+.study-card.expanded .study-toggle { transform: rotate(45deg); opacity: 0.8; }
+.study-body {
+  max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.study-card.expanded .study-body { max-height: 500px; }
+.study-content {
+  padding: 0 clamp(1rem, 3.5vw, 1.5rem) clamp(1rem, 3.5vw, 1.5rem);
+  padding-left: calc(clamp(1rem, 3.5vw, 1.5rem) + 3rem);
+}
+.study-content p {
+  font-size: clamp(0.82rem, 2.3vw, 0.9rem);
+  color: var(--text-secondary); line-height: 1.7; font-weight: 300;
+}
+.study-stat {
+  display: inline-block; font-family: var(--mono);
+  font-size: clamp(0.7rem, 1.8vw, 0.75rem);
+  background: var(--gold-dim); color: var(--gold);
+  padding: 0.25em 0.65em; border-radius: 4px; margin: 0.3em 0.2em;
+  font-weight: 500;
+}
+
+/* ======================== SECTION 03: THE MECHANISM ======================== */
+#mechanism { background: var(--deep); }
+#mechanism .section-inner { max-width: 900px; margin: 0 auto; }
+#mechanism h2 {
+  font-size: clamp(2rem, 7vw, 3.5rem); margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+#mechanism .subtitle-mech {
+  font-family: var(--serif); font-size: clamp(1.05rem, 3vw, 1.25rem);
+  color: var(--gold); font-style: italic; margin-bottom: 1.5rem; font-weight: 400;
+}
+
+/* Stepped walkthrough */
+.step-progress {
+  display: flex; gap: 4px; margin-bottom: 2rem;
+}
+.step-dot {
+  flex: 1; height: 3px; border-radius: 2px;
+  background: rgba(201,168,76,0.15); transition: background 0.5s ease;
+}
+.step-dot.active { background: var(--gold); }
+
+.step-container { position: relative; }
+.step-panel {
+  display: none; animation: fadeStep 0.5s ease;
+}
+.step-panel.active { display: block; }
+@keyframes fadeStep { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+.step-label {
+  font-family: var(--mono); font-size: clamp(0.6rem, 1.6vw, 0.65rem);
+  color: var(--gold); letter-spacing: 0.2em; margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+.step-title {
+  font-family: var(--serif); font-size: clamp(1.3rem, 4vw, 1.7rem);
+  color: var(--text); margin-bottom: 1rem; font-weight: 600;
+}
+.step-body {
+  font-size: clamp(0.88rem, 2.5vw, 0.95rem);
+  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
+}
+.step-nav {
+  display: flex; gap: 0.75rem; margin-top: 2rem;
+}
+.step-btn {
+  font-family: var(--mono); font-size: clamp(0.6rem, 1.6vw, 0.68rem);
+  letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 0.75em 1.5em; border-radius: 6px; cursor: pointer;
+  border: 1px solid rgba(201,168,76,0.25); background: transparent;
+  color: var(--gold); transition: all 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.step-btn:active { background: rgba(201,168,76,0.12); }
+.step-btn.primary {
+  background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.35);
+}
+
+/* Key finding callout */
+.key-finding {
+  margin-top: 3rem; padding: clamp(1.5rem, 4vw, 2rem);
+  background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.02));
+  border: 1px solid rgba(201,168,76,0.15); border-radius: 14px;
+  position: relative;
+}
+.key-finding::before {
+  content: ''; position: absolute; top: -1px; left: 2rem; right: 2rem; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.key-finding-label {
+  font-family: var(--mono); font-size: clamp(0.55rem, 1.4vw, 0.6rem);
+  letter-spacing: 0.25em; color: var(--gold); margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+.key-finding p {
+  font-family: var(--serif); font-size: clamp(1rem, 3vw, 1.2rem);
+  color: var(--text); line-height: 1.55; font-weight: 400;
+  font-style: italic;
+}
+
+/* ======================== SECTION 04: NICOTINE ======================== */
+#nicotine { background: var(--deep-alt); }
+#nicotine .section-inner { max-width: 900px; margin: 0 auto; }
+#nicotine h2 {
+  font-size: clamp(1.8rem, 6.5vw, 3.2rem); margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+/* Tabbed interface */
+.tab-bar {
+  display: flex; gap: 0; margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+}
+.tab-btn {
+  font-family: var(--mono); font-size: clamp(0.6rem, 1.7vw, 0.68rem);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.8em 1.2em; cursor: pointer; border: none;
+  background: transparent; color: var(--text-dim);
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease; flex: 1; text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.tab-btn.active {
+  color: var(--gold); border-bottom-color: var(--gold);
+}
+.tab-panel { display: none; animation: fadeStep 0.4s ease; }
+.tab-panel.active { display: block; }
+
+.trial-detail {
+  background: linear-gradient(145deg, rgba(20,27,39,0.6), rgba(11,15,24,0.4));
+  border: 1px solid rgba(201,168,76,0.08);
+  border-radius: 14px; padding: clamp(1.25rem, 4vw, 1.75rem);
+}
+.trial-detail h4 {
+  font-family: var(--serif); font-size: clamp(1.1rem, 3.2vw, 1.3rem);
+  color: var(--text); margin-bottom: 1rem; font-weight: 600;
+}
+.trial-detail p {
+  font-size: clamp(0.85rem, 2.4vw, 0.92rem);
+  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
+  margin-bottom: 0.75rem;
+}
+.trial-result {
+  margin-top: 1rem; padding: 1rem; border-radius: 8px;
+  background: rgba(201,168,76,0.05); border-left: 3px solid var(--gold);
+}
+.trial-result p {
+  font-family: var(--sans); font-weight: 400; color: var(--text);
+  margin-bottom: 0;
+}
+
+/* Quote */
+.blockquote-wrap {
+  margin-top: 2.5rem; padding: clamp(1.5rem, 4vw, 2rem);
+  position: relative;
+}
+.blockquote-wrap::before {
+  content: '\201C'; font-family: var(--serif); font-size: 5rem;
+  color: var(--gold); opacity: 0.15; position: absolute;
+  top: -0.5rem; left: 0.5rem; line-height: 1;
+}
+.blockquote-wrap blockquote {
+  font-family: var(--serif); font-size: clamp(1rem, 3vw, 1.2rem);
+  color: var(--text); line-height: 1.6; font-style: italic; font-weight: 400;
+}
+.blockquote-wrap cite {
+  display: block; margin-top: 1rem;
+  font-family: var(--mono); font-size: clamp(0.55rem, 1.5vw, 0.62rem);
+  color: var(--text-dim); letter-spacing: 0.1em; font-style: normal;
+}
+
+/* ======================== SECTION 05: PREVENTION ======================== */
+#prevention { background: var(--deep); }
+#prevention .section-inner { max-width: 900px; margin: 0 auto; }
+#prevention h2 {
+  font-size: clamp(1.8rem, 6.5vw, 3.2rem); margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+/* Animated bar chart */
+.risk-chart { margin-top: 2rem; }
+.risk-bar-wrap {
+  display: flex; align-items: center; gap: clamp(0.5rem, 2vw, 0.75rem);
+  margin-bottom: clamp(0.4rem, 1.2vw, 0.55rem);
+}
+.risk-label {
+  font-family: var(--mono); font-size: clamp(0.52rem, 1.4vw, 0.6rem);
+  color: var(--text-secondary); min-width: clamp(90px, 25vw, 130px);
+  text-align: right; letter-spacing: 0.02em; line-height: 1.3;
+}
+.risk-bar-track {
+  flex: 1; height: clamp(18px, 4vw, 24px); background: rgba(255,255,255,0.03);
+  border-radius: 4px; overflow: hidden; position: relative;
+}
+.risk-bar-fill {
+  height: 100%; border-radius: 4px; width: 0%;
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(90deg, rgba(232,228,221,0.15), rgba(232,228,221,0.25));
+}
+.risk-bar-fill.gold-bar {
+  background: linear-gradient(90deg, rgba(201,168,76,0.4), var(--gold));
+}
+.risk-pct {
+  font-family: var(--mono); font-size: clamp(0.52rem, 1.4vw, 0.58rem);
+  color: var(--text-dim); min-width: 28px;
+}
+
+/* ======================== SECTION 06: MOVEMENT ======================== */
+#movement { background: var(--deep-alt); }
+#movement .section-inner { max-width: 900px; margin: 0 auto; }
+#movement h2 {
+  font-size: clamp(1.8rem, 6.5vw, 3.2rem); margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+.evidence-stack { margin-bottom: 2.5rem; }
+.evidence-item {
+  padding: clamp(1rem, 3vw, 1.25rem) 0;
+  border-bottom: 1px solid rgba(232,228,221,0.05);
+}
+.evidence-item:last-child { border-bottom: none; }
+.evidence-source {
+  font-family: var(--mono); font-size: clamp(0.55rem, 1.4vw, 0.6rem);
+  color: var(--gold); letter-spacing: 0.1em; margin-bottom: 0.4rem;
+}
+.evidence-item p {
+  font-size: clamp(0.88rem, 2.5vw, 0.95rem);
+  color: var(--text-secondary); line-height: 1.7; font-weight: 300;
+}
+
+.marathon-callout {
+  background: linear-gradient(145deg, rgba(201,168,76,0.08), rgba(201,168,76,0.02));
+  border: 1px solid rgba(201,168,76,0.18); border-radius: 16px;
+  padding: clamp(1.5rem, 5vw, 2.5rem); position: relative; overflow: hidden;
+}
+.marathon-callout::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.marathon-callout-label {
+  font-family: var(--mono); font-size: clamp(0.6rem, 1.6vw, 0.68rem);
+  color: var(--gold); letter-spacing: 0.25em; text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.marathon-callout p {
+  font-family: var(--serif); font-size: clamp(1rem, 3vw, 1.2rem);
+  color: var(--text); line-height: 1.6; font-weight: 400;
+  margin-bottom: 1rem;
+}
+.marathon-callout p:last-child { margin-bottom: 0; }
+
+/* ======================== SECTION 07: OPPORTUNITY ======================== */
+#opportunity { background: var(--deep); }
+#opportunity .section-inner { max-width: 900px; margin: 0 auto; }
+#opportunity h2 {
+  font-size: clamp(1.8rem, 6.5vw, 3.2rem); margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+/* Accordion */
+.accordion-item {
+  border: 1px solid rgba(201,168,76,0.08);
+  border-radius: 12px; margin-bottom: clamp(0.6rem, 2vw, 0.75rem);
+  overflow: hidden; background: linear-gradient(145deg, rgba(20,27,39,0.5), rgba(11,15,24,0.3));
+  transition: border-color 0.3s ease;
+}
+.accordion-item.expanded { border-color: rgba(201,168,76,0.2); }
+.accordion-header {
+  padding: clamp(1rem, 3.5vw, 1.25rem) clamp(1rem, 3.5vw, 1.5rem);
+  cursor: pointer; display: flex; align-items: flex-start; gap: 0.75rem;
+  -webkit-tap-highlight-color: transparent;
+}
+.accordion-num {
+  font-family: var(--mono); font-size: clamp(0.6rem, 1.6vw, 0.68rem);
+  color: var(--gold); opacity: 0.5; padding-top: 0.3em; flex-shrink: 0;
+}
+.accordion-title {
+  font-family: var(--serif); font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+  color: var(--text); flex: 1; font-weight: 500; line-height: 1.4;
+}
+.accordion-toggle {
+  color: var(--gold); opacity: 0.4; flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+.accordion-item.expanded .accordion-toggle { transform: rotate(45deg); opacity: 0.8; }
+.accordion-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.accordion-item.expanded .accordion-body { max-height: 600px; }
+.accordion-content {
+  padding: 0 clamp(1rem, 3.5vw, 1.5rem) clamp(1rem, 3.5vw, 1.5rem);
+  padding-left: calc(clamp(1rem, 3.5vw, 1.5rem) + 2.5rem);
+}
+.accordion-content p {
+  font-size: clamp(0.82rem, 2.3vw, 0.9rem);
+  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
+  margin-bottom: 0.75rem;
+}
+.accordion-content p:last-child { margin-bottom: 0; }
+
+/* ======================== CLOSING ======================== */
+#closing {
+  background: var(--deep-alt); text-align: center;
+  padding-top: clamp(5rem, 14vw, 9rem); padding-bottom: clamp(5rem, 14vw, 9rem);
+}
+#closing .section-inner { max-width: 720px; margin: 0 auto; }
+#closing h2 {
+  font-size: clamp(2.2rem, 8vw, 4rem); margin-bottom: 2.5rem;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.closing-lines p {
+  font-family: var(--serif); font-size: clamp(1rem, 3vw, 1.2rem);
+  color: var(--text-secondary); line-height: 1.7; font-weight: 400;
+  margin-bottom: 1.25rem;
+}
+.closing-lines p:last-child {
+  color: var(--text); font-weight: 600; font-style: italic;
+  margin-top: 2rem;
+}
+
+/* ======================== REFERENCES ======================== */
+#references { background: var(--deep); }
+#references .section-inner { max-width: 900px; margin: 0 auto; }
+#references h3 {
+  font-family: var(--mono); font-size: clamp(0.65rem, 1.8vw, 0.72rem);
+  letter-spacing: 0.25em; color: var(--gold); margin-bottom: 2rem;
+  text-transform: uppercase;
+}
+.ref-list p {
+  font-family: var(--mono); font-size: clamp(0.55rem, 1.5vw, 0.62rem);
+  color: var(--text-dim); line-height: 1.8; margin-bottom: 0.4rem;
+  letter-spacing: 0.01em;
+}
+
+/* ======================== AMBIENT PARTICLES ======================== */
+.ambient-orb {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, var(--gold-glow), transparent 70%);
+  filter: blur(60px); opacity: 0.5;
+}
+
+/* ======================== RESPONSIVE ======================== */
+@media (min-width: 768px) {
+  .stat-grid { grid-template-columns: repeat(4, 1fr); }
+  .study-content { padding-left: calc(1.5rem + 3rem); }
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ======================== HERO ======================== -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="foundation-tag fade-up">The McCourt Foundation</div>
+    <h1 class="fade-up fade-up-d1">The Bitter Truth</h1>
+    <p class="subtitle fade-up fade-up-d2">How sugar destroys the brain, why nicotine research still matters, and what the McCourt Foundation is positioned to do about it.</p>
+    <span class="brief-tag fade-up fade-up-d3">Research Brief 2026</span>
+    <div class="scroll-indicator fade-up fade-up-d4"><span></span></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ======================== SECTION 01: THE CRISIS ======================== -->
+<section id="crisis" class="section-wrap">
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 01</div>
+    <h2 class="fade-up fade-up-d1">The Crisis</h2>
+    <p class="lead-text fade-up fade-up-d2">A disease that erases identity, bankrupts families, and overwhelms healthcare systems worldwide.</p>
+
+    <div class="stat-grid">
+      <div class="stat-card fade-up fade-up-d1">
+        <div class="stat-number"><span class="counter" data-target="7.2" data-decimals="1">0</span>M</div>
+        <div class="stat-unit">Americans 65+</div>
+        <div class="stat-desc">living with Alzheimer's disease in 2025</div>
+      </div>
+      <div class="stat-card fade-up fade-up-d2">
+        <div class="stat-number"><span class="counter" data-target="57" data-decimals="0">0</span>M+</div>
+        <div class="stat-unit">Global cases</div>
+        <div class="stat-desc">projected to reach 139 million by 2050</div>
+      </div>
+      <div class="stat-card fade-up fade-up-d3">
+        <div class="stat-number">$<span class="counter" data-target="384" data-decimals="0">0</span>B</div>
+        <div class="stat-unit">Annual U.S. cost</div>
+        <div class="stat-desc">projected to reach $1 trillion by 2050</div>
+      </div>
+      <div class="stat-card fade-up fade-up-d4">
+        <div class="stat-number">$<span class="counter" data-target="1.3" data-decimals="1">0</span>T</div>
+        <div class="stat-unit">Global burden</div>
+        <div class="stat-desc">50% borne by unpaid family caregivers</div>
+      </div>
+    </div>
+
+    <div class="context-block fade-up">
+      <p>Alzheimer's is the <span class="highlight-gold">7th leading cause of death worldwide</span> and 6th in the United States, with deaths rising 142% since 2000. A 2025 study in Nature Medicine estimates a 42% lifetime risk of developing dementia after age 55. For women at age 45, the risk is 1 in 5.</p>
+      <p>In 2024, 12 million U.S. caregivers provided 19.2 billion hours of unpaid care&#8202;&#8212;&#8202;valued at $413 billion. Globally, 75% of dementia cases remain undiagnosed.</p>
+    </div>
+    <div class="source-tag fade-up">Sources: Alzheimer's Association 2025 Facts &amp; Figures; WHO 2025; ADI; Fang et al., Nature Medicine 2025</div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ======================== SECTION 02: THE CAUSE ======================== -->
+<section id="cause" class="section-wrap">
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 02</div>
+    <h2 class="fade-up fade-up-d1">The Cause</h2>
+    <div class="cause-headline-stat fade-up fade-up-d2">580,000+ participants across four landmark studies. Dose-dependent. No safe threshold.</div>
+    <p class="lead-text fade-up fade-up-d2">The evidence linking dietary sugar consumption to neurodegeneration is no longer speculative. It is overwhelming, dose-dependent, and consistent across populations.</p>
+
+    <div class="three-canvas-inline fade-up" id="neuron-scene-wrap">
+      <canvas id="neuron-canvas"></canvas>
+    </div>
+
+    <div class="study-card fade-up" onclick="toggleStudy(this)">
+      <div class="study-header">
+        <div class="study-num">01</div>
+        <div class="study-title-block">
+          <div class="study-title">UK Biobank Cohort</div>
+          <div class="study-meta">158,408 participants &#183; J Prev Alzheimers Dis, 2025</div>
+        </div>
+        <div class="study-toggle">+</div>
+      </div>
+      <div class="study-body">
+        <div class="study-content">
+          <p>Participants in the highest quartile of sugar intake had a <span class="study-stat">43% higher dementia risk</span> compared to the lowest quartile (HR 1.43, 95% CI: 1.20&#8211;1.70). Over a 9.94-year mean follow-up, genetic susceptibility via APOE4 amplified the effect. The relationship held after adjusting for BMI, diabetes, cardiovascular risk, and overall diet quality.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="study-card fade-up fade-up-d1" onclick="toggleStudy(this)">
+      <div class="study-header">
+        <div class="study-num">02</div>
+        <div class="study-title-block">
+          <div class="study-title">Rush Memory &amp; Aging Project</div>
+          <div class="study-meta">789 participants &#183; J Alzheimers Dis, 2023</div>
+        </div>
+        <div class="study-toggle">+</div>
+      </div>
+      <div class="study-body">
+        <div class="study-content">
+          <p>Participants in the highest quintile of added sugar intake had <span class="study-stat">double the risk</span> of developing dementia (HR 2.10). Fructose emerged as the most neurotoxic sugar form, with a <span class="study-stat">2.8&#215; risk increase</span> (HR 2.80, 95% CI: 1.38&#8211;5.67, p=0.0009). Refined grain consumption tripled AD risk in the top quintile.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="study-card fade-up fade-up-d2" onclick="toggleStudy(this)">
+      <div class="study-header">
+        <div class="study-num">03</div>
+        <div class="study-title-block">
+          <div class="study-title">UK Biobank / BMC Medicine Analysis</div>
+          <div class="study-meta">210,832 participants &#183; BMC Medicine, 2024</div>
+        </div>
+        <div class="study-toggle">+</div>
+      </div>
+      <div class="study-body">
+        <div class="study-content">
+          <p>The largest single analysis found <span class="study-stat">no safe consumption threshold</span> for sugar and dementia risk. The relationship was non-linear and dose-responsive: HR 1.003 per gram per day (p&lt;0.001). Each additional daily gram of sugar measurably increased risk across the entire intake spectrum.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="study-card fade-up fade-up-d3" onclick="toggleStudy(this)">
+      <div class="study-header">
+        <div class="study-num">04</div>
+        <div class="study-title-block">
+          <div class="study-title">Meta-Analysis of Cohort Studies</div>
+          <div class="study-meta">9 cohort studies &#183; Aging &amp; Mental Health, 2025</div>
+        </div>
+        <div class="study-toggle">+</div>
+      </div>
+      <div class="study-body">
+        <div class="study-content">
+          <p>Pooled analysis across 9 independent cohorts: sugar-sweetened beverage consumption associated with <span class="study-stat">RR 1.49</span> (95% CI: 1.03&#8211;2.15) for dementia. Artificially sweetened beverages showed a similarly elevated relative risk of <span class="study-stat">RR 1.42</span>, suggesting the mechanism may extend beyond caloric intake alone.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ======================== SECTION 03: THE MECHANISM ======================== -->
+<section id="mechanism" class="section-wrap">
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 03</div>
+    <h2 class="fade-up fade-up-d1">The Mechanism</h2>
+    <div class="subtitle-mech fade-up fade-up-d2">Type 3 Diabetes&#8202;&#8212;&#8202;Alzheimer's as a metabolic disease of the brain</div>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:2rem;">A growing body of evidence reframes Alzheimer's not as a disease of aging, but as a brain-specific form of insulin resistance&#8202;&#8212;&#8202;a metabolic failure confined to the central nervous system, often developing without peripheral diabetes.</p>
+
+    <div class="three-canvas-inline fade-up" id="plaque-scene-wrap">
+      <canvas id="plaque-canvas"></canvas>
+    </div>
+
+    <div class="step-progress fade-up" id="step-progress">
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div class="step-container fade-up" id="step-container">
+      <div class="step-panel active" data-step="0">
+        <div class="step-label">Step 01 of 04</div>
+        <div class="step-title">Sugar Overload</div>
+        <div class="step-body">Chronic hyperglycemia from sustained high sugar intake floods the system. The brain, which consumes 20% of the body's glucose despite representing only 2% of body weight, is acutely vulnerable. Type 2 diabetics are 60% more likely to develop Alzheimer's&#8202;&#8212;&#8202;but the damage begins long before a diabetes diagnosis.</div>
+      </div>
+      <div class="step-panel" data-step="1">
+        <div class="step-label">Step 02 of 04</div>
+        <div class="step-title">Brain Insulin Resistance</div>
+        <div class="step-body">Neuronal insulin receptors downregulate. IRS-1 phosphorylation shifts from tyrosine to serine residues, blocking the insulin signaling cascade. This occurs even without peripheral diabetes. The APOE4 gene&#8202;&#8212;&#8202;carried by 20% of the population and present in over 50% of Alzheimer's cases&#8202;&#8212;&#8202;further impairs receptor function, creating a genetic multiplier.</div>
+      </div>
+      <div class="step-panel" data-step="2">
+        <div class="step-label">Step 03 of 04</div>
+        <div class="step-title">Neuronal Starvation</div>
+        <div class="step-body">As insulin signaling fails, neurons lose the ability to take up glucose efficiently. Cellular ATP production collapses. Mitochondria generate excess reactive oxygen species, damaging proteins, lipids, and DNA. Neurons begin to atrophy, synaptic connections weaken, and entire networks start to degrade.</div>
+      </div>
+      <div class="step-panel" data-step="3">
+        <div class="step-label">Step 04 of 04</div>
+        <div class="step-title">Plaque &amp; Tangle Cascade</div>
+        <div class="step-body">Insulin-degrading enzyme (IDE), which also clears amyloid-beta, becomes saturated with excess insulin. Amyloid-beta plaques accumulate. Simultaneously, impaired insulin signaling activates GSK-3&#946;, triggering tau hyperphosphorylation and neurofibrillary tangle formation. Inflammatory cytokines accelerate the loop, creating a self-reinforcing cycle of destruction.</div>
+      </div>
+    </div>
+
+    <div class="step-nav fade-up">
+      <button class="step-btn" onclick="changeStep(-1)" id="step-prev">&#8592; Previous</button>
+      <button class="step-btn primary" onclick="changeStep(1)" id="step-next">Next &#8594;</button>
+    </div>
+
+    <div class="key-finding fade-up">
+      <div class="key-finding-label">Key Finding</div>
+      <p>Brain insulin resistance develops up to a decade before clinical symptoms appear&#8202;&#8212;&#8202;creating a critical window for early intervention through dietary modification and metabolic screening.</p>
+    </div>
+
+    <div class="source-tag fade-up" style="margin-top:2rem;">Sources: de la Monte &amp; Wands 2008; Nguyen et al. 2020; Zhao et al., Neuron 2017 (Mayo Clinic)</div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ======================== SECTION 04: NICOTINE ======================== -->
+<section id="nicotine" class="section-wrap">
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 04</div>
+    <h2 class="fade-up fade-up-d1">The Nicotine Question</h2>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1rem;">Isolated from tobacco and studied for over 30 years as a cognitive enhancer, nicotine stimulates alpha-4-beta-2 and alpha-7 nicotinic acetylcholine receptors in the brain. Unlike cholinesterase inhibitors&#8202;&#8212;&#8202;which merely slow the breakdown of existing acetylcholine&#8202;&#8212;&#8202;nicotine directly activates and upregulates these receptors.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:2.5rem;">A critical distinction: nicotine does not cause cancer. The carcinogens in tobacco&#8202;&#8212;&#8202;tar, nitrosamines, polycyclic aromatic hydrocarbons&#8202;&#8212;&#8202;are responsible. This separation is foundational to the research.</p>
+
+    <div class="three-canvas-inline fade-up" id="synapse-scene-wrap">
+      <canvas id="synapse-canvas"></canvas>
+    </div>
+
+    <div class="tab-bar fade-up">
+      <button class="tab-btn active" onclick="switchTab(0)">2012 Pilot Trial</button>
+      <button class="tab-btn" onclick="switchTab(1)">MIND Study</button>
+    </div>
+
+    <div class="tab-panel active fade-up" data-tab="0">
+      <div class="trial-detail">
+        <h4>Nicotine Pilot Trial</h4>
+        <p><em>Neurology</em>, 2012 &#183; Class I Evidence</p>
+        <p>74 nonsmokers with mild cognitive impairment received 15 mg/day transdermal nicotine patches or placebo for 6 months.</p>
+        <div class="trial-result">
+          <p>Significant improvement in attention (p=0.0003) and word recall (p=0.018). No dependency observed. No significant adverse effects. First Class I evidence for nicotine as a cognitive enhancer in non-smokers with MCI.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" data-tab="1">
+      <div class="trial-detail">
+        <h4>MIND Study&#8202;&#8212;&#8202;The Definitive Trial</h4>
+        <p>Vanderbilt / NIH / ADDF &#183; 2016&#8211;2025 &#183; NCT02720445</p>
+        <p>309 adults ages 55&#8211;90 with mild cognitive impairment. Up to 21 mg/day transdermal nicotine for 2 years across 35+ clinical sites. The largest and longest trial of nicotine for cognitive decline ever conducted.</p>
+        <div class="trial-result">
+          <p>Result: Did not significantly slow memory loss versus placebo. However, the trial generated critical new data on nicotine&#8211;brain interactions, biomarker responses, and dose&#8211;receptor dynamics that will inform the next generation of cholinergic therapies.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="blockquote-wrap fade-up">
+      <blockquote>Even trials that fail to generate positive results produce vitally important information that advances our understanding of these diseases.</blockquote>
+      <cite>&#8212; MIND Study Team, Vanderbilt University Medical Center, 2025</cite>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ======================== SECTION 05: PREVENTION ======================== -->
+<section id="prevention" class="section-wrap">
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 05</div>
+    <h2 class="fade-up fade-up-d1">Prevention</h2>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1rem;">The 2024 Lancet Commission identified <span class="highlight-gold">14 modifiable risk factors</span> that account for 45% of all dementia cases globally&#8202;&#8212;&#8202;up from 40% and 12 factors in 2020. This is a disease that can be significantly prevented.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:2.5rem;">Two of the most impactful factors&#8202;&#8212;&#8202;physical inactivity and diabetes&#8202;&#8212;&#8202;are directly linked to sugar metabolism and the mechanisms described in this brief.</p>
+
+    <div class="risk-chart fade-up" id="risk-chart">
+      <div class="risk-bar-wrap" data-w="7">
+        <div class="risk-label">Less education</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">7%</div>
+      </div>
+      <div class="risk-bar-wrap" data-w="7">
+        <div class="risk-label">Hearing loss</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">7%</div>
+      </div>
+      <div class="risk-bar-wrap gold" data-w="2">
+        <div class="risk-label" style="color:var(--gold)">Physical inactivity</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill gold-bar"></div></div>
+        <div class="risk-pct" style="color:var(--gold)">2%</div>
+      </div>
+      <div class="risk-bar-wrap gold" data-w="2">
+        <div class="risk-label" style="color:var(--gold)">Diabetes</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill gold-bar"></div></div>
+        <div class="risk-pct" style="color:var(--gold)">2%</div>
+      </div>
+      <div class="risk-bar-wrap" data-w="2">
+        <div class="risk-label">Hypertension</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">2%</div>
+      </div>
+      <div class="risk-bar-wrap" data-w="2">
+        <div class="risk-label">Obesity</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">2%</div>
+      </div>
+      <div class="risk-bar-wrap" data-w="2">
+        <div class="risk-label">Smoking</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">2%</div>
+      </div>
+      <div class="risk-bar-wrap" data-w="2">
+        <div class="risk-label">Depression</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">2%</div>
+      </div>
+      <div class="risk-bar-wrap" data-w="2">
+        <div class="risk-label">Social isolation</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">2%</div>
+      </div>
+      <div class="risk-bar-wrap" data-w="3">
+        <div class="risk-label">TBI</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">3%</div>
+      </div>
+      <div class="risk-bar-wrap" data-w="1">
+        <div class="risk-label">Excessive alcohol</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">1%</div>
+      </div>
+      <div class="risk-bar-wrap" data-w="3">
+        <div class="risk-label">Air pollution</div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">3%</div>
+      </div>
+      <div class="risk-bar-wrap" data-w="2">
+        <div class="risk-label">Vision loss<span style="color:var(--gold);opacity:0.7"> *</span></div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">2%</div>
+      </div>
+      <div class="risk-bar-wrap" data-w="7">
+        <div class="risk-label">High LDL<span style="color:var(--gold);opacity:0.7"> *</span></div>
+        <div class="risk-bar-track"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">7%</div>
+      </div>
+    </div>
+    <p class="fade-up" style="font-family:var(--mono);font-size:clamp(0.5rem,1.3vw,0.55rem);color:var(--text-dim);margin-top:0.5rem;">* New factors added in 2024 Lancet Commission update</p>
+    <div class="source-tag fade-up" style="margin-top:1.5rem;">Source: Livingston et al., Lancet 2024;404:572&#8211;628</div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ======================== SECTION 06: MOVEMENT ======================== -->
+<section id="movement" class="section-wrap">
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 06</div>
+    <h2 class="fade-up fade-up-d1">Movement as Medicine</h2>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:2.5rem;">The most recent longitudinal studies confirm that physical activity is among the most powerful modifiable interventions against cognitive decline&#8202;&#8212;&#8202;and the evidence is strengthening with every publication cycle.</p>
+
+    <div class="evidence-stack fade-up">
+      <div class="evidence-item">
+        <div class="evidence-source">Framingham Heart Study &#183; 4,300+ participants &#183; JAMA Network Open, 2025</div>
+        <p>Highest levels of midlife physical activity associated with <span class="highlight-gold">41% lower dementia risk</span>. Late-life activity showed even greater protection at <span class="highlight-gold">45% risk reduction</span>.</p>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-source">Nature Medicine, 2025</div>
+        <p>Exercise directly slows tau protein accumulation in the brain&#8202;&#8212;&#8202;one of the two hallmark pathologies of Alzheimer's&#8202;&#8212;&#8202;even at moderate activity levels.</p>
+      </div>
+      <div class="evidence-item">
+        <div class="evidence-source">Johns Hopkins University, 2025</div>
+        <p>Even physical activity levels below the recommended 150 minutes per week guideline provide meaningful cognitive protection. There is no minimum threshold for benefit.</p>
+      </div>
+    </div>
+
+    <div class="marathon-callout fade-up">
+      <div class="marathon-callout-label">The Marathon Connection</div>
+      <p>The McCourt Foundation already operates one of the most powerful platforms for physical activity in America&#8202;&#8212;&#8202;the Los Angeles Marathon and its suite of endurance events.</p>
+      <p>Every runner crossing a finish line builds the cognitive reserve the Lancet Commission identifies as critical for preventing dementia. The Foundation's events are already doing this work. The science has caught up.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ======================== SECTION 07: THE OPPORTUNITY ======================== -->
+<section id="opportunity" class="section-wrap">
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 07</div>
+    <h2 class="fade-up fade-up-d1">The Opportunity</h2>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1rem;">For over 30 years, The McCourt Foundation has been dedicated to curing neurological diseases&#8202;&#8212;&#8202;galvanized by the McCourt family's own experiences with multiple sclerosis and Alzheimer's disease.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:2.5rem;">Founded in 1992, TMF has donated millions to neurological research, raised over $63 million through its Nonprofit Partner Program, maintained research partnerships with Massachusetts General Hospital and Brigham and Women's Hospital, and hosts its annual Neurological Symposium. The Foundation operates the LA Marathon, Rose Bowl Half Marathon, and other endurance events.</p>
+
+    <div class="fade-up">
+      <div class="accordion-item" onclick="toggleAccordion(this)">
+        <div class="accordion-header">
+          <div class="accordion-num">01</div>
+          <div class="accordion-title">Leverage the Marathon Platform</div>
+          <div class="accordion-toggle">+</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p>Position the Los Angeles Marathon as a dementia-prevention event&#8202;&#8212;&#8202;the first major marathon to explicitly brand physical activity as neuroprotective. Launch a "Run for Your Brain" campaign across the Foundation's event portfolio. Use the annual Neurological Symposium as a platform for public education on the sugar&#8211;Alzheimer's connection and the science of exercise-based prevention.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" onclick="toggleAccordion(this)">
+        <div class="accordion-header">
+          <div class="accordion-num">02</div>
+          <div class="accordion-title">Advance Research</div>
+          <div class="accordion-toggle">+</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p>Fund follow-up research building on the MIND Study dataset. Support combination therapy trials through existing partnerships with Massachusetts General and Brigham and Women's Hospital. Prioritize insulin resistance&#8211;Alzheimer's research&#8202;&#8212;&#8202;the Type 3 Diabetes pathway&#8202;&#8212;&#8202;as a foundation-defining research agenda.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" onclick="toggleAccordion(this)">
+        <div class="accordion-header">
+          <div class="accordion-num">03</div>
+          <div class="accordion-title">Sugar Awareness &amp; Early Detection</div>
+          <div class="accordion-toggle">+</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p>Launch a national sugar&#8211;Alzheimer's education campaign modeled on the anti-smoking public health campaigns that transformed tobacco use. Advocate for HOMA-IR (insulin resistance) screening as standard practice. Champion blood-based biomarker testing for early Alzheimer's detection&#8202;&#8212;&#8202;91% of Americans say they want the option of early diagnosis.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item" onclick="toggleAccordion(this)">
+        <div class="accordion-header">
+          <div class="accordion-num">04</div>
+          <div class="accordion-title">Policy &amp; Global Reach</div>
+          <div class="accordion-toggle">+</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p>Advocate for increased NIA funding (currently $4.4 billion vs. NCI's $7.2 billion&#8202;&#8212;&#8202;a gap that does not reflect the scale of the crisis). Leverage the McCourt Institute at Georgetown University and Sciences Po for transatlantic policy leadership. Use Olympique de Marseille's platform for European awareness. Bring the Lancet Commission's prevention strategies to underserved communities domestically and globally.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ======================== CLOSING ======================== -->
+<section id="closing" class="section-wrap">
+  <div class="section-inner">
+    <h2 class="fade-up">The future is preventable.</h2>
+    <div class="closing-lines">
+      <p class="fade-up fade-up-d1">57 million people. 45% of cases involve modifiable risk factors.</p>
+      <p class="fade-up fade-up-d2">The evidence from 580,000+ participants linking sugar to neurodegeneration is overwhelming.</p>
+      <p class="fade-up fade-up-d3">Exercise reduces risk by up to 45%&#8202;&#8212;&#8202;and the McCourt Foundation already runs the platform.</p>
+      <p class="fade-up fade-up-d4">The science is clear. The mission is aligned. The time to act is now.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ======================== REFERENCES ======================== -->
+<section id="references" class="section-wrap" style="padding-top:clamp(3rem,8vw,5rem);padding-bottom:clamp(4rem,10vw,6rem);">
+  <div class="section-inner">
+    <h3 class="fade-up">References</h3>
+    <div class="ref-list fade-up">
+      <p>[1] Alzheimer's Association. 2025 Facts &amp; Figures. Alzheimers Dement 2025;21:e70235</p>
+      <p>[2] WHO. Dementia Fact Sheet, March 2025</p>
+      <p>[3] Alzheimer's Disease International. Dementia Statistics</p>
+      <p>[4] An Y et al. J Prev Alzheimers Dis 2025;12(9):100312</p>
+      <p>[5] Zhang S et al. BMC Medicine 2024;22:298</p>
+      <p>[6] Agarwal P et al. J Alzheimers Dis 2023;95(4):1417&#8211;1425</p>
+      <p>[7] Jouni N et al. Aging Ment Health 2025;29(10):1845&#8211;1855</p>
+      <p>[8] de la Monte &amp; Wands. J Diabetes Sci Technol 2008;2(6):1101&#8211;13</p>
+      <p>[9] Nguyen et al. Int J Mol Sci 2020;21(9):3165</p>
+      <p>[10] Zhao N et al. Neuron 2017;96(1):115&#8211;129</p>
+      <p>[11] Newhouse P et al. Neurology 2012;78(2):91&#8211;101</p>
+      <p>[12] MIND Study NCT02720445. mindstudy.org/study-results</p>
+      <p>[13] Livingston et al. Lancet 2024;404:572&#8211;628</p>
+      <p>[14] Marino et al. JAMA Netw Open 2025;8(11):e2544439</p>
+      <p>[15] Nature Medicine 2025;31:4075&#8211;4083</p>
+      <p>[16] Fang M et al. Nat Med 2025;31(3):772&#8211;776</p>
+      <p>[17] The McCourt Foundation. mccourtfoundation.org/about-us</p>
+    </div>
+    <div style="margin-top:3rem;text-align:center;">
+      <div style="font-family:var(--mono);font-size:clamp(0.55rem,1.4vw,0.6rem);letter-spacing:0.25em;color:var(--text-dim);text-transform:uppercase;">The McCourt Foundation &#183; Research Brief 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== THREE.JS ======================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ======================== UTILITIES ========================
+const isMobile = window.innerWidth < 768;
+const dpr = Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2);
+
+// ======================== CUSTOM SHADERS ========================
+
+// Brain vertex shader with GLSL noise for cortical folds
+const brainVertShader = `
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  varying vec3 vViewDir;
+  varying float vDisplacement;
+  uniform float uTime;
+
+  // Simplex-style noise
+  vec3 mod289(vec3 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
+  vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
+  vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+  vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+  float snoise(vec3 v) {
+    const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+    const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+    vec3 i = floor(v + dot(v, C.yyy));
+    vec3 x0 = v - i + dot(i, C.xxx);
+    vec3 g = step(x0.yzx, x0.xyz);
+    vec3 l = 1.0 - g;
+    vec3 i1 = min(g.xyz, l.zxy);
+    vec3 i2 = max(g.xyz, l.zxy);
+    vec3 x1 = x0 - i1 + C.xxx;
+    vec3 x2 = x0 - i2 + C.yyy;
+    vec3 x3 = x0 - D.yyy;
+    i = mod289(i);
+    vec4 p = permute(permute(permute(
+      i.z + vec4(0.0, i1.z, i2.z, 1.0))
+      + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+      + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+    float n_ = 0.142857142857;
+    vec3 ns = n_ * D.wyz - D.xzx;
+    vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+    vec4 x_ = floor(j * ns.z);
+    vec4 y_ = floor(j - 7.0 * x_);
+    vec4 x = x_ * ns.x + ns.yyyy;
+    vec4 y = y_ * ns.x + ns.yyyy;
+    vec4 h = 1.0 - abs(x) - abs(y);
+    vec4 b0 = vec4(x.xy, y.xy);
+    vec4 b1 = vec4(x.zw, y.zw);
+    vec4 s0 = floor(b0)*2.0 + 1.0;
+    vec4 s1 = floor(b1)*2.0 + 1.0;
+    vec4 sh = -step(h, vec4(0.0));
+    vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+    vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+    vec3 p0 = vec3(a0.xy, h.x);
+    vec3 p1 = vec3(a0.zw, h.y);
+    vec3 p2 = vec3(a1.xy, h.z);
+    vec3 p3 = vec3(a1.zw, h.w);
+    vec4 norm = taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+    p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+    vec4 m = max(0.6 - vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)), 0.0);
+    m = m * m;
+    return 42.0 * dot(m*m, vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+  }
+
+  float fbm(vec3 p) {
+    float f = 0.0;
+    f += 0.5000 * snoise(p * 1.0);
+    f += 0.2500 * snoise(p * 2.0);
+    f += 0.1250 * snoise(p * 4.0);
+    f += 0.0625 * snoise(p * 8.0);
+    return f;
+  }
+
+  void main() {
+    vec3 pos = position;
+    vec3 norm = normalize(pos);
+
+    // Cortical fold displacement via FBM noise
+    float sulci = fbm(norm * 3.0 + uTime * 0.02) * 0.12;
+    float gyri = snoise(norm * 6.0) * 0.04;
+    float detail = snoise(norm * 12.0) * 0.015;
+
+    // Hemispheric fissure
+    float fissure = exp(-pow(norm.x * 12.0, 2.0)) * 0.06;
+
+    // Temporal and frontal lobe shaping
+    float temporal = exp(-pow((norm.y + 0.4) * 3.0, 2.0)) * 0.08 * (1.0 - abs(norm.x));
+    float frontal = max(0.0, norm.z) * 0.04;
+    float occipital = max(0.0, -norm.z) * 0.02;
+
+    float disp = sulci + gyri + detail - fissure + temporal + frontal + occipital;
+    vDisplacement = disp;
+
+    // Ellipsoidal brain shape
+    pos = norm * (1.0 + disp);
+    pos.x *= 1.08;
+    pos.y *= 0.88;
+    pos.z *= 0.95;
+
+    vNormal = normalize(normalMatrix * normal);
+    vec4 worldPos = modelMatrix * vec4(pos, 1.0);
+    vWorldPos = worldPos.xyz;
+    vViewDir = normalize(cameraPosition - worldPos.xyz);
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+  }
+`;
+
+const brainFragShader = `
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  varying vec3 vViewDir;
+  varying float vDisplacement;
+  uniform float uTime;
+  uniform float uOpacity;
+
+  void main() {
+    vec3 norm = normalize(vNormal);
+    vec3 viewDir = normalize(vViewDir);
+
+    // Fresnel rim lighting (gold edge glow)
+    float fresnel = pow(1.0 - max(dot(norm, viewDir), 0.0), 3.5);
+
+    // Key light (warm top-right)
+    vec3 lightDir1 = normalize(vec3(0.5, 0.8, 0.6));
+    float diff1 = max(dot(norm, lightDir1), 0.0);
+    float spec1 = pow(max(dot(reflect(-lightDir1, norm), viewDir), 0.0), 32.0);
+
+    // Rim light (gold, from behind-left)
+    vec3 lightDir2 = normalize(vec3(-0.6, -0.2, -0.8));
+    float diff2 = max(dot(norm, lightDir2), 0.0);
+
+    // Fill light (cool blue, soft)
+    vec3 lightDir3 = normalize(vec3(-0.3, 0.5, 0.4));
+    float diff3 = max(dot(norm, lightDir3), 0.0);
+
+    // Brain base color — varies with displacement for depth
+    vec3 baseColor = mix(
+      vec3(0.38, 0.33, 0.30),  // Darker sulci
+      vec3(0.58, 0.50, 0.46),  // Lighter gyri
+      smoothstep(-0.05, 0.08, vDisplacement)
+    );
+
+    // Subsurface scattering approximation
+    float sss = max(0.0, dot(viewDir, -lightDir1)) * 0.15;
+    vec3 sssColor = vec3(0.7, 0.4, 0.35) * sss;
+
+    // Compose lighting
+    vec3 color = baseColor * 0.12; // ambient
+    color += baseColor * diff1 * 0.55 * vec3(1.0, 0.96, 0.90);
+    color += baseColor * diff2 * 0.2 * vec3(0.79, 0.66, 0.30);
+    color += baseColor * diff3 * 0.15 * vec3(0.5, 0.6, 0.75);
+    color += spec1 * 0.15 * vec3(1.0, 0.95, 0.85);
+    color += fresnel * 0.35 * vec3(0.79, 0.66, 0.30); // gold rim
+    color += sssColor;
+
+    // Subtle pulse
+    color += vec3(0.79, 0.66, 0.30) * 0.02 * (0.5 + 0.5 * sin(uTime * 0.8));
+
+    gl_FragColor = vec4(color, uOpacity);
+  }
+`;
+
+// Glow shader for volumetric halo
+const glowVertShader = `
+  varying vec3 vNormal;
+  varying vec3 vViewDir;
+  void main() {
+    vNormal = normalize(normalMatrix * normal);
+    vec4 worldPos = modelMatrix * vec4(position, 1.0);
+    vViewDir = normalize(cameraPosition - worldPos.xyz);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const glowFragShader = `
+  varying vec3 vNormal;
+  varying vec3 vViewDir;
+  uniform vec3 uColor;
+  uniform float uIntensity;
+  uniform float uOpacity;
+  void main() {
+    float fresnel = pow(1.0 - max(dot(normalize(vNormal), normalize(vViewDir)), 0.0), 2.5);
+    gl_FragColor = vec4(uColor, fresnel * uIntensity * uOpacity);
+  }
+`;
+
+// Particle vertex shader with size attenuation
+const particleVertShader = `
+  attribute float aSize;
+  attribute float aAlpha;
+  varying float vAlpha;
+  uniform float uTime;
+  void main() {
+    vAlpha = aAlpha;
+    vec3 pos = position;
+    pos.y += sin(uTime * 0.3 + position.x * 2.0) * 0.05;
+    pos.x += cos(uTime * 0.2 + position.z * 1.5) * 0.03;
+    vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
+    gl_PointSize = aSize * (200.0 / -mvPos.z);
+    gl_Position = projectionMatrix * mvPos;
+  }
+`;
+
+const particleFragShader = `
+  varying float vAlpha;
+  uniform vec3 uColor;
+  uniform float uOpacity;
+  void main() {
+    float d = length(gl_PointCoord - vec2(0.5));
+    if (d > 0.5) discard;
+    float alpha = smoothstep(0.5, 0.1, d) * vAlpha;
+    gl_FragColor = vec4(uColor, alpha * uOpacity);
+  }
+`;
+
+// ======================== HERO BRAIN ========================
+(function initHeroBrain() {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+  camera.position.set(0, 0.2, 4.2);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
+  renderer.setPixelRatio(dpr);
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  renderer.setClearColor(0x000000, 0);
+
+  const brainUniforms = { uTime: { value: 0 }, uOpacity: { value: 1.0 } };
+
+  // Brain with custom shader
+  const brainGeo = new THREE.SphereBufferGeometry(1.1, isMobile ? 96 : 160, isMobile ? 72 : 120);
+  const brainMat = new THREE.ShaderMaterial({
+    vertexShader: brainVertShader,
+    fragmentShader: brainFragShader,
+    uniforms: brainUniforms,
+    transparent: true,
+    depthWrite: true,
+  });
+  const brain = new THREE.Mesh(brainGeo, brainMat);
+  scene.add(brain);
+
+  // Inner volumetric glow
+  const glowGeo = new THREE.SphereBufferGeometry(1.35, 32, 24);
+  const glowMat = new THREE.ShaderMaterial({
+    vertexShader: glowVertShader,
+    fragmentShader: glowFragShader,
+    uniforms: {
+      uColor: { value: new THREE.Color(0xc9a84c) },
+      uIntensity: { value: 0.45 },
+      uOpacity: { value: 1.0 }
+    },
+    transparent: true,
+    side: THREE.BackSide,
+    depthWrite: false,
+  });
+  const glow = new THREE.Mesh(glowGeo, glowMat);
+  scene.add(glow);
+
+  // Outer atmospheric halo
+  const haloGeo = new THREE.SphereBufferGeometry(1.8, 32, 24);
+  const haloMat = new THREE.ShaderMaterial({
+    vertexShader: glowVertShader,
+    fragmentShader: glowFragShader,
+    uniforms: {
+      uColor: { value: new THREE.Color(0x4a6080) },
+      uIntensity: { value: 0.2 },
+      uOpacity: { value: 1.0 }
+    },
+    transparent: true,
+    side: THREE.BackSide,
+    depthWrite: false,
+  });
+  scene.add(new THREE.Mesh(haloGeo, haloMat));
+
+  // Rich particle field
+  const pCount = isMobile ? 150 : 400;
+  const pGeo = new THREE.BufferGeometry();
+  const pPositions = new Float32Array(pCount * 3);
+  const pSizes = new Float32Array(pCount);
+  const pAlphas = new Float32Array(pCount);
+  for (let i = 0; i < pCount; i++) {
+    const r = 1.5 + Math.random() * 5;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    pPositions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+    pPositions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+    pPositions[i*3+2] = r * Math.cos(phi);
+    pSizes[i] = 0.5 + Math.random() * 2.5;
+    pAlphas[i] = 0.15 + Math.random() * 0.5;
+  }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+  pGeo.setAttribute('aSize', new THREE.BufferAttribute(pSizes, 1));
+  pGeo.setAttribute('aAlpha', new THREE.BufferAttribute(pAlphas, 1));
+
+  const pUniforms = {
+    uTime: { value: 0 },
+    uColor: { value: new THREE.Color(0xc9a84c) },
+    uOpacity: { value: 1.0 }
+  };
+  const pMat = new THREE.ShaderMaterial({
+    vertexShader: particleVertShader,
+    fragmentShader: particleFragShader,
+    uniforms: pUniforms,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+  const particles = new THREE.Points(pGeo, pMat);
+  scene.add(particles);
+
+  // Neural connection lines (subtle)
+  const lineCount = isMobile ? 8 : 20;
+  for (let i = 0; i < lineCount; i++) {
+    const pts = [];
+    const startR = 1.3 + Math.random() * 0.3;
+    const endR = 2.5 + Math.random() * 2;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const dir = new THREE.Vector3(
+      Math.sin(phi) * Math.cos(theta),
+      Math.sin(phi) * Math.sin(theta),
+      Math.cos(phi)
+    );
+    for (let j = 0; j <= 10; j++) {
+      const t = j / 10;
+      const r = startR + (endR - startR) * t;
+      pts.push(new THREE.Vector3(
+        dir.x * r + Math.sin(t * 4 + i) * 0.1 * t,
+        dir.y * r + Math.cos(t * 3 + i * 2) * 0.08 * t,
+        dir.z * r
+      ));
+    }
+    const curve = new THREE.CatmullRomCurve3(pts);
+    const lineGeo = new THREE.TubeBufferGeometry(curve, 8, 0.003, 3, false);
+    const lineMat = new THREE.MeshBasicMaterial({
+      color: 0xc9a84c, transparent: true, opacity: 0.06 + Math.random() * 0.06
+    });
+    scene.add(new THREE.Mesh(lineGeo, lineMat));
+  }
+
+  let scrollY = 0;
+  window.addEventListener('scroll', () => { scrollY = window.pageYOffset; }, { passive: true });
+
+  function animate(t) {
+    requestAnimationFrame(animate);
+    const time = t * 0.001;
+    brainUniforms.uTime.value = time;
+    pUniforms.uTime.value = time;
+
+    brain.rotation.y = time * 0.08;
+    brain.rotation.x = Math.sin(time * 0.05) * 0.04;
+    brain.rotation.z = Math.sin(time * 0.03) * 0.02;
+    glow.rotation.y = brain.rotation.y;
+    glow.rotation.x = brain.rotation.x;
+    particles.rotation.y = time * 0.015;
+    particles.rotation.x = Math.sin(time * 0.02) * 0.02;
+
+    // Fade on scroll
+    const fade = Math.max(0, 1 - scrollY / (window.innerHeight * 0.6));
+    brainUniforms.uOpacity.value = fade;
+    glowMat.uniforms.uOpacity.value = fade;
+    haloMat.uniforms.uOpacity.value = fade;
+    pUniforms.uOpacity.value = fade;
+    canvas.style.opacity = Math.max(0, fade);
+
+    renderer.render(scene, camera);
+  }
+  animate(0);
+
+  window.addEventListener('resize', () => {
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  });
+})();
+
+// ======================== INLINE 3D SCENES ========================
+function createInlineScene(canvasId, buildFn) {
+  const wrap = document.getElementById(canvasId.replace('-canvas', '-scene-wrap'));
+  if (!wrap) return;
+  let initialized = false;
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !initialized) {
+      initialized = true;
+      buildFn(canvasId);
+      observer.disconnect();
+    }
+  }, { threshold: 0.15 });
+  observer.observe(wrap);
+}
+
+// ======================== NEURON + SUGAR SCENE (Section 02) ========================
+createInlineScene('neuron-canvas', function(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  const wrap = canvas.parentElement;
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, wrap.clientWidth / wrap.clientHeight, 0.1, 50);
+  camera.position.set(0, 0, 5);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
+  renderer.setPixelRatio(dpr);
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  renderer.setClearColor(0x000000, 0);
+
+  // Central neural network — glowing nodes with connections
+  const nodeCount = isMobile ? 12 : 25;
+  const nodes = [];
+  const nodeGroup = new THREE.Group();
+
+  // Create a neural network layout
+  for (let i = 0; i < nodeCount; i++) {
+    const r = 0.3 + Math.random() * 2.2;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const pos = new THREE.Vector3(
+      r * Math.sin(phi) * Math.cos(theta),
+      r * Math.sin(phi) * Math.sin(theta) * 0.6,
+      r * Math.cos(phi) * 0.4
+    );
+
+    // Node glow sphere
+    const size = i === 0 ? 0.15 : 0.04 + Math.random() * 0.08;
+    const nodeGeo = new THREE.SphereBufferGeometry(size, 16, 12);
+    const isCenter = r < 0.8;
+    const nodeMat = new THREE.ShaderMaterial({
+      vertexShader: glowVertShader,
+      fragmentShader: `
+        varying vec3 vNormal;
+        varying vec3 vViewDir;
+        uniform vec3 uColor;
+        uniform float uIntensity;
+        uniform float uOpacity;
+        void main() {
+          float fresnel = pow(1.0 - max(dot(normalize(vNormal), normalize(vViewDir)), 0.0), 1.5);
+          float core = smoothstep(0.8, 0.0, fresnel) * 0.8;
+          gl_FragColor = vec4(uColor, (fresnel * 0.6 + core) * uIntensity * uOpacity);
+        }
+      `,
+      uniforms: {
+        uColor: { value: new THREE.Color(isCenter ? 0x88aacc : 0xc9a84c) },
+        uIntensity: { value: isCenter ? 1.2 : 0.8 },
+        uOpacity: { value: 1.0 }
+      },
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const node = new THREE.Mesh(nodeGeo, nodeMat);
+    node.position.copy(pos);
+    node.userData = { basePos: pos.clone(), phase: Math.random() * Math.PI * 2 };
+    nodeGroup.add(node);
+    nodes.push(node);
+  }
+
+  // Connect nearby nodes with glowing lines
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dist = nodes[i].position.distanceTo(nodes[j].position);
+      if (dist < 1.5 && Math.random() > 0.4) {
+        const pts = [nodes[i].position.clone(), nodes[j].position.clone()];
+        // Add a midpoint with slight curve
+        const mid = nodes[i].position.clone().add(nodes[j].position).multiplyScalar(0.5);
+        mid.y += (Math.random() - 0.5) * 0.15;
+        const curve = new THREE.QuadraticBezierCurve3(pts[0], mid, pts[1]);
+        const lineGeo = new THREE.TubeBufferGeometry(curve, 8, 0.006, 4, false);
+        const lineMat = new THREE.MeshBasicMaterial({
+          color: 0x6688aa, transparent: true, opacity: 0.12
+        });
+        nodeGroup.add(new THREE.Mesh(lineGeo, lineMat));
+      }
+    }
+  }
+  scene.add(nodeGroup);
+
+  // Sugar crystals — glowing golden shards spiraling inward
+  const crystals = [];
+  const crystalCount = isMobile ? 20 : 40;
+  for (let i = 0; i < crystalCount; i++) {
+    const geo = new THREE.OctahedronBufferGeometry(0.04 + Math.random() * 0.06, 0);
+    const mat = new THREE.MeshBasicMaterial({
+      color: 0xdfc47a, transparent: true, opacity: 0.6 + Math.random() * 0.3
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    const angle = Math.random() * Math.PI * 2;
+    const r = 1.8 + Math.random() * 1.5;
+    mesh.position.set(Math.cos(angle) * r, (Math.random()-0.5) * 2, Math.sin(angle) * r * 0.4);
+    mesh.userData = {
+      angle: angle,
+      r: r,
+      speed: 0.2 + Math.random() * 0.4,
+      yOff: mesh.position.y,
+      phase: Math.random() * Math.PI * 2
+    };
+    scene.add(mesh);
+    crystals.push(mesh);
+  }
+
+  // Danger glow particles around center
+  const dpCount = isMobile ? 40 : 80;
+  const dpGeo = new THREE.BufferGeometry();
+  const dpPos = new Float32Array(dpCount * 3);
+  const dpSizes = new Float32Array(dpCount);
+  const dpAlphas = new Float32Array(dpCount);
+  for (let i = 0; i < dpCount; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const r = 0.3 + Math.random() * 0.8;
+    dpPos[i*3] = Math.cos(a) * r;
+    dpPos[i*3+1] = (Math.random()-0.5) * 0.6;
+    dpPos[i*3+2] = Math.sin(a) * r * 0.4;
+    dpSizes[i] = 1.0 + Math.random() * 3.0;
+    dpAlphas[i] = 0.1 + Math.random() * 0.3;
+  }
+  dpGeo.setAttribute('position', new THREE.BufferAttribute(dpPos, 3));
+  dpGeo.setAttribute('aSize', new THREE.BufferAttribute(dpSizes, 1));
+  dpGeo.setAttribute('aAlpha', new THREE.BufferAttribute(dpAlphas, 1));
+  const dpUniforms = {
+    uTime: { value: 0 },
+    uColor: { value: new THREE.Color(0xc9a84c) },
+    uOpacity: { value: 1.0 }
+  };
+  const dpMat = new THREE.ShaderMaterial({
+    vertexShader: particleVertShader,
+    fragmentShader: particleFragShader,
+    uniforms: dpUniforms,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+  });
+  scene.add(new THREE.Points(dpGeo, dpMat));
+
+  function animate(t) {
+    requestAnimationFrame(animate);
+    const time = t * 0.001;
+    dpUniforms.uTime.value = time;
+
+    // Breathe nodes
+    nodes.forEach(n => {
+      const bp = n.userData.basePos;
+      n.position.x = bp.x + Math.sin(time * 0.5 + n.userData.phase) * 0.03;
+      n.position.y = bp.y + Math.cos(time * 0.4 + n.userData.phase * 1.3) * 0.02;
+    });
+
+    // Spiral crystals inward
+    crystals.forEach(c => {
+      c.userData.angle += c.userData.speed * 0.008;
+      const shrink = Math.max(0.5, c.userData.r - Math.sin(time * 0.15 + c.userData.phase) * 0.3);
+      c.position.x = Math.cos(c.userData.angle) * shrink;
+      c.position.z = Math.sin(c.userData.angle) * shrink * 0.4;
+      c.position.y = c.userData.yOff + Math.sin(time * 0.6 + c.userData.phase) * 0.1;
+      c.rotation.x += 0.02 * c.userData.speed;
+      c.rotation.y += 0.015 * c.userData.speed;
+    });
+
+    nodeGroup.rotation.y = Math.sin(time * 0.08) * 0.15;
+    renderer.render(scene, camera);
+  }
+  animate(0);
+});
+
+// ======================== PLAQUE/TANGLE SCENE (Section 03) ========================
+createInlineScene('plaque-canvas', function(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  const wrap = canvas.parentElement;
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, wrap.clientWidth / wrap.clientHeight, 0.1, 50);
+  camera.position.set(0, 0, 5);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
+  renderer.setPixelRatio(dpr);
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  renderer.setClearColor(0x000000, 0);
+
+  // Central neuron as glowing orb
+  const coreGeo = new THREE.SphereBufferGeometry(0.35, 32, 24);
+  const coreMat = new THREE.ShaderMaterial({
+    vertexShader: glowVertShader,
+    fragmentShader: `
+      varying vec3 vNormal;
+      varying vec3 vViewDir;
+      uniform float uTime;
+      void main() {
+        vec3 n = normalize(vNormal);
+        vec3 v = normalize(vViewDir);
+        float fresnel = pow(1.0 - max(dot(n, v), 0.0), 2.0);
+        float core = smoothstep(0.6, 0.0, fresnel);
+        vec3 coreColor = mix(vec3(0.3, 0.45, 0.6), vec3(0.5, 0.6, 0.75), core);
+        float pulse = 0.9 + 0.1 * sin(uTime * 1.5);
+        gl_FragColor = vec4(coreColor * pulse, (core * 0.7 + fresnel * 0.5));
+      }
+    `,
+    uniforms: { uTime: { value: 0 } },
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+  });
+  const core = new THREE.Mesh(coreGeo, coreMat);
+  scene.add(core);
+
+  // Outer dim shell
+  const shellGeo = new THREE.SphereBufferGeometry(0.5, 24, 18);
+  const shellMat = new THREE.ShaderMaterial({
+    vertexShader: glowVertShader,
+    fragmentShader: glowFragShader,
+    uniforms: {
+      uColor: { value: new THREE.Color(0x4a6080) },
+      uIntensity: { value: 0.25 },
+      uOpacity: { value: 1.0 }
+    },
+    transparent: true, side: THREE.BackSide, depthWrite: false
+  });
+  scene.add(new THREE.Mesh(shellGeo, shellMat));
+
+  // Amyloid plaques — dark golden accretions clustering around neuron
+  const plaqueGroup = new THREE.Group();
+  const plaqueCount = isMobile ? 15 : 30;
+  const plaqueMeshes = [];
+  for (let i = 0; i < plaqueCount; i++) {
+    const size = 0.06 + Math.random() * 0.12;
+    const geo = new THREE.IcosahedronBufferGeometry(size, 1);
+    // Distort vertices for organic look
+    const pPos = geo.attributes.position;
+    for (let j = 0; j < pPos.count; j++) {
+      const scale = 0.7 + Math.random() * 0.6;
+      pPos.setX(j, pPos.getX(j) * scale);
+      pPos.setY(j, pPos.getY(j) * (0.7 + Math.random() * 0.6));
+      pPos.setZ(j, pPos.getZ(j) * (0.7 + Math.random() * 0.6));
+    }
+    geo.computeVertexNormals();
+
+    const mat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color().setHSL(0.1 + Math.random() * 0.05, 0.6, 0.35 + Math.random() * 0.15),
+      transparent: true,
+      opacity: 0.5 + Math.random() * 0.3
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+
+    const angle = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const r = 0.5 + Math.random() * 1.2;
+    mesh.position.set(
+      r * Math.sin(phi) * Math.cos(angle),
+      r * Math.sin(phi) * Math.sin(angle) * 0.7,
+      r * Math.cos(phi) * 0.5
+    );
+    mesh.userData = { phase: Math.random() * 6, rotSpeed: (Math.random()-0.5) * 0.02 };
+    plaqueGroup.add(mesh);
+    plaqueMeshes.push(mesh);
+  }
+  scene.add(plaqueGroup);
+
+  // Tau tangles as glowing helix strands
+  const tangleGroup = new THREE.Group();
+  for (let i = 0; i < 6; i++) {
+    const pts = [];
+    const startAngle = Math.random() * Math.PI * 2;
+    const r = 0.7 + Math.random() * 0.8;
+    for (let j = 0; j <= 20; j++) {
+      const t = j / 20;
+      const a = startAngle + t * Math.PI * 3;
+      pts.push(new THREE.Vector3(
+        Math.cos(a) * r * (1 - t * 0.3) + (Math.random()-0.5) * 0.05,
+        (t - 0.5) * 1.8,
+        Math.sin(a) * r * 0.4 * (1 - t * 0.3)
+      ));
+    }
+    const curve = new THREE.CatmullRomCurve3(pts);
+    const tubeGeo = new THREE.TubeBufferGeometry(curve, 16, 0.012, 4, false);
+    const tubeMat = new THREE.MeshBasicMaterial({
+      color: 0xc9a84c, transparent: true, opacity: 0.2 + Math.random() * 0.2
+    });
+    tangleGroup.add(new THREE.Mesh(tubeGeo, tubeMat));
+  }
+  scene.add(tangleGroup);
+
+  // Danger particles
+  const dpCount = isMobile ? 60 : 120;
+  const dpGeo = new THREE.BufferGeometry();
+  const dpPos = new Float32Array(dpCount * 3);
+  const dpSizes = new Float32Array(dpCount);
+  const dpAlphas = new Float32Array(dpCount);
+  for (let i = 0; i < dpCount; i++) {
+    const r = 0.4 + Math.random() * 2.0;
+    const a = Math.random() * Math.PI * 2;
+    const p = Math.acos(2 * Math.random() - 1);
+    dpPos[i*3] = r * Math.sin(p) * Math.cos(a);
+    dpPos[i*3+1] = r * Math.sin(p) * Math.sin(a) * 0.7;
+    dpPos[i*3+2] = r * Math.cos(p) * 0.5;
+    dpSizes[i] = 0.5 + Math.random() * 2.5;
+    dpAlphas[i] = 0.05 + Math.random() * 0.2;
+  }
+  dpGeo.setAttribute('position', new THREE.BufferAttribute(dpPos, 3));
+  dpGeo.setAttribute('aSize', new THREE.BufferAttribute(dpSizes, 1));
+  dpGeo.setAttribute('aAlpha', new THREE.BufferAttribute(dpAlphas, 1));
+  const dpUniforms = { uTime: { value: 0 }, uColor: { value: new THREE.Color(0xb89040) }, uOpacity: { value: 1.0 } };
+  scene.add(new THREE.Points(dpGeo, new THREE.ShaderMaterial({
+    vertexShader: particleVertShader, fragmentShader: particleFragShader,
+    uniforms: dpUniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+  })));
+
+  function animate(t) {
+    requestAnimationFrame(animate);
+    const time = t * 0.001;
+    coreMat.uniforms.uTime.value = time;
+    dpUniforms.uTime.value = time;
+
+    plaqueMeshes.forEach(p => {
+      p.rotation.y += p.userData.rotSpeed;
+      p.position.y += Math.sin(time * 0.4 + p.userData.phase) * 0.0004;
+    });
+    plaqueGroup.rotation.y = time * 0.06;
+    tangleGroup.rotation.y = -time * 0.04;
+
+    renderer.render(scene, camera);
+  }
+  animate(0);
+});
+
+// ======================== SYNAPSE SCENE (Section 04) ========================
+createInlineScene('synapse-canvas', function(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  const wrap = canvas.parentElement;
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, wrap.clientWidth / wrap.clientHeight, 0.1, 50);
+  camera.position.set(0, 0, 4.5);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
+  renderer.setPixelRatio(dpr);
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  renderer.setClearColor(0x000000, 0);
+
+  // Pre-synaptic terminal (left bulb)
+  function makeTerminal(x, color) {
+    const group = new THREE.Group();
+    group.position.x = x;
+
+    // Core
+    const cGeo = new THREE.SphereBufferGeometry(0.5, 32, 24);
+    const cMat = new THREE.ShaderMaterial({
+      vertexShader: glowVertShader,
+      fragmentShader: `
+        varying vec3 vNormal;
+        varying vec3 vViewDir;
+        void main() {
+          vec3 n = normalize(vNormal);
+          vec3 v = normalize(vViewDir);
+          float f = pow(1.0 - max(dot(n, v), 0.0), 2.5);
+          float core = smoothstep(0.7, 0.0, f) * 0.5;
+          vec3 col = vec3(${color});
+          gl_FragColor = vec4(col, core + f * 0.4);
+        }
+      `,
+      uniforms: {
+        uColor: { value: new THREE.Color(1,1,1) },
+        uIntensity: { value: 1.0 },
+        uOpacity: { value: 1.0 }
+      },
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+    });
+    group.add(new THREE.Mesh(cGeo, cMat));
+
+    // Halo
+    const hGeo = new THREE.SphereBufferGeometry(0.7, 24, 16);
+    const hMat = new THREE.ShaderMaterial({
+      vertexShader: glowVertShader,
+      fragmentShader: glowFragShader,
+      uniforms: {
+        uColor: { value: new THREE.Color(parseInt(color.split(',').map(c => Math.round(parseFloat(c)*255).toString(16).padStart(2,'0')).join(''), 16) || 0x4a6080) },
+        uIntensity: { value: 0.2 },
+        uOpacity: { value: 1.0 }
+      },
+      transparent: true, side: THREE.BackSide, depthWrite: false
+    });
+    group.add(new THREE.Mesh(hGeo, hMat));
+
+    return group;
+  }
+
+  const preTerminal = makeTerminal(-1.4, '0.35, 0.5, 0.65');
+  const postTerminal = makeTerminal(1.4, '0.35, 0.55, 0.6');
+  scene.add(preTerminal);
+  scene.add(postTerminal);
+
+  // Receptor bumps on post-synaptic side
+  for (let i = 0; i < 7; i++) {
+    const angle = ((i / 7) * Math.PI * 1.2) - Math.PI * 0.6;
+    const rGeo = new THREE.SphereBufferGeometry(0.06, 8, 6);
+    const rMat = new THREE.MeshBasicMaterial({
+      color: 0xc9a84c, transparent: true, opacity: 0.7
+    });
+    const r = new THREE.Mesh(rGeo, rMat);
+    r.position.set(0.9, Math.sin(angle) * 0.4, Math.cos(angle) * 0.25);
+    postTerminal.add(r);
+  }
+
+  // Neurotransmitter flow — particles streaming across the cleft
+  const ntCount = isMobile ? 60 : 120;
+  const ntGeo = new THREE.BufferGeometry();
+  const ntPositions = new Float32Array(ntCount * 3);
+  const ntSizes = new Float32Array(ntCount);
+  const ntAlphas = new Float32Array(ntCount);
+  const ntData = [];
+
+  for (let i = 0; i < ntCount; i++) {
+    ntData.push({
+      t: Math.random(),
+      speed: 0.12 + Math.random() * 0.25,
+      yOff: (Math.random() - 0.5) * 0.7,
+      zOff: (Math.random() - 0.5) * 0.5,
+      wave: Math.random() * Math.PI * 2
+    });
+    ntSizes[i] = 1.5 + Math.random() * 3.0;
+    ntAlphas[i] = 0.4 + Math.random() * 0.6;
+  }
+  ntGeo.setAttribute('position', new THREE.BufferAttribute(ntPositions, 3));
+  ntGeo.setAttribute('aSize', new THREE.BufferAttribute(ntSizes, 1));
+  ntGeo.setAttribute('aAlpha', new THREE.BufferAttribute(ntAlphas, 1));
+
+  const ntUniforms = {
+    uTime: { value: 0 },
+    uColor: { value: new THREE.Color(0xdfc47a) },
+    uOpacity: { value: 1.0 }
+  };
+  const ntMat = new THREE.ShaderMaterial({
+    vertexShader: particleVertShader,
+    fragmentShader: particleFragShader,
+    uniforms: ntUniforms,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+  });
+  const ntParticles = new THREE.Points(ntGeo, ntMat);
+  scene.add(ntParticles);
+
+  // Ambient background particles
+  const bgCount = isMobile ? 30 : 60;
+  const bgGeo = new THREE.BufferGeometry();
+  const bgPos = new Float32Array(bgCount * 3);
+  const bgSizes = new Float32Array(bgCount);
+  const bgAlphas = new Float32Array(bgCount);
+  for (let i = 0; i < bgCount; i++) {
+    bgPos[i*3] = (Math.random()-0.5) * 8;
+    bgPos[i*3+1] = (Math.random()-0.5) * 4;
+    bgPos[i*3+2] = (Math.random()-0.5) * 3;
+    bgSizes[i] = 0.5 + Math.random() * 1.5;
+    bgAlphas[i] = 0.05 + Math.random() * 0.1;
+  }
+  bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+  bgGeo.setAttribute('aSize', new THREE.BufferAttribute(bgSizes, 1));
+  bgGeo.setAttribute('aAlpha', new THREE.BufferAttribute(bgAlphas, 1));
+  const bgUniforms = { uTime: { value: 0 }, uColor: { value: new THREE.Color(0x6688aa) }, uOpacity: { value: 1.0 } };
+  scene.add(new THREE.Points(bgGeo, new THREE.ShaderMaterial({
+    vertexShader: particleVertShader, fragmentShader: particleFragShader,
+    uniforms: bgUniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+  })));
+
+  function animate(t) {
+    requestAnimationFrame(animate);
+    const time = t * 0.001;
+    ntUniforms.uTime.value = time;
+    bgUniforms.uTime.value = time;
+
+    // Update neurotransmitter positions
+    const pos = ntGeo.attributes.position.array;
+    for (let i = 0; i < ntCount; i++) {
+      const d = ntData[i];
+      d.t += d.speed * 0.006;
+      if (d.t > 1) d.t -= 1;
+      const prog = d.t;
+      // Arc path from pre to post terminal
+      const x = -0.9 + prog * 1.8;
+      const arc = Math.sin(prog * Math.PI) * 0.3;
+      pos[i*3] = x;
+      pos[i*3+1] = d.yOff + arc + Math.sin(prog * Math.PI * 3 + d.wave + time * 0.5) * 0.08;
+      pos[i*3+2] = d.zOff + Math.cos(prog * Math.PI * 2 + d.wave + time * 0.3) * 0.06;
+    }
+    ntGeo.attributes.position.needsUpdate = true;
+
+    // Gentle sway
+    preTerminal.position.y = Math.sin(time * 0.3) * 0.03;
+    postTerminal.position.y = Math.sin(time * 0.3 + 1) * 0.03;
+    scene.rotation.y = Math.sin(time * 0.06) * 0.08;
+
+    renderer.render(scene, camera);
+  }
+  animate(0);
+});
+
+// ======================== SCROLL ANIMATIONS ========================
+const fadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+
+// ======================== PROGRESS BAR ========================
+const progressBar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const scrollTop = window.pageYOffset;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  progressBar.style.width = progress + '%';
+}, { passive: true });
+
+// ======================== COUNTERS ========================
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseFloat(el.dataset.target);
+      const decimals = parseInt(el.dataset.decimals) || 0;
+      let current = 0;
+      const duration = 2000;
+      const start = performance.now();
+
+      function update(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        current = target * eased;
+        el.textContent = current.toFixed(decimals);
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+// ======================== RISK CHART ANIMATION ========================
+const chartObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const bars = entry.target.querySelectorAll('.risk-bar-wrap');
+      bars.forEach((bar, i) => {
+        const w = parseInt(bar.dataset.w);
+        const fill = bar.querySelector('.risk-bar-fill');
+        setTimeout(() => {
+          fill.style.width = (w / 7 * 100) + '%';
+        }, i * 80);
+      });
+      chartObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+const riskChart = document.getElementById('risk-chart');
+if (riskChart) chartObserver.observe(riskChart);
+
+// ======================== INTERACTIVE ELEMENTS ========================
+
+// Study card expand/collapse
+function toggleStudy(el) {
+  el.classList.toggle('expanded');
+}
+
+// Mechanism step walkthrough
+let currentStep = 0;
+const totalSteps = 4;
+
+function updateStep() {
+  document.querySelectorAll('.step-panel').forEach((p, i) => {
+    p.classList.toggle('active', i === currentStep);
+  });
+  document.querySelectorAll('.step-dot').forEach((d, i) => {
+    d.classList.toggle('active', i <= currentStep);
+  });
+  document.getElementById('step-prev').style.opacity = currentStep === 0 ? '0.3' : '1';
+  document.getElementById('step-next').textContent = currentStep === totalSteps - 1 ? 'Done' : 'Next \u2192';
+}
+
+function changeStep(dir) {
+  const next = currentStep + dir;
+  if (next >= 0 && next < totalSteps) {
+    currentStep = next;
+    updateStep();
+  }
+}
+
+// Tab interface (nicotine section)
+function switchTab(idx) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+}
+
+// Accordion (opportunity section)
+function toggleAccordion(el) {
+  el.classList.toggle('expanded');
+}
+
+// ======================== INITIAL HERO ANIMATION ========================
+setTimeout(() => {
+  document.querySelectorAll('#hero .fade-up').forEach(el => el.classList.add('visible'));
+}, 300);
+</script>
+</body>
+</html>
