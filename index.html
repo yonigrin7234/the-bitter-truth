@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>The Bitter Truth — McCourt Foundation</title>
+<meta name="theme-color" content="#070a10">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
-
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
@@ -25,6 +27,8 @@
   --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
   --sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 html {
@@ -47,12 +51,105 @@ body {
 body::-webkit-scrollbar { display: none; }
 body { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* ======================== PRELOADER ======================== */
+#preloader {
+  position: fixed; inset: 0; z-index: 99999;
+  background: var(--deep);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#preloader.done {
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+.preloader-mark {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: preloaderFadeIn 1s ease 0.3s forwards;
+}
+.preloader-line {
+  width: 120px; height: 1px;
+  background: rgba(201,168,76,0.12);
+  margin-top: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: preloaderFadeIn 0.6s ease 0.5s forwards;
+}
+.preloader-line::after {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 40%; height: 100%;
+  background: var(--gold);
+  animation: preloaderSweep 1.2s ease-in-out infinite;
+}
+@keyframes preloaderFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes preloaderSweep {
+  0% { left: -40%; }
+  100% { left: 100%; }
+}
+
 /* ======================== PROGRESS BAR ======================== */
 #progress-bar {
   position: fixed; top: 0; left: 0; height: 2px; width: 0%;
   background: linear-gradient(90deg, var(--gold), var(--gold-light));
-  z-index: 9999; transition: width 0.1s linear;
+  z-index: 9998; transition: width 0.15s linear;
   box-shadow: 0 0 12px rgba(201,168,76,0.5);
+  opacity: 0;
+  transition: width 0.15s linear, opacity 0.5s ease;
+}
+#progress-bar.active { opacity: 1; }
+
+/* ======================== SIDE NAV ======================== */
+#side-nav {
+  position: fixed; right: clamp(12px, 3vw, 24px);
+  top: 50%; transform: translateY(-50%);
+  z-index: 9000;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 14px;
+  opacity: 0; transition: opacity 0.6s ease;
+}
+#side-nav.visible { opacity: 1; }
+.nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(232,228,221,0.15);
+  cursor: pointer;
+  transition: all 0.4s var(--ease-spring);
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-dot::before {
+  content: attr(data-label);
+  position: absolute; right: 20px; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.nav-dot:hover::before,
+.nav-dot:active::before { opacity: 1; }
+.nav-dot.active {
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(201,168,76,0.4);
+  transform: scale(1.4);
+}
+@media (max-width: 767px) {
+  #side-nav { right: 8px; gap: 12px; }
+  .nav-dot { width: 5px; height: 5px; }
+  .nav-dot::before { display: none; }
 }
 
 /* ======================== TYPOGRAPHY ======================== */
@@ -63,76 +160,123 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   font-weight: 400;
 }
 .body-text {
-  font-family: var(--sans); font-size: clamp(0.95rem, 2.8vw, 1.1rem);
-  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
+  font-family: var(--sans); font-size: clamp(1rem, 2.8vw, 1.1rem);
+  color: var(--text-secondary); line-height: 1.8; font-weight: 300;
 }
 
 /* ======================== LAYOUT ======================== */
 .section-wrap {
   width: 100%; max-width: 100vw; overflow: hidden;
-  padding: clamp(4rem, 12vw, 8rem) clamp(1.25rem, 5vw, 3rem);
+  padding: clamp(5rem, 14vw, 10rem) clamp(1.5rem, 6vw, 3.5rem);
   position: relative;
+}
+
+/* ======================== AMBIENT ORBS ======================== */
+.ambient-orb {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, var(--gold-glow), transparent 70%);
+  filter: blur(80px); opacity: 0;
+  transition: opacity 1.5s ease;
+}
+.section-wrap.in-view .ambient-orb { opacity: 0.5; }
+.ambient-orb--1 { width: 400px; height: 400px; top: -100px; right: -150px; }
+.ambient-orb--2 { width: 300px; height: 300px; bottom: -80px; left: -100px; }
+.ambient-orb--3 {
+  width: 350px; height: 350px; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(74,96,128,0.06), transparent 70%);
 }
 
 /* ======================== FADE ANIMATIONS ======================== */
 .fade-up {
-  opacity: 0; transform: translateY(40px);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0; transform: translateY(50px);
+  transition: opacity 1.1s var(--ease-out-expo), transform 1.1s var(--ease-out-expo);
 }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-.fade-up-d1 { transition-delay: 0.1s; }
-.fade-up-d2 { transition-delay: 0.2s; }
-.fade-up-d3 { transition-delay: 0.35s; }
-.fade-up-d4 { transition-delay: 0.5s; }
-.fade-up-d5 { transition-delay: 0.65s; }
+.fade-up-d1 { transition-delay: 0.12s; }
+.fade-up-d2 { transition-delay: 0.24s; }
+.fade-up-d3 { transition-delay: 0.38s; }
+.fade-up-d4 { transition-delay: 0.52s; }
+.fade-up-d5 { transition-delay: 0.68s; }
+.fade-up-d6 { transition-delay: 0.82s; }
 
 /* ======================== HERO ======================== */
 #hero {
   min-height: 100svh; display: flex; flex-direction: column;
   justify-content: flex-end; align-items: center;
-  padding: 0 clamp(1.5rem, 5vw, 3rem) clamp(3rem, 8vw, 5rem);
+  padding: 0 clamp(1.5rem, 5vw, 3rem) clamp(4rem, 10vw, 6rem);
   position: relative; text-align: center; overflow: hidden;
 }
-#hero-canvas {
+#hero-bg {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  z-index: 0; opacity: 0.7;
+  z-index: 0;
+  background: url('images/hero-brain.jpg') center 40% / cover no-repeat;
+  opacity: 0.75;
+  animation: heroFloat 20s ease-in-out infinite;
+}
+@keyframes heroFloat {
+  0%, 100% { transform: scale(1.02) translateY(0); }
+  50% { transform: scale(1.05) translateY(-8px); }
+}
+#hero::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center 60%, transparent 30%, var(--deep) 75%);
+  z-index: 1; pointer-events: none;
 }
 #hero .hero-content { position: relative; z-index: 2; max-width: 680px; }
+.prepared-for {
+  font-family: var(--mono);
+  font-size: clamp(0.5rem, 1.4vw, 0.58rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 3rem;
+  line-height: 2.2;
+}
+.prepared-for strong {
+  display: block;
+  color: var(--text-secondary);
+  font-weight: 400;
+  font-size: clamp(0.55rem, 1.6vw, 0.65rem);
+  letter-spacing: 0.2em;
+  margin-top: 0.25rem;
+}
 #hero .foundation-tag {
   font-family: var(--mono); font-size: clamp(0.6rem, 1.8vw, 0.7rem);
   letter-spacing: 0.35em; text-transform: uppercase;
   color: var(--gold); margin-bottom: 2rem; opacity: 0.9;
 }
 #hero h1 {
-  font-size: clamp(2.8rem, 10vw, 5.5rem); font-weight: 700;
-  letter-spacing: -0.025em; margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, var(--text) 0%, rgba(232,228,221,0.8) 100%);
+  font-size: clamp(3rem, 11vw, 6rem); font-weight: 700;
+  letter-spacing: -0.03em; margin-bottom: 1.75rem;
+  background: linear-gradient(135deg, var(--text) 0%, rgba(232,228,221,0.75) 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 #hero .subtitle {
-  font-family: var(--sans); font-size: clamp(0.9rem, 2.8vw, 1.15rem);
-  color: var(--text-secondary); line-height: 1.7;
-  font-weight: 300; margin-bottom: 2.5rem; max-width: 540px; margin-inline: auto;
+  font-family: var(--sans); font-size: clamp(0.95rem, 2.8vw, 1.2rem);
+  color: var(--text-secondary); line-height: 1.75;
+  font-weight: 300; margin-bottom: 3rem; max-width: 540px; margin-inline: auto;
 }
 #hero .brief-tag {
   font-family: var(--mono); font-size: clamp(0.6rem, 1.6vw, 0.65rem);
   letter-spacing: 0.25em; color: var(--text-dim);
   border: 1px solid rgba(201,168,76,0.2);
-  padding: 0.5em 1.5em; display: inline-block;
+  padding: 0.6em 1.8em; display: inline-block;
+  transition: border-color 0.3s ease;
 }
 .scroll-indicator {
-  margin-top: 3rem; opacity: 0.4;
+  margin-top: 3.5rem; opacity: 0.4;
   animation: pulse-down 2.5s ease-in-out infinite;
 }
 .scroll-indicator span {
-  display: block; width: 1px; height: 40px;
+  display: block; width: 1px; height: 48px;
   background: linear-gradient(to bottom, var(--gold), transparent);
   margin: 0 auto;
 }
 @keyframes pulse-down {
-  0%, 100% { opacity: 0.2; transform: translateY(0); }
-  50% { opacity: 0.5; transform: translateY(8px); }
+  0%, 100% { opacity: 0.15; transform: translateY(0); }
+  50% { opacity: 0.45; transform: translateY(10px); }
 }
 
 /* ======================== DIVIDERS ======================== */
@@ -146,8 +290,8 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   animation: shimmer-line 4s ease-in-out infinite;
 }
 @keyframes shimmer-line {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.7; }
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.65; }
 }
 
 /* ======================== SECTION 01: THE CRISIS ======================== */
@@ -156,104 +300,124 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 .section-num {
   font-family: var(--mono); font-size: clamp(0.6rem, 1.5vw, 0.65rem);
   letter-spacing: 0.3em; color: var(--gold); opacity: 0.6;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 #crisis h2 {
-  font-size: clamp(2rem, 7vw, 3.5rem); margin-bottom: 1.5rem;
-  letter-spacing: -0.02em; color: var(--text);
+  font-size: clamp(2.2rem, 8vw, 3.8rem); margin-bottom: 1.75rem;
+  letter-spacing: -0.025em; color: var(--text);
 }
 #crisis .lead-text {
-  font-family: var(--serif); font-size: clamp(1.1rem, 3.2vw, 1.4rem);
-  color: var(--text-secondary); line-height: 1.6;
-  margin-bottom: 3rem; font-weight: 400; font-style: italic;
+  font-family: var(--serif); font-size: clamp(1.15rem, 3.2vw, 1.45rem);
+  color: var(--text-secondary); line-height: 1.65;
+  margin-bottom: 3.5rem; font-weight: 400; font-style: italic;
 }
 
 /* Stat Grid */
 .stat-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 4vw, 1.5rem);
-  margin-bottom: 3rem;
+  margin-bottom: 3.5rem;
 }
 .stat-card {
   background: linear-gradient(135deg, rgba(20,27,39,0.8), rgba(13,17,23,0.6));
   border: 1px solid rgba(201,168,76,0.1);
-  border-radius: 12px; padding: clamp(1.25rem, 4vw, 1.75rem);
+  border-radius: 14px; padding: clamp(1.5rem, 5vw, 2rem);
   position: relative; overflow: hidden;
+  transition: border-color 0.4s ease, transform 0.4s var(--ease-out-expo);
+}
+.stat-card:active {
+  transform: scale(0.98);
+  border-color: rgba(201,168,76,0.25);
 }
 .stat-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
 }
 .stat-number {
-  font-family: var(--serif); font-size: clamp(1.6rem, 5.5vw, 2.5rem);
-  font-weight: 700; color: var(--gold); line-height: 1.1; margin-bottom: 0.5rem;
+  font-family: var(--serif); font-size: clamp(1.8rem, 6vw, 2.8rem);
+  font-weight: 700; color: var(--gold); line-height: 1.1; margin-bottom: 0.6rem;
 }
 .stat-unit {
   font-family: var(--mono); font-size: clamp(0.55rem, 1.5vw, 0.65rem);
   letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase;
 }
 .stat-desc {
-  font-family: var(--sans); font-size: clamp(0.75rem, 2.2vw, 0.85rem);
-  color: var(--text-secondary); line-height: 1.5; margin-top: 0.5rem; font-weight: 300;
+  font-family: var(--sans); font-size: clamp(0.78rem, 2.2vw, 0.88rem);
+  color: var(--text-secondary); line-height: 1.55; margin-top: 0.6rem; font-weight: 300;
 }
 
 /* Context paragraphs */
 .context-block {
-  margin-top: 2rem; position: relative;
-  padding-left: clamp(1rem, 3vw, 1.5rem);
+  margin-top: 2.5rem; position: relative;
+  padding-left: clamp(1.25rem, 3vw, 1.75rem);
   border-left: 2px solid rgba(201,168,76,0.2);
 }
 .context-block p {
-  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
-  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
-  margin-bottom: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  color: var(--text-secondary); line-height: 1.8; font-weight: 300;
+  margin-bottom: 1.25rem;
 }
 .context-block p:last-child { margin-bottom: 0; }
 .highlight-gold { color: var(--gold); font-weight: 500; }
 
 .source-tag {
   font-family: var(--mono); font-size: clamp(0.55rem, 1.4vw, 0.6rem);
-  color: var(--text-dim); margin-top: 2rem; letter-spacing: 0.05em;
-  line-height: 1.7;
+  color: var(--text-dim); margin-top: 2.5rem; letter-spacing: 0.05em;
+  line-height: 1.8;
 }
 
 /* ======================== SECTION 02: THE CAUSE ======================== */
 #cause { background: var(--deep-alt); }
 #cause .section-inner { max-width: 900px; margin: 0 auto; }
 #cause h2 {
-  font-size: clamp(2rem, 7vw, 3.5rem); margin-bottom: 0.75rem;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 8vw, 3.8rem); margin-bottom: 0.85rem;
+  letter-spacing: -0.025em;
 }
 .cause-headline-stat {
   font-family: var(--mono); font-size: clamp(0.7rem, 2vw, 0.8rem);
-  color: var(--gold); letter-spacing: 0.1em; margin-bottom: 2rem;
+  color: var(--gold); letter-spacing: 0.1em; margin-bottom: 2.5rem;
 }
 #cause .lead-text {
-  font-family: var(--sans); font-size: clamp(0.95rem, 2.8vw, 1.1rem);
-  color: var(--text-secondary); line-height: 1.75; margin-bottom: 3rem;
+  font-family: var(--sans); font-size: clamp(1rem, 2.8vw, 1.15rem);
+  color: var(--text-secondary); line-height: 1.8; margin-bottom: 3.5rem;
   font-weight: 300;
 }
 
-.three-canvas-inline {
-  width: 100%; height: clamp(220px, 50vw, 340px);
-  border-radius: 16px; overflow: hidden; margin-bottom: 2.5rem;
-  background: radial-gradient(ellipse at center, rgba(201,168,76,0.03) 0%, rgba(7,10,16,0.95) 70%);
+.scene-image {
+  width: 100%; height: clamp(240px, 55vw, 360px);
+  border-radius: 18px; overflow: hidden; margin-bottom: 3rem;
   position: relative;
-  border: 1px solid rgba(201,168,76,0.06);
-  box-shadow: 0 0 60px rgba(201,168,76,0.04), inset 0 0 40px rgba(0,0,0,0.3);
+  border: 1px solid rgba(201,168,76,0.08);
+  box-shadow: 0 0 80px rgba(201,168,76,0.04), inset 0 0 60px rgba(0,0,0,0.3);
+}
+.scene-image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  animation: sceneBreath 12s ease-in-out infinite;
+}
+@keyframes sceneBreath {
+  0%, 100% { transform: scale(1); filter: brightness(0.95); }
+  50% { transform: scale(1.03); filter: brightness(1.05); }
+}
+.scene-image::after {
+  content: ''; position: absolute; inset: 0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(7,10,16,0.15) 0%, transparent 30%, transparent 70%, rgba(7,10,16,0.4) 100%);
+  pointer-events: none;
 }
 
 /* Study Cards */
 .study-card {
   background: linear-gradient(145deg, rgba(20,27,39,0.7), rgba(11,15,24,0.5));
   border: 1px solid rgba(201,168,76,0.08);
-  border-radius: 14px; margin-bottom: clamp(0.75rem, 2vw, 1rem);
-  overflow: hidden; transition: border-color 0.3s ease;
+  border-radius: 16px; margin-bottom: clamp(0.85rem, 2vw, 1rem);
+  overflow: hidden; transition: border-color 0.4s ease, transform 0.3s var(--ease-out-expo);
 }
-.study-card:active { border-color: rgba(201,168,76,0.25); }
+.study-card:active { transform: scale(0.99); border-color: rgba(201,168,76,0.25); }
 .study-header {
-  padding: clamp(1rem, 3.5vw, 1.5rem); cursor: pointer;
+  padding: clamp(1.25rem, 4vw, 1.75rem); cursor: pointer;
   display: flex; align-items: flex-start; gap: 1rem;
   -webkit-tap-highlight-color: transparent;
+  min-height: 56px;
 }
 .study-num {
   font-family: var(--serif); font-size: clamp(1.4rem, 4vw, 1.8rem);
@@ -262,8 +426,8 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 }
 .study-title-block { flex: 1; }
 .study-title {
-  font-family: var(--serif); font-size: clamp(0.95rem, 2.8vw, 1.1rem);
-  color: var(--text); line-height: 1.4; font-weight: 500; margin-bottom: 0.25rem;
+  font-family: var(--serif); font-size: clamp(1rem, 2.8vw, 1.15rem);
+  color: var(--text); line-height: 1.4; font-weight: 500; margin-bottom: 0.35rem;
 }
 .study-meta {
   font-family: var(--mono); font-size: clamp(0.55rem, 1.5vw, 0.6rem);
@@ -271,27 +435,28 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 }
 .study-toggle {
   color: var(--gold); opacity: 0.4; font-size: 1.2rem;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 0.4s var(--ease-spring), opacity 0.3s ease;
   flex-shrink: 0; padding-top: 0.2em;
+  width: 24px; text-align: center;
 }
 .study-card.expanded .study-toggle { transform: rotate(45deg); opacity: 0.8; }
 .study-body {
-  max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 0; overflow: hidden; transition: max-height 0.6s var(--ease-out-expo);
 }
 .study-card.expanded .study-body { max-height: 500px; }
 .study-content {
-  padding: 0 clamp(1rem, 3.5vw, 1.5rem) clamp(1rem, 3.5vw, 1.5rem);
-  padding-left: calc(clamp(1rem, 3.5vw, 1.5rem) + 3rem);
+  padding: 0 clamp(1.25rem, 4vw, 1.75rem) clamp(1.25rem, 4vw, 1.75rem);
+  padding-left: calc(clamp(1.25rem, 4vw, 1.75rem) + 3rem);
 }
 .study-content p {
-  font-size: clamp(0.82rem, 2.3vw, 0.9rem);
-  color: var(--text-secondary); line-height: 1.7; font-weight: 300;
+  font-size: clamp(0.85rem, 2.3vw, 0.95rem);
+  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
 }
 .study-stat {
   display: inline-block; font-family: var(--mono);
-  font-size: clamp(0.7rem, 1.8vw, 0.75rem);
+  font-size: clamp(0.7rem, 1.8vw, 0.78rem);
   background: var(--gold-dim); color: var(--gold);
-  padding: 0.25em 0.65em; border-radius: 4px; margin: 0.3em 0.2em;
+  padding: 0.3em 0.75em; border-radius: 5px; margin: 0.3em 0.2em;
   font-weight: 500;
 }
 
@@ -299,65 +464,82 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 #mechanism { background: var(--deep); }
 #mechanism .section-inner { max-width: 900px; margin: 0 auto; }
 #mechanism h2 {
-  font-size: clamp(2rem, 7vw, 3.5rem); margin-bottom: 0.75rem;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 8vw, 3.8rem); margin-bottom: 0.85rem;
+  letter-spacing: -0.025em;
 }
 #mechanism .subtitle-mech {
-  font-family: var(--serif); font-size: clamp(1.05rem, 3vw, 1.25rem);
-  color: var(--gold); font-style: italic; margin-bottom: 1.5rem; font-weight: 400;
+  font-family: var(--serif); font-size: clamp(1.1rem, 3vw, 1.3rem);
+  color: var(--gold); font-style: italic; margin-bottom: 1.75rem; font-weight: 400;
 }
 
 /* Stepped walkthrough */
 .step-progress {
-  display: flex; gap: 4px; margin-bottom: 2rem;
+  display: flex; gap: 5px; margin-bottom: 2.5rem;
 }
 .step-dot {
   flex: 1; height: 3px; border-radius: 2px;
-  background: rgba(201,168,76,0.15); transition: background 0.5s ease;
+  background: rgba(201,168,76,0.12); transition: background 0.5s ease;
 }
 .step-dot.active { background: var(--gold); }
 
-.step-container { position: relative; }
+.step-container {
+  position: relative;
+  touch-action: pan-y;
+  min-height: 180px;
+}
 .step-panel {
   display: none; animation: fadeStep 0.5s ease;
 }
 .step-panel.active { display: block; }
-@keyframes fadeStep { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeStep { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
 .step-label {
   font-family: var(--mono); font-size: clamp(0.6rem, 1.6vw, 0.65rem);
-  color: var(--gold); letter-spacing: 0.2em; margin-bottom: 0.75rem;
+  color: var(--gold); letter-spacing: 0.2em; margin-bottom: 1rem;
   text-transform: uppercase;
 }
 .step-title {
-  font-family: var(--serif); font-size: clamp(1.3rem, 4vw, 1.7rem);
-  color: var(--text); margin-bottom: 1rem; font-weight: 600;
+  font-family: var(--serif); font-size: clamp(1.4rem, 4.5vw, 1.8rem);
+  color: var(--text); margin-bottom: 1.25rem; font-weight: 600;
 }
 .step-body {
-  font-size: clamp(0.88rem, 2.5vw, 0.95rem);
-  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
+  font-size: clamp(0.92rem, 2.5vw, 1rem);
+  color: var(--text-secondary); line-height: 1.8; font-weight: 300;
 }
 .step-nav {
-  display: flex; gap: 0.75rem; margin-top: 2rem;
+  display: flex; gap: 0.85rem; margin-top: 2.5rem;
 }
 .step-btn {
   font-family: var(--mono); font-size: clamp(0.6rem, 1.6vw, 0.68rem);
   letter-spacing: 0.15em; text-transform: uppercase;
-  padding: 0.75em 1.5em; border-radius: 6px; cursor: pointer;
+  padding: 0.85em 1.75em; border-radius: 8px; cursor: pointer;
   border: 1px solid rgba(201,168,76,0.25); background: transparent;
   color: var(--gold); transition: all 0.3s ease;
   -webkit-tap-highlight-color: transparent;
+  min-height: 44px; display: flex; align-items: center;
 }
-.step-btn:active { background: rgba(201,168,76,0.12); }
+.step-btn:active { background: rgba(201,168,76,0.12); transform: scale(0.97); }
 .step-btn.primary {
   background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.35);
 }
 
+/* Swipe hint */
+.swipe-hint {
+  font-family: var(--mono);
+  font-size: clamp(0.5rem, 1.3vw, 0.55rem);
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: 1rem;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+}
+@media (min-width: 768px) { .swipe-hint { display: none; } }
+
 /* Key finding callout */
 .key-finding {
-  margin-top: 3rem; padding: clamp(1.5rem, 4vw, 2rem);
+  margin-top: 3.5rem; padding: clamp(1.75rem, 5vw, 2.5rem);
   background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.02));
-  border: 1px solid rgba(201,168,76,0.15); border-radius: 14px;
+  border: 1px solid rgba(201,168,76,0.15); border-radius: 16px;
   position: relative;
 }
 .key-finding::before {
@@ -366,12 +548,12 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 }
 .key-finding-label {
   font-family: var(--mono); font-size: clamp(0.55rem, 1.4vw, 0.6rem);
-  letter-spacing: 0.25em; color: var(--gold); margin-bottom: 0.75rem;
+  letter-spacing: 0.25em; color: var(--gold); margin-bottom: 1rem;
   text-transform: uppercase;
 }
 .key-finding p {
-  font-family: var(--serif); font-size: clamp(1rem, 3vw, 1.2rem);
-  color: var(--text); line-height: 1.55; font-weight: 400;
+  font-family: var(--serif); font-size: clamp(1.05rem, 3vw, 1.25rem);
+  color: var(--text); line-height: 1.6; font-weight: 400;
   font-style: italic;
 }
 
@@ -379,23 +561,25 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 #nicotine { background: var(--deep-alt); }
 #nicotine .section-inner { max-width: 900px; margin: 0 auto; }
 #nicotine h2 {
-  font-size: clamp(1.8rem, 6.5vw, 3.2rem); margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
+  font-size: clamp(2rem, 7vw, 3.4rem); margin-bottom: 1.75rem;
+  letter-spacing: -0.025em;
 }
 
 /* Tabbed interface */
 .tab-bar {
-  display: flex; gap: 0; margin-bottom: 2rem;
+  display: flex; gap: 0; margin-bottom: 2.5rem;
   border-bottom: 1px solid rgba(201,168,76,0.12);
+  touch-action: pan-y;
 }
 .tab-btn {
-  font-family: var(--mono); font-size: clamp(0.6rem, 1.7vw, 0.68rem);
+  font-family: var(--mono); font-size: clamp(0.62rem, 1.7vw, 0.7rem);
   letter-spacing: 0.12em; text-transform: uppercase;
-  padding: 0.8em 1.2em; cursor: pointer; border: none;
+  padding: 1em 1.2em; cursor: pointer; border: none;
   background: transparent; color: var(--text-dim);
   border-bottom: 2px solid transparent;
   transition: all 0.3s ease; flex: 1; text-align: center;
   -webkit-tap-highlight-color: transparent;
+  min-height: 48px;
 }
 .tab-btn.active {
   color: var(--gold); border-bottom-color: var(--gold);
@@ -406,19 +590,19 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 .trial-detail {
   background: linear-gradient(145deg, rgba(20,27,39,0.6), rgba(11,15,24,0.4));
   border: 1px solid rgba(201,168,76,0.08);
-  border-radius: 14px; padding: clamp(1.25rem, 4vw, 1.75rem);
+  border-radius: 16px; padding: clamp(1.5rem, 5vw, 2rem);
 }
 .trial-detail h4 {
-  font-family: var(--serif); font-size: clamp(1.1rem, 3.2vw, 1.3rem);
-  color: var(--text); margin-bottom: 1rem; font-weight: 600;
+  font-family: var(--serif); font-size: clamp(1.15rem, 3.2vw, 1.35rem);
+  color: var(--text); margin-bottom: 1.25rem; font-weight: 600;
 }
 .trial-detail p {
-  font-size: clamp(0.85rem, 2.4vw, 0.92rem);
-  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
-  margin-bottom: 0.75rem;
+  font-size: clamp(0.88rem, 2.4vw, 0.95rem);
+  color: var(--text-secondary); line-height: 1.8; font-weight: 300;
+  margin-bottom: 0.85rem;
 }
 .trial-result {
-  margin-top: 1rem; padding: 1rem; border-radius: 8px;
+  margin-top: 1.25rem; padding: 1.25rem; border-radius: 10px;
   background: rgba(201,168,76,0.05); border-left: 3px solid var(--gold);
 }
 .trial-result p {
@@ -428,20 +612,20 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
 /* Quote */
 .blockquote-wrap {
-  margin-top: 2.5rem; padding: clamp(1.5rem, 4vw, 2rem);
+  margin-top: 3rem; padding: clamp(2rem, 5vw, 2.5rem);
   position: relative;
 }
 .blockquote-wrap::before {
-  content: '\201C'; font-family: var(--serif); font-size: 5rem;
-  color: var(--gold); opacity: 0.15; position: absolute;
+  content: '\201C'; font-family: var(--serif); font-size: 6rem;
+  color: var(--gold); opacity: 0.12; position: absolute;
   top: -0.5rem; left: 0.5rem; line-height: 1;
 }
 .blockquote-wrap blockquote {
-  font-family: var(--serif); font-size: clamp(1rem, 3vw, 1.2rem);
-  color: var(--text); line-height: 1.6; font-style: italic; font-weight: 400;
+  font-family: var(--serif); font-size: clamp(1.05rem, 3vw, 1.25rem);
+  color: var(--text); line-height: 1.65; font-style: italic; font-weight: 400;
 }
 .blockquote-wrap cite {
-  display: block; margin-top: 1rem;
+  display: block; margin-top: 1.25rem;
   font-family: var(--mono); font-size: clamp(0.55rem, 1.5vw, 0.62rem);
   color: var(--text-dim); letter-spacing: 0.1em; font-style: normal;
 }
@@ -450,64 +634,64 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 #prevention { background: var(--deep); }
 #prevention .section-inner { max-width: 900px; margin: 0 auto; }
 #prevention h2 {
-  font-size: clamp(1.8rem, 6.5vw, 3.2rem); margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
+  font-size: clamp(2rem, 7vw, 3.4rem); margin-bottom: 1.75rem;
+  letter-spacing: -0.025em;
 }
 
 /* Animated bar chart */
-.risk-chart { margin-top: 2rem; }
+.risk-chart { margin-top: 2.5rem; }
 .risk-bar-wrap {
-  display: flex; align-items: center; gap: clamp(0.5rem, 2vw, 0.75rem);
-  margin-bottom: clamp(0.4rem, 1.2vw, 0.55rem);
+  display: flex; align-items: center; gap: clamp(0.6rem, 2vw, 0.85rem);
+  margin-bottom: clamp(0.5rem, 1.4vw, 0.65rem);
 }
 .risk-label {
-  font-family: var(--mono); font-size: clamp(0.52rem, 1.4vw, 0.6rem);
-  color: var(--text-secondary); min-width: clamp(90px, 25vw, 130px);
+  font-family: var(--mono); font-size: clamp(0.55rem, 1.4vw, 0.62rem);
+  color: var(--text-secondary); min-width: clamp(95px, 25vw, 135px);
   text-align: right; letter-spacing: 0.02em; line-height: 1.3;
 }
 .risk-bar-track {
-  flex: 1; height: clamp(18px, 4vw, 24px); background: rgba(255,255,255,0.03);
-  border-radius: 4px; overflow: hidden; position: relative;
+  flex: 1; height: clamp(20px, 4.5vw, 26px); background: rgba(255,255,255,0.03);
+  border-radius: 5px; overflow: hidden; position: relative;
 }
 .risk-bar-fill {
-  height: 100%; border-radius: 4px; width: 0%;
-  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-  background: linear-gradient(90deg, rgba(232,228,221,0.15), rgba(232,228,221,0.25));
+  height: 100%; border-radius: 5px; width: 0%;
+  transition: width 1.4s var(--ease-out-expo);
+  background: linear-gradient(90deg, rgba(232,228,221,0.12), rgba(232,228,221,0.22));
 }
 .risk-bar-fill.gold-bar {
-  background: linear-gradient(90deg, rgba(201,168,76,0.4), var(--gold));
+  background: linear-gradient(90deg, rgba(201,168,76,0.35), var(--gold));
 }
 .risk-pct {
-  font-family: var(--mono); font-size: clamp(0.52rem, 1.4vw, 0.58rem);
-  color: var(--text-dim); min-width: 28px;
+  font-family: var(--mono); font-size: clamp(0.55rem, 1.4vw, 0.6rem);
+  color: var(--text-dim); min-width: 30px;
 }
 
 /* ======================== SECTION 06: MOVEMENT ======================== */
 #movement { background: var(--deep-alt); }
 #movement .section-inner { max-width: 900px; margin: 0 auto; }
 #movement h2 {
-  font-size: clamp(1.8rem, 6.5vw, 3.2rem); margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
+  font-size: clamp(2rem, 7vw, 3.4rem); margin-bottom: 1.75rem;
+  letter-spacing: -0.025em;
 }
-.evidence-stack { margin-bottom: 2.5rem; }
+.evidence-stack { margin-bottom: 3rem; }
 .evidence-item {
-  padding: clamp(1rem, 3vw, 1.25rem) 0;
+  padding: clamp(1.25rem, 3.5vw, 1.5rem) 0;
   border-bottom: 1px solid rgba(232,228,221,0.05);
 }
 .evidence-item:last-child { border-bottom: none; }
 .evidence-source {
-  font-family: var(--mono); font-size: clamp(0.55rem, 1.4vw, 0.6rem);
-  color: var(--gold); letter-spacing: 0.1em; margin-bottom: 0.4rem;
+  font-family: var(--mono); font-size: clamp(0.55rem, 1.4vw, 0.62rem);
+  color: var(--gold); letter-spacing: 0.1em; margin-bottom: 0.5rem;
 }
 .evidence-item p {
-  font-size: clamp(0.88rem, 2.5vw, 0.95rem);
-  color: var(--text-secondary); line-height: 1.7; font-weight: 300;
+  font-size: clamp(0.92rem, 2.5vw, 1rem);
+  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
 }
 
 .marathon-callout {
   background: linear-gradient(145deg, rgba(201,168,76,0.08), rgba(201,168,76,0.02));
-  border: 1px solid rgba(201,168,76,0.18); border-radius: 16px;
-  padding: clamp(1.5rem, 5vw, 2.5rem); position: relative; overflow: hidden;
+  border: 1px solid rgba(201,168,76,0.18); border-radius: 18px;
+  padding: clamp(2rem, 6vw, 3rem); position: relative; overflow: hidden;
 }
 .marathon-callout::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
@@ -516,12 +700,12 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 .marathon-callout-label {
   font-family: var(--mono); font-size: clamp(0.6rem, 1.6vw, 0.68rem);
   color: var(--gold); letter-spacing: 0.25em; text-transform: uppercase;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 .marathon-callout p {
-  font-family: var(--serif); font-size: clamp(1rem, 3vw, 1.2rem);
-  color: var(--text); line-height: 1.6; font-weight: 400;
-  margin-bottom: 1rem;
+  font-family: var(--serif); font-size: clamp(1.05rem, 3vw, 1.25rem);
+  color: var(--text); line-height: 1.65; font-weight: 400;
+  margin-bottom: 1.25rem;
 }
 .marathon-callout p:last-child { margin-bottom: 0; }
 
@@ -529,73 +713,130 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 #opportunity { background: var(--deep); }
 #opportunity .section-inner { max-width: 900px; margin: 0 auto; }
 #opportunity h2 {
-  font-size: clamp(1.8rem, 6.5vw, 3.2rem); margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
+  font-size: clamp(2rem, 7vw, 3.4rem); margin-bottom: 1.75rem;
+  letter-spacing: -0.025em;
 }
 
 /* Accordion */
 .accordion-item {
   border: 1px solid rgba(201,168,76,0.08);
-  border-radius: 12px; margin-bottom: clamp(0.6rem, 2vw, 0.75rem);
+  border-radius: 14px; margin-bottom: clamp(0.7rem, 2vw, 0.85rem);
   overflow: hidden; background: linear-gradient(145deg, rgba(20,27,39,0.5), rgba(11,15,24,0.3));
-  transition: border-color 0.3s ease;
+  transition: border-color 0.4s ease, transform 0.3s var(--ease-out-expo);
 }
-.accordion-item.expanded { border-color: rgba(201,168,76,0.2); }
+.accordion-item:active { transform: scale(0.99); }
+.accordion-item.expanded { border-color: rgba(201,168,76,0.22); }
 .accordion-header {
-  padding: clamp(1rem, 3.5vw, 1.25rem) clamp(1rem, 3.5vw, 1.5rem);
-  cursor: pointer; display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: clamp(1.25rem, 4vw, 1.5rem) clamp(1.25rem, 4vw, 1.75rem);
+  cursor: pointer; display: flex; align-items: flex-start; gap: 0.85rem;
   -webkit-tap-highlight-color: transparent;
+  min-height: 56px;
 }
 .accordion-num {
   font-family: var(--mono); font-size: clamp(0.6rem, 1.6vw, 0.68rem);
   color: var(--gold); opacity: 0.5; padding-top: 0.3em; flex-shrink: 0;
 }
 .accordion-title {
-  font-family: var(--serif); font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+  font-family: var(--serif); font-size: clamp(1rem, 2.8vw, 1.15rem);
   color: var(--text); flex: 1; font-weight: 500; line-height: 1.4;
 }
 .accordion-toggle {
   color: var(--gold); opacity: 0.4; flex-shrink: 0;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s var(--ease-spring), opacity 0.3s ease;
+  width: 24px; text-align: center;
 }
 .accordion-item.expanded .accordion-toggle { transform: rotate(45deg); opacity: 0.8; }
 .accordion-body {
   max-height: 0; overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: max-height 0.6s var(--ease-out-expo);
 }
 .accordion-item.expanded .accordion-body { max-height: 600px; }
 .accordion-content {
-  padding: 0 clamp(1rem, 3.5vw, 1.5rem) clamp(1rem, 3.5vw, 1.5rem);
-  padding-left: calc(clamp(1rem, 3.5vw, 1.5rem) + 2.5rem);
+  padding: 0 clamp(1.25rem, 4vw, 1.75rem) clamp(1.25rem, 4vw, 1.75rem);
+  padding-left: calc(clamp(1.25rem, 4vw, 1.75rem) + 2.5rem);
 }
 .accordion-content p {
-  font-size: clamp(0.82rem, 2.3vw, 0.9rem);
-  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
-  margin-bottom: 0.75rem;
+  font-size: clamp(0.85rem, 2.3vw, 0.95rem);
+  color: var(--text-secondary); line-height: 1.8; font-weight: 300;
+  margin-bottom: 0.85rem;
 }
 .accordion-content p:last-child { margin-bottom: 0; }
+
+/* Section feature images */
+.section-feature-image {
+  width: 100%; border-radius: 18px; overflow: hidden;
+  margin: 2rem 0 3rem; position: relative;
+  border: 1px solid rgba(201,168,76,0.06);
+}
+.section-feature-image img {
+  width: 100%; display: block;
+  animation: sceneBreath 15s ease-in-out infinite;
+}
+.section-feature-image::after {
+  content: ''; position: absolute; inset: 0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(7,10,16,0.1) 0%, transparent 30%, transparent 70%, rgba(7,10,16,0.3) 100%);
+  pointer-events: none;
+}
 
 /* ======================== CLOSING ======================== */
 #closing {
   background: var(--deep-alt); text-align: center;
-  padding-top: clamp(5rem, 14vw, 9rem); padding-bottom: clamp(5rem, 14vw, 9rem);
+  padding-top: clamp(6rem, 16vw, 11rem); padding-bottom: clamp(6rem, 16vw, 11rem);
+  position: relative; overflow: hidden;
 }
-#closing .section-inner { max-width: 720px; margin: 0 auto; }
+#closing .section-inner { max-width: 740px; margin: 0 auto; position: relative; z-index: 2; }
 #closing h2 {
-  font-size: clamp(2.2rem, 8vw, 4rem); margin-bottom: 2.5rem;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.4rem, 9vw, 4.5rem); margin-bottom: 3rem;
+  letter-spacing: -0.025em;
   background: linear-gradient(135deg, var(--gold-light), var(--gold));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .closing-lines p {
-  font-family: var(--serif); font-size: clamp(1rem, 3vw, 1.2rem);
-  color: var(--text-secondary); line-height: 1.7; font-weight: 400;
-  margin-bottom: 1.25rem;
+  font-family: var(--serif); font-size: clamp(1.05rem, 3vw, 1.25rem);
+  color: var(--text-secondary); line-height: 1.75; font-weight: 400;
+  margin-bottom: 1.5rem;
 }
 .closing-lines p:last-child {
   color: var(--text); font-weight: 600; font-style: italic;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
+}
+
+/* CTA */
+.closing-cta {
+  margin-top: 4rem;
+  display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+}
+.cta-divider {
+  width: 40px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.5;
+}
+.cta-label {
+  font-family: var(--mono);
+  font-size: clamp(0.55rem, 1.5vw, 0.62rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.cta-contact {
+  font-family: var(--serif);
+  font-size: clamp(1rem, 2.8vw, 1.15rem);
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Closing ambient */
+#closing .closing-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
 }
 
 /* ======================== REFERENCES ======================== */
@@ -603,42 +844,75 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 #references .section-inner { max-width: 900px; margin: 0 auto; }
 #references h3 {
   font-family: var(--mono); font-size: clamp(0.65rem, 1.8vw, 0.72rem);
-  letter-spacing: 0.25em; color: var(--gold); margin-bottom: 2rem;
+  letter-spacing: 0.25em; color: var(--gold); margin-bottom: 2.5rem;
   text-transform: uppercase;
 }
 .ref-list p {
   font-family: var(--mono); font-size: clamp(0.55rem, 1.5vw, 0.62rem);
-  color: var(--text-dim); line-height: 1.8; margin-bottom: 0.4rem;
+  color: var(--text-dim); line-height: 1.9; margin-bottom: 0.45rem;
   letter-spacing: 0.01em;
 }
 
-/* ======================== AMBIENT PARTICLES ======================== */
-.ambient-orb {
-  position: absolute; border-radius: 50%; pointer-events: none;
-  background: radial-gradient(circle, var(--gold-glow), transparent 70%);
-  filter: blur(60px); opacity: 0.5;
+/* ======================== COLOPHON ======================== */
+.colophon {
+  margin-top: 4rem; text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(201,168,76,0.06);
+}
+.colophon p {
+  font-family: var(--mono);
+  font-size: clamp(0.5rem, 1.3vw, 0.55rem);
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  opacity: 0.6;
 }
 
 /* ======================== RESPONSIVE ======================== */
 @media (min-width: 768px) {
   .stat-grid { grid-template-columns: repeat(4, 1fr); }
-  .study-content { padding-left: calc(1.5rem + 3rem); }
+  .study-content { padding-left: calc(1.75rem + 3rem); }
+}
+
+/* Safe area insets for modern phones */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  #references { padding-bottom: calc(clamp(4rem,10vw,6rem) + env(safe-area-inset-bottom)); }
 }
 </style>
 </head>
 <body>
 
+<!-- ======================== PRELOADER ======================== -->
+<div id="preloader">
+  <div class="preloader-mark">The McCourt Foundation</div>
+  <div class="preloader-line"></div>
+</div>
+
 <div id="progress-bar"></div>
+
+<!-- ======================== SIDE NAV ======================== -->
+<nav id="side-nav">
+  <div class="nav-dot" data-section="hero" data-label="Top"></div>
+  <div class="nav-dot" data-section="crisis" data-label="The Crisis"></div>
+  <div class="nav-dot" data-section="cause" data-label="The Cause"></div>
+  <div class="nav-dot" data-section="mechanism" data-label="The Mechanism"></div>
+  <div class="nav-dot" data-section="nicotine" data-label="Nicotine"></div>
+  <div class="nav-dot" data-section="prevention" data-label="Prevention"></div>
+  <div class="nav-dot" data-section="movement" data-label="Movement"></div>
+  <div class="nav-dot" data-section="opportunity" data-label="Opportunity"></div>
+  <div class="nav-dot" data-section="closing" data-label="Closing"></div>
+</nav>
 
 <!-- ======================== HERO ======================== -->
 <section id="hero">
-  <canvas id="hero-canvas"></canvas>
+  <div id="hero-bg"></div>
   <div class="hero-content">
-    <div class="foundation-tag fade-up">The McCourt Foundation</div>
-    <h1 class="fade-up fade-up-d1">The Bitter Truth</h1>
-    <p class="subtitle fade-up fade-up-d2">How sugar destroys the brain, why nicotine research still matters, and what the McCourt Foundation is positioned to do about it.</p>
-    <span class="brief-tag fade-up fade-up-d3">Research Brief 2026</span>
-    <div class="scroll-indicator fade-up fade-up-d4"><span></span></div>
+    <div class="prepared-for fade-up">Prepared exclusively for<strong>Frank McCourt &amp; The McCourt Foundation</strong></div>
+    <div class="foundation-tag fade-up fade-up-d1">The McCourt Foundation</div>
+    <h1 class="fade-up fade-up-d2">The Bitter Truth</h1>
+    <p class="subtitle fade-up fade-up-d3">How sugar destroys the brain, why nicotine research still matters, and what the McCourt Foundation is positioned to do about it.</p>
+    <span class="brief-tag fade-up fade-up-d4">Research Brief 2026</span>
+    <div class="scroll-indicator fade-up fade-up-d5"><span></span></div>
   </div>
 </section>
 
@@ -646,6 +920,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
 <!-- ======================== SECTION 01: THE CRISIS ======================== -->
 <section id="crisis" class="section-wrap">
+  <div class="ambient-orb ambient-orb--1"></div>
   <div class="section-inner">
     <div class="section-num fade-up">Section 01</div>
     <h2 class="fade-up fade-up-d1">The Crisis</h2>
@@ -686,14 +961,16 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
 <!-- ======================== SECTION 02: THE CAUSE ======================== -->
 <section id="cause" class="section-wrap">
+  <div class="ambient-orb ambient-orb--2"></div>
+  <div class="ambient-orb ambient-orb--3"></div>
   <div class="section-inner">
     <div class="section-num fade-up">Section 02</div>
     <h2 class="fade-up fade-up-d1">The Cause</h2>
     <div class="cause-headline-stat fade-up fade-up-d2">580,000+ participants across four landmark studies. Dose-dependent. No safe threshold.</div>
     <p class="lead-text fade-up fade-up-d2">The evidence linking dietary sugar consumption to neurodegeneration is no longer speculative. It is overwhelming, dose-dependent, and consistent across populations.</p>
 
-    <div class="three-canvas-inline fade-up" id="neuron-scene-wrap">
-      <canvas id="neuron-canvas"></canvas>
+    <div class="scene-image fade-up">
+      <img src="images/sugar-attack.jpg" alt="Neuron under attack from sugar crystals" loading="lazy">
     </div>
 
     <div class="study-card fade-up" onclick="toggleStudy(this)">
@@ -766,14 +1043,15 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
 <!-- ======================== SECTION 03: THE MECHANISM ======================== -->
 <section id="mechanism" class="section-wrap">
+  <div class="ambient-orb ambient-orb--1"></div>
   <div class="section-inner">
     <div class="section-num fade-up">Section 03</div>
     <h2 class="fade-up fade-up-d1">The Mechanism</h2>
     <div class="subtitle-mech fade-up fade-up-d2">Type 3 Diabetes&#8202;&#8212;&#8202;Alzheimer's as a metabolic disease of the brain</div>
-    <p class="body-text fade-up fade-up-d2" style="margin-bottom:2rem;">A growing body of evidence reframes Alzheimer's not as a disease of aging, but as a brain-specific form of insulin resistance&#8202;&#8212;&#8202;a metabolic failure confined to the central nervous system, often developing without peripheral diabetes.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:2.5rem;">A growing body of evidence reframes Alzheimer's not as a disease of aging, but as a brain-specific form of insulin resistance&#8202;&#8212;&#8202;a metabolic failure confined to the central nervous system, often developing without peripheral diabetes.</p>
 
-    <div class="three-canvas-inline fade-up" id="plaque-scene-wrap">
-      <canvas id="plaque-canvas"></canvas>
+    <div class="scene-image fade-up">
+      <img src="images/plaque-synapse.jpg" alt="Amyloid plaque formation at synaptic junction" loading="lazy">
     </div>
 
     <div class="step-progress fade-up" id="step-progress">
@@ -810,13 +1088,14 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       <button class="step-btn" onclick="changeStep(-1)" id="step-prev">&#8592; Previous</button>
       <button class="step-btn primary" onclick="changeStep(1)" id="step-next">Next &#8594;</button>
     </div>
+    <div class="swipe-hint fade-up">Swipe to navigate</div>
 
     <div class="key-finding fade-up">
       <div class="key-finding-label">Key Finding</div>
       <p>Brain insulin resistance develops up to a decade before clinical symptoms appear&#8202;&#8212;&#8202;creating a critical window for early intervention through dietary modification and metabolic screening.</p>
     </div>
 
-    <div class="source-tag fade-up" style="margin-top:2rem;">Sources: de la Monte &amp; Wands 2008; Nguyen et al. 2020; Zhao et al., Neuron 2017 (Mayo Clinic)</div>
+    <div class="source-tag fade-up" style="margin-top:2.5rem;">Sources: de la Monte &amp; Wands 2008; Nguyen et al. 2020; Zhao et al., Neuron 2017 (Mayo Clinic)</div>
   </div>
 </section>
 
@@ -824,17 +1103,18 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
 <!-- ======================== SECTION 04: NICOTINE ======================== -->
 <section id="nicotine" class="section-wrap">
+  <div class="ambient-orb ambient-orb--2"></div>
   <div class="section-inner">
     <div class="section-num fade-up">Section 04</div>
     <h2 class="fade-up fade-up-d1">The Nicotine Question</h2>
-    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1rem;">Isolated from tobacco and studied for over 30 years as a cognitive enhancer, nicotine stimulates alpha-4-beta-2 and alpha-7 nicotinic acetylcholine receptors in the brain. Unlike cholinesterase inhibitors&#8202;&#8212;&#8202;which merely slow the breakdown of existing acetylcholine&#8202;&#8212;&#8202;nicotine directly activates and upregulates these receptors.</p>
-    <p class="body-text fade-up fade-up-d2" style="margin-bottom:2.5rem;">A critical distinction: nicotine does not cause cancer. The carcinogens in tobacco&#8202;&#8212;&#8202;tar, nitrosamines, polycyclic aromatic hydrocarbons&#8202;&#8212;&#8202;are responsible. This separation is foundational to the research.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1.25rem;">Isolated from tobacco and studied for over 30 years as a cognitive enhancer, nicotine stimulates alpha-4-beta-2 and alpha-7 nicotinic acetylcholine receptors in the brain. Unlike cholinesterase inhibitors&#8202;&#8212;&#8202;which merely slow the breakdown of existing acetylcholine&#8202;&#8212;&#8202;nicotine directly activates and upregulates these receptors.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:3rem;">A critical distinction: nicotine does not cause cancer. The carcinogens in tobacco&#8202;&#8212;&#8202;tar, nitrosamines, polycyclic aromatic hydrocarbons&#8202;&#8212;&#8202;are responsible. This separation is foundational to the research.</p>
 
-    <div class="three-canvas-inline fade-up" id="synapse-scene-wrap">
-      <canvas id="synapse-canvas"></canvas>
+    <div class="scene-image fade-up">
+      <img src="images/nicotine-receptor.jpg" alt="Nicotine molecule binding to acetylcholine receptor" loading="lazy">
     </div>
 
-    <div class="tab-bar fade-up">
+    <div class="tab-bar fade-up" id="tab-bar">
       <button class="tab-btn active" onclick="switchTab(0)">2012 Pilot Trial</button>
       <button class="tab-btn" onclick="switchTab(1)">MIND Study</button>
     </div>
@@ -872,11 +1152,16 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
 <!-- ======================== SECTION 05: PREVENTION ======================== -->
 <section id="prevention" class="section-wrap">
+  <div class="ambient-orb ambient-orb--3"></div>
   <div class="section-inner">
     <div class="section-num fade-up">Section 05</div>
     <h2 class="fade-up fade-up-d1">Prevention</h2>
-    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1rem;">The 2024 Lancet Commission identified <span class="highlight-gold">14 modifiable risk factors</span> that account for 45% of all dementia cases globally&#8202;&#8212;&#8202;up from 40% and 12 factors in 2020. This is a disease that can be significantly prevented.</p>
-    <p class="body-text fade-up fade-up-d2" style="margin-bottom:2.5rem;">Two of the most impactful factors&#8202;&#8212;&#8202;physical inactivity and diabetes&#8202;&#8212;&#8202;are directly linked to sugar metabolism and the mechanisms described in this brief.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1.25rem;">The 2024 Lancet Commission identified <span class="highlight-gold">14 modifiable risk factors</span> that account for 45% of all dementia cases globally&#8202;&#8212;&#8202;up from 40% and 12 factors in 2020. This is a disease that can be significantly prevented.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:3rem;">Two of the most impactful factors&#8202;&#8212;&#8202;physical inactivity and diabetes&#8202;&#8212;&#8202;are directly linked to sugar metabolism and the mechanisms described in this brief.</p>
+
+    <div class="section-feature-image fade-up">
+      <img src="images/brain-shield.jpg" alt="Brain with protective neural shield" loading="lazy">
+    </div>
 
     <div class="risk-chart fade-up" id="risk-chart">
       <div class="risk-bar-wrap" data-w="7">
@@ -950,8 +1235,8 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
         <div class="risk-pct">7%</div>
       </div>
     </div>
-    <p class="fade-up" style="font-family:var(--mono);font-size:clamp(0.5rem,1.3vw,0.55rem);color:var(--text-dim);margin-top:0.5rem;">* New factors added in 2024 Lancet Commission update</p>
-    <div class="source-tag fade-up" style="margin-top:1.5rem;">Source: Livingston et al., Lancet 2024;404:572&#8211;628</div>
+    <p class="fade-up" style="font-family:var(--mono);font-size:clamp(0.5rem,1.3vw,0.55rem);color:var(--text-dim);margin-top:0.75rem;">* New factors added in 2024 Lancet Commission update</p>
+    <div class="source-tag fade-up" style="margin-top:2rem;">Source: Livingston et al., Lancet 2024;404:572&#8211;628</div>
   </div>
 </section>
 
@@ -959,10 +1244,15 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
 <!-- ======================== SECTION 06: MOVEMENT ======================== -->
 <section id="movement" class="section-wrap">
+  <div class="ambient-orb ambient-orb--1"></div>
   <div class="section-inner">
     <div class="section-num fade-up">Section 06</div>
     <h2 class="fade-up fade-up-d1">Movement as Medicine</h2>
-    <p class="body-text fade-up fade-up-d2" style="margin-bottom:2.5rem;">The most recent longitudinal studies confirm that physical activity is among the most powerful modifiable interventions against cognitive decline&#8202;&#8212;&#8202;and the evidence is strengthening with every publication cycle.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:3rem;">The most recent longitudinal studies confirm that physical activity is among the most powerful modifiable interventions against cognitive decline&#8202;&#8212;&#8202;and the evidence is strengthening with every publication cycle.</p>
+
+    <div class="section-feature-image fade-up">
+      <img src="images/brain-comparison.jpg" alt="Inactive brain versus active brain comparison" loading="lazy">
+    </div>
 
     <div class="evidence-stack fade-up">
       <div class="evidence-item">
@@ -991,11 +1281,17 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
 <!-- ======================== SECTION 07: THE OPPORTUNITY ======================== -->
 <section id="opportunity" class="section-wrap">
+  <div class="ambient-orb ambient-orb--2"></div>
+  <div class="ambient-orb ambient-orb--3"></div>
   <div class="section-inner">
     <div class="section-num fade-up">Section 07</div>
     <h2 class="fade-up fade-up-d1">The Opportunity</h2>
-    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1rem;">For over 30 years, The McCourt Foundation has been dedicated to curing neurological diseases&#8202;&#8212;&#8202;galvanized by the McCourt family's own experiences with multiple sclerosis and Alzheimer's disease.</p>
-    <p class="body-text fade-up fade-up-d2" style="margin-bottom:2.5rem;">Founded in 1992, TMF has donated millions to neurological research, raised over $63 million through its Nonprofit Partner Program, maintained research partnerships with Massachusetts General Hospital and Brigham and Women's Hospital, and hosts its annual Neurological Symposium. The Foundation operates the LA Marathon, Rose Bowl Half Marathon, and other endurance events.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1.25rem;">For over 30 years, The McCourt Foundation has been dedicated to curing neurological diseases&#8202;&#8212;&#8202;galvanized by the McCourt family's own experiences with multiple sclerosis and Alzheimer's disease.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:3rem;">Founded in 1992, TMF has donated millions to neurological research, raised over $63 million through its Nonprofit Partner Program, maintained research partnerships with Massachusetts General Hospital and Brigham and Women's Hospital, and hosts its annual Neurological Symposium. The Foundation operates the LA Marathon, Rose Bowl Half Marathon, and other endurance events.</p>
+
+    <div class="section-feature-image fade-up">
+      <img src="images/global-network.jpg" alt="Global network of connected brains" loading="lazy">
+    </div>
 
     <div class="fade-up">
       <div class="accordion-item" onclick="toggleAccordion(this)">
@@ -1057,6 +1353,10 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
 <!-- ======================== CLOSING ======================== -->
 <section id="closing" class="section-wrap">
+  <div class="closing-glow"></div>
+    <div style="position:absolute;inset:0;z-index:0;opacity:0.12;">
+      <img src="images/brain-split.jpg" alt="" style="width:100%;height:100%;object-fit:cover;">
+    </div>
   <div class="section-inner">
     <h2 class="fade-up">The future is preventable.</h2>
     <div class="closing-lines">
@@ -1065,13 +1365,18 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       <p class="fade-up fade-up-d3">Exercise reduces risk by up to 45%&#8202;&#8212;&#8202;and the McCourt Foundation already runs the platform.</p>
       <p class="fade-up fade-up-d4">The science is clear. The mission is aligned. The time to act is now.</p>
     </div>
+    <div class="closing-cta fade-up fade-up-d5">
+      <div class="cta-divider"></div>
+      <div class="cta-label">Begin the conversation</div>
+      <div class="cta-contact">mccourtfoundation.org</div>
+    </div>
   </div>
 </section>
 
 <div class="section-divider"></div>
 
 <!-- ======================== REFERENCES ======================== -->
-<section id="references" class="section-wrap" style="padding-top:clamp(3rem,8vw,5rem);padding-bottom:clamp(4rem,10vw,6rem);">
+<section id="references" class="section-wrap" style="padding-top:clamp(3.5rem,8vw,5.5rem);padding-bottom:clamp(4.5rem,10vw,7rem);">
   <div class="section-inner">
     <h3 class="fade-up">References</h3>
     <div class="ref-list fade-up">
@@ -1093,905 +1398,14 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       <p>[16] Fang M et al. Nat Med 2025;31(3):772&#8211;776</p>
       <p>[17] The McCourt Foundation. mccourtfoundation.org/about-us</p>
     </div>
-    <div style="margin-top:3rem;text-align:center;">
-      <div style="font-family:var(--mono);font-size:clamp(0.55rem,1.4vw,0.6rem);letter-spacing:0.25em;color:var(--text-dim);text-transform:uppercase;">The McCourt Foundation &#183; Research Brief 2026</div>
+    <div class="colophon">
+      <p>The McCourt Foundation &#183; Research Brief 2026</p>
     </div>
   </div>
 </section>
 
-<!-- ======================== THREE.JS ======================== -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ======================== UTILITIES ========================
-const isMobile = window.innerWidth < 768;
-const dpr = Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2);
 
-// ======================== CUSTOM SHADERS ========================
-
-// Brain vertex shader with GLSL noise for cortical folds
-const brainVertShader = `
-  varying vec3 vNormal;
-  varying vec3 vWorldPos;
-  varying vec3 vViewDir;
-  varying float vDisplacement;
-  uniform float uTime;
-
-  // Simplex-style noise
-  vec3 mod289(vec3 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
-  vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
-  vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
-  vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
-
-  float snoise(vec3 v) {
-    const vec2 C = vec2(1.0/6.0, 1.0/3.0);
-    const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
-    vec3 i = floor(v + dot(v, C.yyy));
-    vec3 x0 = v - i + dot(i, C.xxx);
-    vec3 g = step(x0.yzx, x0.xyz);
-    vec3 l = 1.0 - g;
-    vec3 i1 = min(g.xyz, l.zxy);
-    vec3 i2 = max(g.xyz, l.zxy);
-    vec3 x1 = x0 - i1 + C.xxx;
-    vec3 x2 = x0 - i2 + C.yyy;
-    vec3 x3 = x0 - D.yyy;
-    i = mod289(i);
-    vec4 p = permute(permute(permute(
-      i.z + vec4(0.0, i1.z, i2.z, 1.0))
-      + i.y + vec4(0.0, i1.y, i2.y, 1.0))
-      + i.x + vec4(0.0, i1.x, i2.x, 1.0));
-    float n_ = 0.142857142857;
-    vec3 ns = n_ * D.wyz - D.xzx;
-    vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
-    vec4 x_ = floor(j * ns.z);
-    vec4 y_ = floor(j - 7.0 * x_);
-    vec4 x = x_ * ns.x + ns.yyyy;
-    vec4 y = y_ * ns.x + ns.yyyy;
-    vec4 h = 1.0 - abs(x) - abs(y);
-    vec4 b0 = vec4(x.xy, y.xy);
-    vec4 b1 = vec4(x.zw, y.zw);
-    vec4 s0 = floor(b0)*2.0 + 1.0;
-    vec4 s1 = floor(b1)*2.0 + 1.0;
-    vec4 sh = -step(h, vec4(0.0));
-    vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
-    vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
-    vec3 p0 = vec3(a0.xy, h.x);
-    vec3 p1 = vec3(a0.zw, h.y);
-    vec3 p2 = vec3(a1.xy, h.z);
-    vec3 p3 = vec3(a1.zw, h.w);
-    vec4 norm = taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
-    p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
-    vec4 m = max(0.6 - vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)), 0.0);
-    m = m * m;
-    return 42.0 * dot(m*m, vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-  }
-
-  float fbm(vec3 p) {
-    float f = 0.0;
-    f += 0.5000 * snoise(p * 1.0);
-    f += 0.2500 * snoise(p * 2.0);
-    f += 0.1250 * snoise(p * 4.0);
-    f += 0.0625 * snoise(p * 8.0);
-    return f;
-  }
-
-  void main() {
-    vec3 pos = position;
-    vec3 norm = normalize(pos);
-
-    // Cortical fold displacement via FBM noise
-    float sulci = fbm(norm * 3.0 + uTime * 0.02) * 0.12;
-    float gyri = snoise(norm * 6.0) * 0.04;
-    float detail = snoise(norm * 12.0) * 0.015;
-
-    // Hemispheric fissure
-    float fissure = exp(-pow(norm.x * 12.0, 2.0)) * 0.06;
-
-    // Temporal and frontal lobe shaping
-    float temporal = exp(-pow((norm.y + 0.4) * 3.0, 2.0)) * 0.08 * (1.0 - abs(norm.x));
-    float frontal = max(0.0, norm.z) * 0.04;
-    float occipital = max(0.0, -norm.z) * 0.02;
-
-    float disp = sulci + gyri + detail - fissure + temporal + frontal + occipital;
-    vDisplacement = disp;
-
-    // Ellipsoidal brain shape
-    pos = norm * (1.0 + disp);
-    pos.x *= 1.08;
-    pos.y *= 0.88;
-    pos.z *= 0.95;
-
-    vNormal = normalize(normalMatrix * normal);
-    vec4 worldPos = modelMatrix * vec4(pos, 1.0);
-    vWorldPos = worldPos.xyz;
-    vViewDir = normalize(cameraPosition - worldPos.xyz);
-
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-  }
-`;
-
-const brainFragShader = `
-  varying vec3 vNormal;
-  varying vec3 vWorldPos;
-  varying vec3 vViewDir;
-  varying float vDisplacement;
-  uniform float uTime;
-  uniform float uOpacity;
-
-  void main() {
-    vec3 norm = normalize(vNormal);
-    vec3 viewDir = normalize(vViewDir);
-
-    // Fresnel rim lighting (gold edge glow)
-    float fresnel = pow(1.0 - max(dot(norm, viewDir), 0.0), 3.5);
-
-    // Key light (warm top-right)
-    vec3 lightDir1 = normalize(vec3(0.5, 0.8, 0.6));
-    float diff1 = max(dot(norm, lightDir1), 0.0);
-    float spec1 = pow(max(dot(reflect(-lightDir1, norm), viewDir), 0.0), 32.0);
-
-    // Rim light (gold, from behind-left)
-    vec3 lightDir2 = normalize(vec3(-0.6, -0.2, -0.8));
-    float diff2 = max(dot(norm, lightDir2), 0.0);
-
-    // Fill light (cool blue, soft)
-    vec3 lightDir3 = normalize(vec3(-0.3, 0.5, 0.4));
-    float diff3 = max(dot(norm, lightDir3), 0.0);
-
-    // Brain base color — varies with displacement for depth
-    vec3 baseColor = mix(
-      vec3(0.38, 0.33, 0.30),  // Darker sulci
-      vec3(0.58, 0.50, 0.46),  // Lighter gyri
-      smoothstep(-0.05, 0.08, vDisplacement)
-    );
-
-    // Subsurface scattering approximation
-    float sss = max(0.0, dot(viewDir, -lightDir1)) * 0.15;
-    vec3 sssColor = vec3(0.7, 0.4, 0.35) * sss;
-
-    // Compose lighting
-    vec3 color = baseColor * 0.12; // ambient
-    color += baseColor * diff1 * 0.55 * vec3(1.0, 0.96, 0.90);
-    color += baseColor * diff2 * 0.2 * vec3(0.79, 0.66, 0.30);
-    color += baseColor * diff3 * 0.15 * vec3(0.5, 0.6, 0.75);
-    color += spec1 * 0.15 * vec3(1.0, 0.95, 0.85);
-    color += fresnel * 0.35 * vec3(0.79, 0.66, 0.30); // gold rim
-    color += sssColor;
-
-    // Subtle pulse
-    color += vec3(0.79, 0.66, 0.30) * 0.02 * (0.5 + 0.5 * sin(uTime * 0.8));
-
-    gl_FragColor = vec4(color, uOpacity);
-  }
-`;
-
-// Glow shader for volumetric halo
-const glowVertShader = `
-  varying vec3 vNormal;
-  varying vec3 vViewDir;
-  void main() {
-    vNormal = normalize(normalMatrix * normal);
-    vec4 worldPos = modelMatrix * vec4(position, 1.0);
-    vViewDir = normalize(cameraPosition - worldPos.xyz);
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
-
-const glowFragShader = `
-  varying vec3 vNormal;
-  varying vec3 vViewDir;
-  uniform vec3 uColor;
-  uniform float uIntensity;
-  uniform float uOpacity;
-  void main() {
-    float fresnel = pow(1.0 - max(dot(normalize(vNormal), normalize(vViewDir)), 0.0), 2.5);
-    gl_FragColor = vec4(uColor, fresnel * uIntensity * uOpacity);
-  }
-`;
-
-// Particle vertex shader with size attenuation
-const particleVertShader = `
-  attribute float aSize;
-  attribute float aAlpha;
-  varying float vAlpha;
-  uniform float uTime;
-  void main() {
-    vAlpha = aAlpha;
-    vec3 pos = position;
-    pos.y += sin(uTime * 0.3 + position.x * 2.0) * 0.05;
-    pos.x += cos(uTime * 0.2 + position.z * 1.5) * 0.03;
-    vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
-    gl_PointSize = aSize * (200.0 / -mvPos.z);
-    gl_Position = projectionMatrix * mvPos;
-  }
-`;
-
-const particleFragShader = `
-  varying float vAlpha;
-  uniform vec3 uColor;
-  uniform float uOpacity;
-  void main() {
-    float d = length(gl_PointCoord - vec2(0.5));
-    if (d > 0.5) discard;
-    float alpha = smoothstep(0.5, 0.1, d) * vAlpha;
-    gl_FragColor = vec4(uColor, alpha * uOpacity);
-  }
-`;
-
-// ======================== HERO BRAIN ========================
-(function initHeroBrain() {
-  const canvas = document.getElementById('hero-canvas');
-  if (!canvas) return;
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(40, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
-  camera.position.set(0, 0.2, 4.2);
-
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
-  renderer.setPixelRatio(dpr);
-  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-  renderer.setClearColor(0x000000, 0);
-
-  const brainUniforms = { uTime: { value: 0 }, uOpacity: { value: 1.0 } };
-
-  // Brain with custom shader
-  const brainGeo = new THREE.SphereBufferGeometry(1.1, isMobile ? 96 : 160, isMobile ? 72 : 120);
-  const brainMat = new THREE.ShaderMaterial({
-    vertexShader: brainVertShader,
-    fragmentShader: brainFragShader,
-    uniforms: brainUniforms,
-    transparent: true,
-    depthWrite: true,
-  });
-  const brain = new THREE.Mesh(brainGeo, brainMat);
-  scene.add(brain);
-
-  // Inner volumetric glow
-  const glowGeo = new THREE.SphereBufferGeometry(1.35, 32, 24);
-  const glowMat = new THREE.ShaderMaterial({
-    vertexShader: glowVertShader,
-    fragmentShader: glowFragShader,
-    uniforms: {
-      uColor: { value: new THREE.Color(0xc9a84c) },
-      uIntensity: { value: 0.45 },
-      uOpacity: { value: 1.0 }
-    },
-    transparent: true,
-    side: THREE.BackSide,
-    depthWrite: false,
-  });
-  const glow = new THREE.Mesh(glowGeo, glowMat);
-  scene.add(glow);
-
-  // Outer atmospheric halo
-  const haloGeo = new THREE.SphereBufferGeometry(1.8, 32, 24);
-  const haloMat = new THREE.ShaderMaterial({
-    vertexShader: glowVertShader,
-    fragmentShader: glowFragShader,
-    uniforms: {
-      uColor: { value: new THREE.Color(0x4a6080) },
-      uIntensity: { value: 0.2 },
-      uOpacity: { value: 1.0 }
-    },
-    transparent: true,
-    side: THREE.BackSide,
-    depthWrite: false,
-  });
-  scene.add(new THREE.Mesh(haloGeo, haloMat));
-
-  // Rich particle field
-  const pCount = isMobile ? 150 : 400;
-  const pGeo = new THREE.BufferGeometry();
-  const pPositions = new Float32Array(pCount * 3);
-  const pSizes = new Float32Array(pCount);
-  const pAlphas = new Float32Array(pCount);
-  for (let i = 0; i < pCount; i++) {
-    const r = 1.5 + Math.random() * 5;
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-    pPositions[i*3] = r * Math.sin(phi) * Math.cos(theta);
-    pPositions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
-    pPositions[i*3+2] = r * Math.cos(phi);
-    pSizes[i] = 0.5 + Math.random() * 2.5;
-    pAlphas[i] = 0.15 + Math.random() * 0.5;
-  }
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
-  pGeo.setAttribute('aSize', new THREE.BufferAttribute(pSizes, 1));
-  pGeo.setAttribute('aAlpha', new THREE.BufferAttribute(pAlphas, 1));
-
-  const pUniforms = {
-    uTime: { value: 0 },
-    uColor: { value: new THREE.Color(0xc9a84c) },
-    uOpacity: { value: 1.0 }
-  };
-  const pMat = new THREE.ShaderMaterial({
-    vertexShader: particleVertShader,
-    fragmentShader: particleFragShader,
-    uniforms: pUniforms,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  });
-  const particles = new THREE.Points(pGeo, pMat);
-  scene.add(particles);
-
-  // Neural connection lines (subtle)
-  const lineCount = isMobile ? 8 : 20;
-  for (let i = 0; i < lineCount; i++) {
-    const pts = [];
-    const startR = 1.3 + Math.random() * 0.3;
-    const endR = 2.5 + Math.random() * 2;
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-    const dir = new THREE.Vector3(
-      Math.sin(phi) * Math.cos(theta),
-      Math.sin(phi) * Math.sin(theta),
-      Math.cos(phi)
-    );
-    for (let j = 0; j <= 10; j++) {
-      const t = j / 10;
-      const r = startR + (endR - startR) * t;
-      pts.push(new THREE.Vector3(
-        dir.x * r + Math.sin(t * 4 + i) * 0.1 * t,
-        dir.y * r + Math.cos(t * 3 + i * 2) * 0.08 * t,
-        dir.z * r
-      ));
-    }
-    const curve = new THREE.CatmullRomCurve3(pts);
-    const lineGeo = new THREE.TubeBufferGeometry(curve, 8, 0.003, 3, false);
-    const lineMat = new THREE.MeshBasicMaterial({
-      color: 0xc9a84c, transparent: true, opacity: 0.06 + Math.random() * 0.06
-    });
-    scene.add(new THREE.Mesh(lineGeo, lineMat));
-  }
-
-  let scrollY = 0;
-  window.addEventListener('scroll', () => { scrollY = window.pageYOffset; }, { passive: true });
-
-  function animate(t) {
-    requestAnimationFrame(animate);
-    const time = t * 0.001;
-    brainUniforms.uTime.value = time;
-    pUniforms.uTime.value = time;
-
-    brain.rotation.y = time * 0.08;
-    brain.rotation.x = Math.sin(time * 0.05) * 0.04;
-    brain.rotation.z = Math.sin(time * 0.03) * 0.02;
-    glow.rotation.y = brain.rotation.y;
-    glow.rotation.x = brain.rotation.x;
-    particles.rotation.y = time * 0.015;
-    particles.rotation.x = Math.sin(time * 0.02) * 0.02;
-
-    // Fade on scroll
-    const fade = Math.max(0, 1 - scrollY / (window.innerHeight * 0.6));
-    brainUniforms.uOpacity.value = fade;
-    glowMat.uniforms.uOpacity.value = fade;
-    haloMat.uniforms.uOpacity.value = fade;
-    pUniforms.uOpacity.value = fade;
-    canvas.style.opacity = Math.max(0, fade);
-
-    renderer.render(scene, camera);
-  }
-  animate(0);
-
-  window.addEventListener('resize', () => {
-    camera.aspect = canvas.clientWidth / canvas.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-  });
-})();
-
-// ======================== INLINE 3D SCENES ========================
-function createInlineScene(canvasId, buildFn) {
-  const wrap = document.getElementById(canvasId.replace('-canvas', '-scene-wrap'));
-  if (!wrap) return;
-  let initialized = false;
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && !initialized) {
-      initialized = true;
-      buildFn(canvasId);
-      observer.disconnect();
-    }
-  }, { threshold: 0.15 });
-  observer.observe(wrap);
-}
-
-// ======================== NEURON + SUGAR SCENE (Section 02) ========================
-createInlineScene('neuron-canvas', function(canvasId) {
-  const canvas = document.getElementById(canvasId);
-  const wrap = canvas.parentElement;
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(50, wrap.clientWidth / wrap.clientHeight, 0.1, 50);
-  camera.position.set(0, 0, 5);
-
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
-  renderer.setPixelRatio(dpr);
-  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
-  renderer.setClearColor(0x000000, 0);
-
-  // Central neural network — glowing nodes with connections
-  const nodeCount = isMobile ? 12 : 25;
-  const nodes = [];
-  const nodeGroup = new THREE.Group();
-
-  // Create a neural network layout
-  for (let i = 0; i < nodeCount; i++) {
-    const r = 0.3 + Math.random() * 2.2;
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-    const pos = new THREE.Vector3(
-      r * Math.sin(phi) * Math.cos(theta),
-      r * Math.sin(phi) * Math.sin(theta) * 0.6,
-      r * Math.cos(phi) * 0.4
-    );
-
-    // Node glow sphere
-    const size = i === 0 ? 0.15 : 0.04 + Math.random() * 0.08;
-    const nodeGeo = new THREE.SphereBufferGeometry(size, 16, 12);
-    const isCenter = r < 0.8;
-    const nodeMat = new THREE.ShaderMaterial({
-      vertexShader: glowVertShader,
-      fragmentShader: `
-        varying vec3 vNormal;
-        varying vec3 vViewDir;
-        uniform vec3 uColor;
-        uniform float uIntensity;
-        uniform float uOpacity;
-        void main() {
-          float fresnel = pow(1.0 - max(dot(normalize(vNormal), normalize(vViewDir)), 0.0), 1.5);
-          float core = smoothstep(0.8, 0.0, fresnel) * 0.8;
-          gl_FragColor = vec4(uColor, (fresnel * 0.6 + core) * uIntensity * uOpacity);
-        }
-      `,
-      uniforms: {
-        uColor: { value: new THREE.Color(isCenter ? 0x88aacc : 0xc9a84c) },
-        uIntensity: { value: isCenter ? 1.2 : 0.8 },
-        uOpacity: { value: 1.0 }
-      },
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-    });
-    const node = new THREE.Mesh(nodeGeo, nodeMat);
-    node.position.copy(pos);
-    node.userData = { basePos: pos.clone(), phase: Math.random() * Math.PI * 2 };
-    nodeGroup.add(node);
-    nodes.push(node);
-  }
-
-  // Connect nearby nodes with glowing lines
-  for (let i = 0; i < nodes.length; i++) {
-    for (let j = i + 1; j < nodes.length; j++) {
-      const dist = nodes[i].position.distanceTo(nodes[j].position);
-      if (dist < 1.5 && Math.random() > 0.4) {
-        const pts = [nodes[i].position.clone(), nodes[j].position.clone()];
-        // Add a midpoint with slight curve
-        const mid = nodes[i].position.clone().add(nodes[j].position).multiplyScalar(0.5);
-        mid.y += (Math.random() - 0.5) * 0.15;
-        const curve = new THREE.QuadraticBezierCurve3(pts[0], mid, pts[1]);
-        const lineGeo = new THREE.TubeBufferGeometry(curve, 8, 0.006, 4, false);
-        const lineMat = new THREE.MeshBasicMaterial({
-          color: 0x6688aa, transparent: true, opacity: 0.12
-        });
-        nodeGroup.add(new THREE.Mesh(lineGeo, lineMat));
-      }
-    }
-  }
-  scene.add(nodeGroup);
-
-  // Sugar crystals — glowing golden shards spiraling inward
-  const crystals = [];
-  const crystalCount = isMobile ? 20 : 40;
-  for (let i = 0; i < crystalCount; i++) {
-    const geo = new THREE.OctahedronBufferGeometry(0.04 + Math.random() * 0.06, 0);
-    const mat = new THREE.MeshBasicMaterial({
-      color: 0xdfc47a, transparent: true, opacity: 0.6 + Math.random() * 0.3
-    });
-    const mesh = new THREE.Mesh(geo, mat);
-    const angle = Math.random() * Math.PI * 2;
-    const r = 1.8 + Math.random() * 1.5;
-    mesh.position.set(Math.cos(angle) * r, (Math.random()-0.5) * 2, Math.sin(angle) * r * 0.4);
-    mesh.userData = {
-      angle: angle,
-      r: r,
-      speed: 0.2 + Math.random() * 0.4,
-      yOff: mesh.position.y,
-      phase: Math.random() * Math.PI * 2
-    };
-    scene.add(mesh);
-    crystals.push(mesh);
-  }
-
-  // Danger glow particles around center
-  const dpCount = isMobile ? 40 : 80;
-  const dpGeo = new THREE.BufferGeometry();
-  const dpPos = new Float32Array(dpCount * 3);
-  const dpSizes = new Float32Array(dpCount);
-  const dpAlphas = new Float32Array(dpCount);
-  for (let i = 0; i < dpCount; i++) {
-    const a = Math.random() * Math.PI * 2;
-    const r = 0.3 + Math.random() * 0.8;
-    dpPos[i*3] = Math.cos(a) * r;
-    dpPos[i*3+1] = (Math.random()-0.5) * 0.6;
-    dpPos[i*3+2] = Math.sin(a) * r * 0.4;
-    dpSizes[i] = 1.0 + Math.random() * 3.0;
-    dpAlphas[i] = 0.1 + Math.random() * 0.3;
-  }
-  dpGeo.setAttribute('position', new THREE.BufferAttribute(dpPos, 3));
-  dpGeo.setAttribute('aSize', new THREE.BufferAttribute(dpSizes, 1));
-  dpGeo.setAttribute('aAlpha', new THREE.BufferAttribute(dpAlphas, 1));
-  const dpUniforms = {
-    uTime: { value: 0 },
-    uColor: { value: new THREE.Color(0xc9a84c) },
-    uOpacity: { value: 1.0 }
-  };
-  const dpMat = new THREE.ShaderMaterial({
-    vertexShader: particleVertShader,
-    fragmentShader: particleFragShader,
-    uniforms: dpUniforms,
-    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
-  });
-  scene.add(new THREE.Points(dpGeo, dpMat));
-
-  function animate(t) {
-    requestAnimationFrame(animate);
-    const time = t * 0.001;
-    dpUniforms.uTime.value = time;
-
-    // Breathe nodes
-    nodes.forEach(n => {
-      const bp = n.userData.basePos;
-      n.position.x = bp.x + Math.sin(time * 0.5 + n.userData.phase) * 0.03;
-      n.position.y = bp.y + Math.cos(time * 0.4 + n.userData.phase * 1.3) * 0.02;
-    });
-
-    // Spiral crystals inward
-    crystals.forEach(c => {
-      c.userData.angle += c.userData.speed * 0.008;
-      const shrink = Math.max(0.5, c.userData.r - Math.sin(time * 0.15 + c.userData.phase) * 0.3);
-      c.position.x = Math.cos(c.userData.angle) * shrink;
-      c.position.z = Math.sin(c.userData.angle) * shrink * 0.4;
-      c.position.y = c.userData.yOff + Math.sin(time * 0.6 + c.userData.phase) * 0.1;
-      c.rotation.x += 0.02 * c.userData.speed;
-      c.rotation.y += 0.015 * c.userData.speed;
-    });
-
-    nodeGroup.rotation.y = Math.sin(time * 0.08) * 0.15;
-    renderer.render(scene, camera);
-  }
-  animate(0);
-});
-
-// ======================== PLAQUE/TANGLE SCENE (Section 03) ========================
-createInlineScene('plaque-canvas', function(canvasId) {
-  const canvas = document.getElementById(canvasId);
-  const wrap = canvas.parentElement;
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(50, wrap.clientWidth / wrap.clientHeight, 0.1, 50);
-  camera.position.set(0, 0, 5);
-
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
-  renderer.setPixelRatio(dpr);
-  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
-  renderer.setClearColor(0x000000, 0);
-
-  // Central neuron as glowing orb
-  const coreGeo = new THREE.SphereBufferGeometry(0.35, 32, 24);
-  const coreMat = new THREE.ShaderMaterial({
-    vertexShader: glowVertShader,
-    fragmentShader: `
-      varying vec3 vNormal;
-      varying vec3 vViewDir;
-      uniform float uTime;
-      void main() {
-        vec3 n = normalize(vNormal);
-        vec3 v = normalize(vViewDir);
-        float fresnel = pow(1.0 - max(dot(n, v), 0.0), 2.0);
-        float core = smoothstep(0.6, 0.0, fresnel);
-        vec3 coreColor = mix(vec3(0.3, 0.45, 0.6), vec3(0.5, 0.6, 0.75), core);
-        float pulse = 0.9 + 0.1 * sin(uTime * 1.5);
-        gl_FragColor = vec4(coreColor * pulse, (core * 0.7 + fresnel * 0.5));
-      }
-    `,
-    uniforms: { uTime: { value: 0 } },
-    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
-  });
-  const core = new THREE.Mesh(coreGeo, coreMat);
-  scene.add(core);
-
-  // Outer dim shell
-  const shellGeo = new THREE.SphereBufferGeometry(0.5, 24, 18);
-  const shellMat = new THREE.ShaderMaterial({
-    vertexShader: glowVertShader,
-    fragmentShader: glowFragShader,
-    uniforms: {
-      uColor: { value: new THREE.Color(0x4a6080) },
-      uIntensity: { value: 0.25 },
-      uOpacity: { value: 1.0 }
-    },
-    transparent: true, side: THREE.BackSide, depthWrite: false
-  });
-  scene.add(new THREE.Mesh(shellGeo, shellMat));
-
-  // Amyloid plaques — dark golden accretions clustering around neuron
-  const plaqueGroup = new THREE.Group();
-  const plaqueCount = isMobile ? 15 : 30;
-  const plaqueMeshes = [];
-  for (let i = 0; i < plaqueCount; i++) {
-    const size = 0.06 + Math.random() * 0.12;
-    const geo = new THREE.IcosahedronBufferGeometry(size, 1);
-    // Distort vertices for organic look
-    const pPos = geo.attributes.position;
-    for (let j = 0; j < pPos.count; j++) {
-      const scale = 0.7 + Math.random() * 0.6;
-      pPos.setX(j, pPos.getX(j) * scale);
-      pPos.setY(j, pPos.getY(j) * (0.7 + Math.random() * 0.6));
-      pPos.setZ(j, pPos.getZ(j) * (0.7 + Math.random() * 0.6));
-    }
-    geo.computeVertexNormals();
-
-    const mat = new THREE.MeshBasicMaterial({
-      color: new THREE.Color().setHSL(0.1 + Math.random() * 0.05, 0.6, 0.35 + Math.random() * 0.15),
-      transparent: true,
-      opacity: 0.5 + Math.random() * 0.3
-    });
-    const mesh = new THREE.Mesh(geo, mat);
-
-    const angle = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-    const r = 0.5 + Math.random() * 1.2;
-    mesh.position.set(
-      r * Math.sin(phi) * Math.cos(angle),
-      r * Math.sin(phi) * Math.sin(angle) * 0.7,
-      r * Math.cos(phi) * 0.5
-    );
-    mesh.userData = { phase: Math.random() * 6, rotSpeed: (Math.random()-0.5) * 0.02 };
-    plaqueGroup.add(mesh);
-    plaqueMeshes.push(mesh);
-  }
-  scene.add(plaqueGroup);
-
-  // Tau tangles as glowing helix strands
-  const tangleGroup = new THREE.Group();
-  for (let i = 0; i < 6; i++) {
-    const pts = [];
-    const startAngle = Math.random() * Math.PI * 2;
-    const r = 0.7 + Math.random() * 0.8;
-    for (let j = 0; j <= 20; j++) {
-      const t = j / 20;
-      const a = startAngle + t * Math.PI * 3;
-      pts.push(new THREE.Vector3(
-        Math.cos(a) * r * (1 - t * 0.3) + (Math.random()-0.5) * 0.05,
-        (t - 0.5) * 1.8,
-        Math.sin(a) * r * 0.4 * (1 - t * 0.3)
-      ));
-    }
-    const curve = new THREE.CatmullRomCurve3(pts);
-    const tubeGeo = new THREE.TubeBufferGeometry(curve, 16, 0.012, 4, false);
-    const tubeMat = new THREE.MeshBasicMaterial({
-      color: 0xc9a84c, transparent: true, opacity: 0.2 + Math.random() * 0.2
-    });
-    tangleGroup.add(new THREE.Mesh(tubeGeo, tubeMat));
-  }
-  scene.add(tangleGroup);
-
-  // Danger particles
-  const dpCount = isMobile ? 60 : 120;
-  const dpGeo = new THREE.BufferGeometry();
-  const dpPos = new Float32Array(dpCount * 3);
-  const dpSizes = new Float32Array(dpCount);
-  const dpAlphas = new Float32Array(dpCount);
-  for (let i = 0; i < dpCount; i++) {
-    const r = 0.4 + Math.random() * 2.0;
-    const a = Math.random() * Math.PI * 2;
-    const p = Math.acos(2 * Math.random() - 1);
-    dpPos[i*3] = r * Math.sin(p) * Math.cos(a);
-    dpPos[i*3+1] = r * Math.sin(p) * Math.sin(a) * 0.7;
-    dpPos[i*3+2] = r * Math.cos(p) * 0.5;
-    dpSizes[i] = 0.5 + Math.random() * 2.5;
-    dpAlphas[i] = 0.05 + Math.random() * 0.2;
-  }
-  dpGeo.setAttribute('position', new THREE.BufferAttribute(dpPos, 3));
-  dpGeo.setAttribute('aSize', new THREE.BufferAttribute(dpSizes, 1));
-  dpGeo.setAttribute('aAlpha', new THREE.BufferAttribute(dpAlphas, 1));
-  const dpUniforms = { uTime: { value: 0 }, uColor: { value: new THREE.Color(0xb89040) }, uOpacity: { value: 1.0 } };
-  scene.add(new THREE.Points(dpGeo, new THREE.ShaderMaterial({
-    vertexShader: particleVertShader, fragmentShader: particleFragShader,
-    uniforms: dpUniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
-  })));
-
-  function animate(t) {
-    requestAnimationFrame(animate);
-    const time = t * 0.001;
-    coreMat.uniforms.uTime.value = time;
-    dpUniforms.uTime.value = time;
-
-    plaqueMeshes.forEach(p => {
-      p.rotation.y += p.userData.rotSpeed;
-      p.position.y += Math.sin(time * 0.4 + p.userData.phase) * 0.0004;
-    });
-    plaqueGroup.rotation.y = time * 0.06;
-    tangleGroup.rotation.y = -time * 0.04;
-
-    renderer.render(scene, camera);
-  }
-  animate(0);
-});
-
-// ======================== SYNAPSE SCENE (Section 04) ========================
-createInlineScene('synapse-canvas', function(canvasId) {
-  const canvas = document.getElementById(canvasId);
-  const wrap = canvas.parentElement;
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(50, wrap.clientWidth / wrap.clientHeight, 0.1, 50);
-  camera.position.set(0, 0, 4.5);
-
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
-  renderer.setPixelRatio(dpr);
-  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
-  renderer.setClearColor(0x000000, 0);
-
-  // Pre-synaptic terminal (left bulb)
-  function makeTerminal(x, color) {
-    const group = new THREE.Group();
-    group.position.x = x;
-
-    // Core
-    const cGeo = new THREE.SphereBufferGeometry(0.5, 32, 24);
-    const cMat = new THREE.ShaderMaterial({
-      vertexShader: glowVertShader,
-      fragmentShader: `
-        varying vec3 vNormal;
-        varying vec3 vViewDir;
-        void main() {
-          vec3 n = normalize(vNormal);
-          vec3 v = normalize(vViewDir);
-          float f = pow(1.0 - max(dot(n, v), 0.0), 2.5);
-          float core = smoothstep(0.7, 0.0, f) * 0.5;
-          vec3 col = vec3(${color});
-          gl_FragColor = vec4(col, core + f * 0.4);
-        }
-      `,
-      uniforms: {
-        uColor: { value: new THREE.Color(1,1,1) },
-        uIntensity: { value: 1.0 },
-        uOpacity: { value: 1.0 }
-      },
-      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
-    });
-    group.add(new THREE.Mesh(cGeo, cMat));
-
-    // Halo
-    const hGeo = new THREE.SphereBufferGeometry(0.7, 24, 16);
-    const hMat = new THREE.ShaderMaterial({
-      vertexShader: glowVertShader,
-      fragmentShader: glowFragShader,
-      uniforms: {
-        uColor: { value: new THREE.Color(parseInt(color.split(',').map(c => Math.round(parseFloat(c)*255).toString(16).padStart(2,'0')).join(''), 16) || 0x4a6080) },
-        uIntensity: { value: 0.2 },
-        uOpacity: { value: 1.0 }
-      },
-      transparent: true, side: THREE.BackSide, depthWrite: false
-    });
-    group.add(new THREE.Mesh(hGeo, hMat));
-
-    return group;
-  }
-
-  const preTerminal = makeTerminal(-1.4, '0.35, 0.5, 0.65');
-  const postTerminal = makeTerminal(1.4, '0.35, 0.55, 0.6');
-  scene.add(preTerminal);
-  scene.add(postTerminal);
-
-  // Receptor bumps on post-synaptic side
-  for (let i = 0; i < 7; i++) {
-    const angle = ((i / 7) * Math.PI * 1.2) - Math.PI * 0.6;
-    const rGeo = new THREE.SphereBufferGeometry(0.06, 8, 6);
-    const rMat = new THREE.MeshBasicMaterial({
-      color: 0xc9a84c, transparent: true, opacity: 0.7
-    });
-    const r = new THREE.Mesh(rGeo, rMat);
-    r.position.set(0.9, Math.sin(angle) * 0.4, Math.cos(angle) * 0.25);
-    postTerminal.add(r);
-  }
-
-  // Neurotransmitter flow — particles streaming across the cleft
-  const ntCount = isMobile ? 60 : 120;
-  const ntGeo = new THREE.BufferGeometry();
-  const ntPositions = new Float32Array(ntCount * 3);
-  const ntSizes = new Float32Array(ntCount);
-  const ntAlphas = new Float32Array(ntCount);
-  const ntData = [];
-
-  for (let i = 0; i < ntCount; i++) {
-    ntData.push({
-      t: Math.random(),
-      speed: 0.12 + Math.random() * 0.25,
-      yOff: (Math.random() - 0.5) * 0.7,
-      zOff: (Math.random() - 0.5) * 0.5,
-      wave: Math.random() * Math.PI * 2
-    });
-    ntSizes[i] = 1.5 + Math.random() * 3.0;
-    ntAlphas[i] = 0.4 + Math.random() * 0.6;
-  }
-  ntGeo.setAttribute('position', new THREE.BufferAttribute(ntPositions, 3));
-  ntGeo.setAttribute('aSize', new THREE.BufferAttribute(ntSizes, 1));
-  ntGeo.setAttribute('aAlpha', new THREE.BufferAttribute(ntAlphas, 1));
-
-  const ntUniforms = {
-    uTime: { value: 0 },
-    uColor: { value: new THREE.Color(0xdfc47a) },
-    uOpacity: { value: 1.0 }
-  };
-  const ntMat = new THREE.ShaderMaterial({
-    vertexShader: particleVertShader,
-    fragmentShader: particleFragShader,
-    uniforms: ntUniforms,
-    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
-  });
-  const ntParticles = new THREE.Points(ntGeo, ntMat);
-  scene.add(ntParticles);
-
-  // Ambient background particles
-  const bgCount = isMobile ? 30 : 60;
-  const bgGeo = new THREE.BufferGeometry();
-  const bgPos = new Float32Array(bgCount * 3);
-  const bgSizes = new Float32Array(bgCount);
-  const bgAlphas = new Float32Array(bgCount);
-  for (let i = 0; i < bgCount; i++) {
-    bgPos[i*3] = (Math.random()-0.5) * 8;
-    bgPos[i*3+1] = (Math.random()-0.5) * 4;
-    bgPos[i*3+2] = (Math.random()-0.5) * 3;
-    bgSizes[i] = 0.5 + Math.random() * 1.5;
-    bgAlphas[i] = 0.05 + Math.random() * 0.1;
-  }
-  bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
-  bgGeo.setAttribute('aSize', new THREE.BufferAttribute(bgSizes, 1));
-  bgGeo.setAttribute('aAlpha', new THREE.BufferAttribute(bgAlphas, 1));
-  const bgUniforms = { uTime: { value: 0 }, uColor: { value: new THREE.Color(0x6688aa) }, uOpacity: { value: 1.0 } };
-  scene.add(new THREE.Points(bgGeo, new THREE.ShaderMaterial({
-    vertexShader: particleVertShader, fragmentShader: particleFragShader,
-    uniforms: bgUniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
-  })));
-
-  function animate(t) {
-    requestAnimationFrame(animate);
-    const time = t * 0.001;
-    ntUniforms.uTime.value = time;
-    bgUniforms.uTime.value = time;
-
-    // Update neurotransmitter positions
-    const pos = ntGeo.attributes.position.array;
-    for (let i = 0; i < ntCount; i++) {
-      const d = ntData[i];
-      d.t += d.speed * 0.006;
-      if (d.t > 1) d.t -= 1;
-      const prog = d.t;
-      // Arc path from pre to post terminal
-      const x = -0.9 + prog * 1.8;
-      const arc = Math.sin(prog * Math.PI) * 0.3;
-      pos[i*3] = x;
-      pos[i*3+1] = d.yOff + arc + Math.sin(prog * Math.PI * 3 + d.wave + time * 0.5) * 0.08;
-      pos[i*3+2] = d.zOff + Math.cos(prog * Math.PI * 2 + d.wave + time * 0.3) * 0.06;
-    }
-    ntGeo.attributes.position.needsUpdate = true;
-
-    // Gentle sway
-    preTerminal.position.y = Math.sin(time * 0.3) * 0.03;
-    postTerminal.position.y = Math.sin(time * 0.3 + 1) * 0.03;
-    scene.rotation.y = Math.sin(time * 0.06) * 0.08;
-
-    renderer.render(scene, camera);
-  }
-  animate(0);
-});
 
 // ======================== SCROLL ANIMATIONS ========================
 const fadeObserver = new IntersectionObserver((entries) => {
@@ -2000,9 +1414,18 @@ const fadeObserver = new IntersectionObserver((entries) => {
       entry.target.classList.add('visible');
     }
   });
-}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
 
 document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+
+// Ambient orb visibility
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    entry.target.classList.toggle('in-view', entry.isIntersecting);
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.section-wrap').forEach(el => sectionObserver.observe(el));
 
 // ======================== PROGRESS BAR ========================
 const progressBar = document.getElementById('progress-bar');
@@ -2011,7 +1434,48 @@ window.addEventListener('scroll', () => {
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
   const progress = (scrollTop / docHeight) * 100;
   progressBar.style.width = progress + '%';
+  if (scrollTop > 100) progressBar.classList.add('active');
+  else progressBar.classList.remove('active');
 }, { passive: true });
+
+// ======================== SIDE NAV ========================
+(function initSideNav() {
+  const nav = document.getElementById('side-nav');
+  const dots = nav.querySelectorAll('.nav-dot');
+  const sections = [];
+
+  dots.forEach(dot => {
+    const id = dot.dataset.section;
+    const section = document.getElementById(id);
+    if (section) sections.push({ dot, section });
+
+    dot.addEventListener('click', () => {
+      const target = document.getElementById(id);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  let showTimeout;
+  window.addEventListener('scroll', () => {
+    // Show/hide nav
+    if (window.pageYOffset > window.innerHeight * 0.3) {
+      nav.classList.add('visible');
+    } else {
+      nav.classList.remove('visible');
+    }
+
+    // Update active dot
+    let current = null;
+    sections.forEach(({ dot, section }) => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.5 && rect.bottom > 0) {
+        current = dot;
+      }
+    });
+    dots.forEach(d => d.classList.remove('active'));
+    if (current) current.classList.add('active');
+  }, { passive: true });
+})();
 
 // ======================== COUNTERS ========================
 const counterObserver = new IntersectionObserver((entries) => {
@@ -2020,16 +1484,15 @@ const counterObserver = new IntersectionObserver((entries) => {
       const el = entry.target;
       const target = parseFloat(el.dataset.target);
       const decimals = parseInt(el.dataset.decimals) || 0;
-      let current = 0;
-      const duration = 2000;
+      const duration = 2200;
       const start = performance.now();
 
       function update(now) {
         const elapsed = now - start;
         const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        current = target * eased;
-        el.textContent = current.toFixed(decimals);
+        // Quintic ease-out for more dramatic deceleration
+        const eased = 1 - Math.pow(1 - progress, 5);
+        el.textContent = (target * eased).toFixed(decimals);
         if (progress < 1) requestAnimationFrame(update);
       }
       requestAnimationFrame(update);
@@ -2055,19 +1518,17 @@ const chartObserver = new IntersectionObserver((entries) => {
       chartObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.3 });
+}, { threshold: 0.25 });
 
 const riskChart = document.getElementById('risk-chart');
 if (riskChart) chartObserver.observe(riskChart);
 
 // ======================== INTERACTIVE ELEMENTS ========================
 
-// Study card expand/collapse
 function toggleStudy(el) {
   el.classList.toggle('expanded');
 }
 
-// Mechanism step walkthrough
 let currentStep = 0;
 const totalSteps = 4;
 
@@ -2090,21 +1551,89 @@ function changeStep(dir) {
   }
 }
 
-// Tab interface (nicotine section)
 function switchTab(idx) {
   document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
   document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
 }
 
-// Accordion (opportunity section)
 function toggleAccordion(el) {
   el.classList.toggle('expanded');
 }
 
-// ======================== INITIAL HERO ANIMATION ========================
+// ======================== SWIPE GESTURES ========================
+(function initSwipe() {
+  // Step container swipe
+  const stepContainer = document.getElementById('step-container');
+  if (stepContainer) {
+    let startX = 0, startY = 0, tracking = false;
+    stepContainer.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      tracking = true;
+    }, { passive: true });
+
+    stepContainer.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        if (dx < 0) changeStep(1);
+        else changeStep(-1);
+      }
+    }, { passive: true });
+  }
+
+  // Tab bar swipe
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  if (tabPanels.length > 0) {
+    const nicotineSection = document.getElementById('nicotine');
+    if (nicotineSection) {
+      let startX = 0, startY = 0, tracking = false;
+      nicotineSection.addEventListener('touchstart', (e) => {
+        if (e.target.closest('.tab-panel') || e.target.closest('.tab-bar')) {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+          tracking = true;
+        }
+      }, { passive: true });
+
+      nicotineSection.addEventListener('touchend', (e) => {
+        if (!tracking) return;
+        tracking = false;
+        const dx = e.changedTouches[0].clientX - startX;
+        const dy = e.changedTouches[0].clientY - startY;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          const currentTab = document.querySelector('.tab-btn.active');
+          const tabs = [...document.querySelectorAll('.tab-btn')];
+          const idx = tabs.indexOf(currentTab);
+          if (dx < 0 && idx < tabs.length - 1) switchTab(idx + 1);
+          else if (dx > 0 && idx > 0) switchTab(idx - 1);
+        }
+      }, { passive: true });
+    }
+  }
+})();
+
+// ======================== PRELOADER ========================
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('preloader').classList.add('done');
+    // Trigger hero animations after preloader fades
+    setTimeout(() => {
+      document.querySelectorAll('#hero .fade-up').forEach(el => el.classList.add('visible'));
+    }, 400);
+  }, 1200);
+});
+
+// Fallback: ensure preloader clears even if load event is slow
 setTimeout(() => {
-  document.querySelectorAll('#hero .fade-up').forEach(el => el.classList.add('visible'));
-}, 300);
+  const preloader = document.getElementById('preloader');
+  if (preloader && !preloader.classList.contains('done')) {
+    preloader.classList.add('done');
+    document.querySelectorAll('#hero .fade-up').forEach(el => el.classList.add('visible'));
+  }
+}, 4000);
 </script>
 </body>
 </html>
