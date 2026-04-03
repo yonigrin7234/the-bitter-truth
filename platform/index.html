@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>McCourt Foundation — Confidential</title>
+<meta name="theme-color" content="#070a10">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --deep: #070a10;
+  --deep-alt: #0b0f18;
+  --navy: #0d1117;
+  --navy-light: #141b27;
+  --charcoal: #1a2233;
+  --gold: #c9a84c;
+  --gold-light: #dfc47a;
+  --gold-dim: rgba(201,168,76,0.15);
+  --gold-glow: rgba(201,168,76,0.08);
+  --text: #e8e4dd;
+  --text-secondary: rgba(232,228,221,0.72);
+  --text-dim: rgba(232,228,221,0.45);
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  background: var(--deep);
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--deep);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.65;
+}
+
+body::-webkit-scrollbar { display: none; }
+body { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ======================== PASSCODE GATE ======================== */
+#gate {
+  position: fixed; inset: 0; z-index: 99999;
+  background: var(--deep);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#gate.unlocked {
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+.gate-brand {
+  font-family: var(--mono);
+  font-size: clamp(0.6rem, 1.5vw, 0.68rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+.gate-subtitle {
+  font-family: var(--serif);
+  font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+  color: var(--text-dim);
+  font-style: italic;
+  margin-bottom: 3rem;
+}
+.gate-input-wrap {
+  position: relative;
+  width: clamp(220px, 60vw, 280px);
+}
+.gate-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(201,168,76,0.3);
+  padding: 0.75em 0;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  letter-spacing: 0.15em;
+  outline: none;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+.gate-input::placeholder {
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+}
+.gate-input:focus {
+  border-bottom-color: var(--gold);
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(4px); }
+}
+.gate-input.shake {
+  animation: shake 0.4s ease;
+  border-bottom-color: rgba(201,168,76,0.5);
+}
+
+/* ======================== MAIN CONTENT ======================== */
+#content {
+  opacity: 0;
+  transition: opacity 1s ease 0.3s;
+}
+#content.visible { opacity: 1; }
+
+/* ======================== PROGRESS BAR ======================== */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  z-index: 9998;
+  box-shadow: 0 0 12px rgba(201,168,76,0.5);
+  opacity: 0;
+  transition: width 0.15s linear, opacity 0.5s ease;
+}
+#progress-bar.active { opacity: 1; }
+
+/* ======================== TYPOGRAPHY ======================== */
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15; }
+.label {
+  font-family: var(--sans); font-size: clamp(0.625rem, 2vw, 0.75rem);
+  text-transform: uppercase; letter-spacing: 0.2em; color: var(--gold);
+  font-weight: 500;
+}
+.body-text {
+  font-family: var(--sans); font-size: clamp(1rem, 2.8vw, 1.1rem);
+  color: var(--text-secondary); line-height: 1.8; font-weight: 300;
+}
+
+/* ======================== LAYOUT ======================== */
+.section-wrap {
+  width: 100%; max-width: 100vw; overflow: hidden;
+  padding: clamp(5rem, 14vw, 10rem) clamp(1.5rem, 6vw, 3.5rem);
+  position: relative;
+}
+.section-inner { max-width: 900px; margin: 0 auto; }
+
+/* ======================== AMBIENT ORBS ======================== */
+.ambient-orb {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, var(--gold-glow), transparent 70%);
+  filter: blur(80px); opacity: 0;
+  transition: opacity 1.5s ease;
+}
+.section-wrap.in-view .ambient-orb { opacity: 0.5; }
+.ambient-orb--1 { width: 400px; height: 400px; top: -100px; right: -150px; }
+.ambient-orb--2 { width: 300px; height: 300px; bottom: -80px; left: -100px; }
+
+/* ======================== FADE ANIMATIONS ======================== */
+.fade-up {
+  opacity: 0; transform: translateY(50px);
+  transition: opacity 1.1s var(--ease-out-expo), transform 1.1s var(--ease-out-expo);
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.fade-up-d1 { transition-delay: 0.12s; }
+.fade-up-d2 { transition-delay: 0.24s; }
+.fade-up-d3 { transition-delay: 0.38s; }
+.fade-up-d4 { transition-delay: 0.52s; }
+.fade-up-d5 { transition-delay: 0.68s; }
+.fade-up-d6 { transition-delay: 0.82s; }
+
+/* ======================== SECTION NUMS ======================== */
+.section-num {
+  font-family: var(--sans); font-size: clamp(0.62rem, 1.5vw, 0.68rem);
+  letter-spacing: 0.25em; color: var(--gold); opacity: 0.6;
+  margin-bottom: 1rem; font-weight: 500; text-transform: uppercase;
+}
+
+/* ======================== DIVIDERS ======================== */
+.section-blend {
+  height: clamp(80px, 12vw, 140px);
+  position: relative; margin: 0; overflow: hidden;
+}
+.section-blend--to-alt {
+  background: linear-gradient(180deg, var(--deep) 0%, var(--deep-alt) 100%);
+}
+.section-blend--to-deep {
+  background: linear-gradient(180deg, var(--deep-alt) 0%, var(--deep) 100%);
+}
+.section-blend::after {
+  content: ''; position: absolute;
+  left: 10%; right: 10%;
+  top: 50%; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(201,168,76,0.15) 30%, rgba(201,168,76,0.35) 50%, rgba(201,168,76,0.15) 70%, transparent 100%);
+  animation: shimmer-line 4s ease-in-out infinite;
+}
+@keyframes shimmer-line {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.65; }
+}
+
+/* ======================== HERO ======================== */
+#platform-hero {
+  min-height: 100svh; display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 0 clamp(1.5rem, 5vw, 3rem);
+  position: relative; text-align: center;
+}
+.hero-confidential {
+  font-family: var(--mono);
+  font-size: clamp(0.55rem, 1.4vw, 0.62rem);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 3rem;
+  opacity: 0.7;
+}
+#platform-hero h1 {
+  font-size: clamp(2.8rem, 10vw, 5.5rem); font-weight: 700;
+  letter-spacing: -0.02em; margin-bottom: 2rem;
+  color: var(--text); line-height: 1.05;
+}
+#platform-hero .subtitle {
+  font-family: var(--sans); font-size: clamp(0.95rem, 2.8vw, 1.15rem);
+  color: var(--text-secondary); line-height: 1.75;
+  font-weight: 300; margin-bottom: 3rem; max-width: 420px; margin-inline: auto;
+}
+.hero-rule {
+  width: 60px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto;
+}
+
+/* ======================== SECTION HEADINGS ======================== */
+.section-heading {
+  font-size: clamp(2rem, 7vw, 3.4rem);
+  margin-bottom: 1.75rem;
+  letter-spacing: -0.025em;
+}
+.section-heading-md {
+  font-size: clamp(1.6rem, 5.5vw, 2.6rem);
+  margin-bottom: 1.75rem;
+  letter-spacing: -0.02em;
+}
+
+/* ======================== APP MOCKUPS ======================== */
+.mockup-scroll {
+  display: flex; gap: clamp(1rem, 3vw, 1.5rem);
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  padding: 2rem 0 1.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.mockup-scroll::-webkit-scrollbar { display: none; }
+.mockup-wrap {
+  scroll-snap-align: center;
+  flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center;
+}
+.mockup-frame {
+  width: 280px; min-height: 520px;
+  background: linear-gradient(180deg, #0c1018 0%, #080c14 100%);
+  border-radius: 40px;
+  border: 1px solid rgba(232,228,221,0.08);
+  padding: clamp(1.5rem, 4vw, 2rem);
+  position: relative; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(232,228,221,0.04);
+  display: flex; flex-direction: column;
+}
+.mockup-frame::before {
+  content: '';
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  width: 80px; height: 5px; border-radius: 3px;
+  background: rgba(232,228,221,0.06);
+}
+.mockup-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  margin-top: 0.85rem;
+  text-transform: uppercase;
+}
+.swipe-hint-mockup {
+  font-family: var(--sans);
+  font-size: clamp(0.55rem, 1.3vw, 0.6rem);
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: 1rem;
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+}
+@media (min-width: 768px) {
+  .mockup-scroll {
+    flex-wrap: wrap; justify-content: center;
+    overflow-x: visible; scroll-snap-type: none;
+  }
+  .swipe-hint-mockup { display: none; }
+}
+
+/* Mockup inner elements */
+.mock-greeting {
+  font-family: var(--sans); font-size: 0.75rem;
+  color: var(--text-dim); margin-top: 1.25rem; margin-bottom: 1.5rem;
+}
+.mock-ring {
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  border: 3px solid rgba(201,168,76,0.15);
+  position: relative;
+  margin: 0 auto 0.75rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.mock-ring::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: var(--gold);
+  border-right-color: var(--gold);
+  transform: rotate(-30deg);
+}
+.mock-ring-value {
+  font-family: var(--serif); font-size: 2.2rem; font-weight: 700;
+  color: var(--gold);
+}
+.mock-ring-unit {
+  font-family: var(--sans); font-size: 0.6rem;
+  color: var(--text-dim); text-align: center; margin-bottom: 0.25rem;
+  letter-spacing: 0.02em;
+}
+.mock-ring-source {
+  font-family: var(--mono); font-size: 0.5rem;
+  color: rgba(232,228,221,0.25); text-align: center; margin-bottom: 1.25rem;
+}
+.mock-stats-row {
+  display: flex; justify-content: space-between; gap: 0.5rem;
+  margin-top: auto;
+}
+.mock-stat-block { text-align: center; flex: 1; }
+.mock-stat-val {
+  font-family: var(--sans); font-size: 0.85rem; font-weight: 600;
+  color: var(--text);
+}
+.mock-stat-label {
+  font-family: var(--sans); font-size: 0.5rem;
+  color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em;
+}
+
+/* Activity Detail screen */
+.mock-date {
+  font-family: var(--sans); font-size: 0.7rem;
+  color: var(--text-dim); margin-top: 1.25rem; margin-bottom: 1rem;
+}
+.mock-run-stats {
+  font-family: var(--sans); font-size: 1rem;
+  color: var(--text); font-weight: 500; margin-bottom: 1.25rem;
+}
+.mock-contrib-card {
+  border-left: 2px solid var(--gold);
+  padding: 0.85rem 1rem;
+  background: rgba(201,168,76,0.04);
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 0.85rem;
+}
+.mock-contrib-text {
+  font-family: var(--sans); font-size: 0.75rem;
+  color: var(--text-secondary); line-height: 1.6;
+}
+.mock-contrib-source {
+  font-family: var(--mono); font-size: 0.48rem;
+  color: rgba(232,228,221,0.28); margin-top: 0.5rem;
+}
+.mock-link {
+  font-family: var(--sans); font-size: 0.7rem;
+  color: var(--gold); margin-top: 0.85rem;
+  border-top: 1px solid rgba(232,228,221,0.06);
+  padding-top: 0.85rem;
+}
+
+/* Race Day screen */
+.mock-event-label {
+  font-family: var(--mono); font-size: 0.6rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-top: 1.25rem; margin-bottom: 2rem;
+}
+.mock-collective-num {
+  font-family: var(--serif); font-size: 1.8rem; font-weight: 700;
+  color: var(--text); text-align: center; margin-bottom: 0.25rem;
+}
+.mock-collective-label {
+  font-family: var(--sans); font-size: 0.65rem;
+  color: var(--text-dim); text-align: center; margin-bottom: 1.5rem;
+}
+.mock-collective-desc {
+  font-family: var(--sans); font-size: 0.7rem;
+  color: var(--text-secondary); text-align: center; line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+.mock-progress-bar {
+  height: 6px; border-radius: 3px;
+  background: rgba(232,228,221,0.06);
+  margin-bottom: 1.5rem; position: relative; overflow: hidden;
+}
+.mock-progress-fill {
+  height: 100%; border-radius: 3px; width: 73%;
+  background: linear-gradient(90deg, rgba(201,168,76,0.4), var(--gold));
+}
+.mock-finish-line {
+  font-family: var(--sans); font-size: 0.65rem;
+  color: var(--text-dim); text-align: center; line-height: 1.7;
+  margin-top: auto;
+}
+.mock-finish-line span {
+  color: var(--text); font-weight: 500;
+}
+
+/* Returning Runner screen */
+.mock-trajectory-title {
+  font-family: var(--sans); font-size: 0.7rem;
+  color: var(--gold); margin-top: 1.25rem; margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+.mock-chart {
+  position: relative; height: 120px;
+  margin-bottom: 1rem;
+}
+.mock-chart-line {
+  position: absolute; bottom: 10px; left: 0; right: 0;
+  height: 80px;
+}
+.mock-chart-line svg { width: 100%; height: 100%; }
+.mock-chart-labels {
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 0.42rem;
+  color: rgba(232,228,221,0.3); letter-spacing: 0.02em;
+}
+.mock-chart-summary {
+  font-family: var(--sans); font-size: 0.65rem;
+  color: var(--text-dim); line-height: 1.6; margin-top: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+.mock-chart-summary span {
+  color: var(--text-secondary); font-weight: 400;
+}
+.mock-chart-note {
+  font-family: var(--sans); font-size: 0.6rem;
+  color: rgba(232,228,221,0.3); line-height: 1.55;
+  margin-top: auto;
+}
+
+/* Research Feed screen */
+.mock-feed-title {
+  font-family: var(--sans); font-size: 0.85rem;
+  color: var(--text); margin-top: 1.25rem; margin-bottom: 1.25rem;
+  font-weight: 500;
+}
+.mock-feed-card {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(232,228,221,0.05);
+}
+.mock-feed-card:last-child { border-bottom: none; }
+.mock-feed-label {
+  font-family: var(--sans); font-size: 0.5rem;
+  color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase;
+  font-weight: 600; margin-bottom: 0.35rem;
+}
+.mock-feed-headline {
+  font-family: var(--sans); font-size: 0.72rem;
+  color: var(--text); line-height: 1.45; margin-bottom: 0.25rem;
+  font-weight: 400;
+}
+.mock-feed-meta {
+  font-family: var(--mono); font-size: 0.45rem;
+  color: rgba(232,228,221,0.28);
+}
+.mock-feed-link {
+  color: var(--gold); font-size: 0.55rem;
+}
+
+/* ======================== TIMELINE (Events) ======================== */
+.event-timeline {
+  position: relative;
+  padding: 2rem 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.event-timeline::-webkit-scrollbar { display: none; }
+.timeline-track {
+  display: flex;
+  min-width: max-content;
+  position: relative;
+  padding: 0 1rem;
+}
+.timeline-track::before {
+  content: '';
+  position: absolute;
+  top: 8px; left: 1rem; right: 1rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), rgba(201,168,76,0.3));
+}
+.timeline-node {
+  flex: 0 0 clamp(120px, 18vw, 160px);
+  position: relative;
+  padding-top: 2rem;
+}
+.timeline-node::before {
+  content: '';
+  position: absolute; top: 2px;
+  left: 0;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--deep);
+  border: 2px solid var(--gold);
+}
+.timeline-node-title {
+  font-family: var(--sans);
+  font-size: clamp(0.62rem, 1.5vw, 0.68rem);
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.timeline-node-desc {
+  font-family: var(--sans);
+  font-size: clamp(0.55rem, 1.3vw, 0.6rem);
+  color: var(--text-dim);
+  line-height: 1.55;
+  font-weight: 300;
+  padding-right: 1rem;
+}
+
+/* ======================== KEY FINDING ======================== */
+.key-finding {
+  margin-top: 3.5rem; padding: clamp(1.75rem, 5vw, 2.5rem);
+  background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.02));
+  border: 1px solid rgba(201,168,76,0.15); border-radius: 16px;
+  position: relative;
+}
+.key-finding::before {
+  content: ''; position: absolute; top: -1px; left: 2rem; right: 2rem; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.key-finding-label {
+  font-family: var(--sans); font-size: clamp(0.6rem, 1.4vw, 0.65rem);
+  letter-spacing: 0.2em; color: var(--gold); margin-bottom: 1rem;
+  text-transform: uppercase; font-weight: 500;
+}
+.key-finding p {
+  font-family: var(--serif); font-size: clamp(1.05rem, 3vw, 1.25rem);
+  color: var(--text); line-height: 1.6; font-weight: 400;
+  font-style: italic;
+}
+
+/* ======================== STRATEGY CARDS ======================== */
+.strategy-card {
+  padding: clamp(1.75rem, 5vw, 2.25rem) 0;
+  border-top: 1px solid rgba(232,228,221,0.08);
+}
+.strategy-card:last-child { border-bottom: 1px solid rgba(232,228,221,0.08); }
+.strategy-anchor {
+  font-family: var(--serif);
+  font-size: clamp(2.75rem, 10vw, 4rem);
+  font-weight: 700;
+  color: rgba(201,168,76,0.2);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.strategy-title {
+  font-family: var(--sans);
+  font-size: clamp(0.65rem, 1.7vw, 0.75rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.strategy-lead {
+  font-family: var(--sans);
+  font-size: clamp(0.92rem, 2.5vw, 1rem);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-weight: 300;
+  margin-bottom: 0.75rem;
+}
+.strategy-lead .sw { color: var(--text); font-weight: 500; }
+.strategy-detail {
+  font-family: var(--sans);
+  font-size: clamp(0.82rem, 2.2vw, 0.88rem);
+  color: var(--text-dim);
+  line-height: 1.75;
+  font-weight: 300;
+}
+
+/* ======================== ROADMAP TIMELINE ======================== */
+.roadmap-phase {
+  position: relative;
+  padding-left: clamp(2rem, 5vw, 2.5rem);
+  padding-bottom: clamp(2.5rem, 6vw, 3.5rem);
+  border-left: 1px solid rgba(201,168,76,0.2);
+  margin-left: 7px;
+}
+.roadmap-phase:last-of-type { border-left-color: transparent; }
+.roadmap-phase::before {
+  content: '';
+  position: absolute; left: -7px; top: 2px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--deep);
+  border: 2px solid var(--gold);
+}
+.roadmap-timeframe {
+  font-family: var(--mono); font-size: clamp(0.55rem, 1.4vw, 0.62rem);
+  color: var(--gold); letter-spacing: 0.1em; margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.roadmap-title {
+  font-family: var(--serif); font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+  color: var(--text); margin-bottom: 1rem; font-weight: 600;
+}
+.roadmap-list {
+  list-style: none;
+}
+.roadmap-list li {
+  font-family: var(--sans); font-size: clamp(0.85rem, 2.3vw, 0.95rem);
+  color: var(--text-secondary); line-height: 1.75; font-weight: 300;
+  padding: 0.35rem 0;
+  padding-left: 1rem;
+  position: relative;
+}
+.roadmap-list li::before {
+  content: '';
+  position: absolute; left: 0; top: 0.85em;
+  width: 4px; height: 4px; border-radius: 50%;
+  background: rgba(201,168,76,0.4);
+}
+
+/* ======================== CLOSING ======================== */
+#platform-closing {
+  background: var(--deep-alt); text-align: center;
+  padding-top: clamp(8rem, 20vw, 14rem);
+  padding-bottom: clamp(8rem, 20vw, 14rem);
+  position: relative; overflow: hidden;
+}
+#platform-closing .section-inner { position: relative; z-index: 2; }
+#platform-closing h2 {
+  font-size: clamp(2.2rem, 8vw, 4rem);
+  margin-bottom: 3rem;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 1.1;
+}
+.closing-lines p {
+  font-family: var(--serif); font-size: clamp(1.05rem, 3vw, 1.25rem);
+  color: var(--text-secondary); line-height: 1.75; font-weight: 400;
+  margin-bottom: 1.5rem;
+}
+.closing-lines p:last-child {
+  color: var(--text); font-weight: 500;
+  margin-top: 2.5rem;
+}
+.closing-rule {
+  width: 40px; height: 1px; margin: 3rem auto;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.closing-colophon {
+  font-family: var(--mono);
+  font-size: clamp(0.55rem, 1.3vw, 0.6rem);
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+.closing-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+/* ======================== RESPONSIVE ======================== */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  #platform-closing { padding-bottom: calc(clamp(8rem,20vw,14rem) + env(safe-area-inset-bottom)); }
+}
+</style>
+</head>
+<body>
+
+<!-- ======================== PASSCODE GATE ======================== -->
+<div id="gate">
+  <div class="gate-brand">McCourt Foundation</div>
+  <div class="gate-subtitle">This document is confidential.</div>
+  <div class="gate-input-wrap">
+    <input type="password" class="gate-input" id="gate-input" placeholder="Enter passcode" autocomplete="off" autocapitalize="off" spellcheck="false">
+  </div>
+</div>
+
+<!-- ======================== CONTENT ======================== -->
+<div id="content">
+
+<div id="progress-bar"></div>
+
+<!-- ======================== HERO ======================== -->
+<section id="platform-hero">
+  <div class="hero-confidential fade-up">McCourt Foundation &middot; Confidential</div>
+  <h1 class="fade-up fade-up-d1">The Brain<br>Health<br>Platform</h1>
+  <p class="subtitle fade-up fade-up-d2">A year-round product that makes the neuroprotection science personal for every runner&#8202;&#8212;&#8202;and gives the Foundation a direct relationship with hundreds of thousands of participants beyond race day.</p>
+  <div class="hero-rule fade-up fade-up-d3"></div>
+</section>
+
+<div class="section-blend section-blend--to-alt"></div>
+
+<!-- ======================== SECTION 01: THE INSIGHT ======================== -->
+<section id="insight" class="section-wrap" style="background:var(--deep-alt);">
+  <div class="ambient-orb ambient-orb--1"></div>
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 01</div>
+    <h2 class="section-heading-md fade-up fade-up-d1">Every mile protects the brain. No app in the world shows a runner that.</h2>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1.25rem;">Strava tracks pace. Nike Run Club tracks streaks. Garmin tracks heart rate zones. No running app anywhere translates physical activity into its effect on the brain&#8202;&#8212;&#8202;despite a decade of published evidence quantifying exactly that relationship.</p>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:1.25rem;">The Framingham Heart Study found that physical activity reduces dementia risk by up to 45%. Nature Medicine 2025 confirmed that exercise directly slows tau protein accumulation. Johns Hopkins 2025 established that there is no minimum threshold&#8202;&#8212;&#8202;any activity provides measurable cognitive benefit.</p>
+    <p class="body-text fade-up fade-up-d2">That means every run a user logs has a scientifically grounded brain health impact that can be estimated, tracked, and shown to them. The Foundation's events&#8202;&#8212;&#8202;the LA Marathon, the Pasadena Half Marathon, the Santa Monica Classic&#8202;&#8212;&#8202;become activation moments within a year-round relationship, not the entire relationship.</p>
+  </div>
+</section>
+
+<div class="section-blend section-blend--to-deep"></div>
+
+<!-- ======================== SECTION 02: THE PRODUCT ======================== -->
+<section id="product" class="section-wrap" style="background:var(--deep);">
+  <div class="ambient-orb ambient-orb--2"></div>
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 02</div>
+    <h2 class="section-heading fade-up fade-up-d1">What the runner sees</h2>
+
+    <div class="mockup-scroll fade-up fade-up-d2">
+
+      <!-- Screen 1: Dashboard -->
+      <div class="mockup-wrap">
+        <div class="mockup-frame">
+          <div class="mock-greeting">Good morning, Sarah</div>
+          <div class="mock-ring">
+            <div class="mock-ring-value">34%</div>
+          </div>
+          <div class="mock-ring-unit">Estimated relative risk reduction</div>
+          <div class="mock-ring-source">Based on your activity over the past 12 months</div>
+          <div style="font-family:var(--mono);font-size:0.42rem;color:rgba(232,228,221,0.22);text-align:center;margin-bottom:auto;">Framingham Heart Study cohort model</div>
+          <div class="mock-stats-row">
+            <div class="mock-stat-block">
+              <div class="mock-stat-val">847 mi</div>
+              <div class="mock-stat-label">this year</div>
+            </div>
+            <div class="mock-stat-block">
+              <div class="mock-stat-val">12 mo</div>
+              <div class="mock-stat-label">active streak</div>
+            </div>
+            <div class="mock-stat-block">
+              <div class="mock-stat-val">4.2 hrs</div>
+              <div class="mock-stat-label">this week</div>
+            </div>
+          </div>
+        </div>
+        <div class="mockup-label">Dashboard</div>
+      </div>
+
+      <!-- Screen 2: Activity Detail -->
+      <div class="mockup-wrap">
+        <div class="mockup-frame">
+          <div class="mock-date">Tuesday, March 14</div>
+          <div class="mock-run-stats">5.3 mi &middot; 48:12 &middot; 9:05/mi</div>
+          <div class="mock-contrib-card">
+            <div class="mock-contrib-text">This run contributed an estimated +0.03% to your cumulative cognitive reserve score.</div>
+            <div class="mock-contrib-source">Based on moderate-intensity aerobic activity duration &#215; Framingham HR model</div>
+          </div>
+          <div class="mock-link">View the science &#8594;</div>
+        </div>
+        <div class="mockup-label">Activity detail</div>
+      </div>
+
+      <!-- Screen 3: Race Day -->
+      <div class="mockup-wrap">
+        <div class="mockup-frame">
+          <div class="mock-event-label">LA Marathon 2027</div>
+          <div class="mock-collective-num">25,000</div>
+          <div class="mock-collective-label">runners</div>
+          <div class="mock-collective-desc">Generating an estimated 112,000 hours of neuroprotective activity today</div>
+          <div class="mock-progress-bar"><div class="mock-progress-fill"></div></div>
+          <div class="mock-finish-line">
+            Your finish: <span>4:12:33</span><br>
+            Personal cognitive reserve contribution: <span>+0.8%</span>
+          </div>
+        </div>
+        <div class="mockup-label">Race day</div>
+      </div>
+
+      <!-- Screen 4: Returning Runner -->
+      <div class="mockup-wrap">
+        <div class="mockup-frame">
+          <div class="mock-trajectory-title">Your Brain Health Trajectory</div>
+          <div class="mock-chart">
+            <div class="mock-chart-line">
+              <svg viewBox="0 0 220 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 65 Q30 60 55 48 Q80 36 100 32 Q130 28 155 22 Q180 16 220 8" stroke="rgba(201,168,76,0.5)" stroke-width="1.5" fill="none"/>
+                <circle cx="55" cy="48" r="4" fill="#c9a84c"/>
+                <circle cx="100" cy="32" r="4" fill="#c9a84c"/>
+                <circle cx="155" cy="22" r="3" fill="rgba(201,168,76,0.4)"/>
+                <circle cx="220" cy="8" r="4" fill="#c9a84c"/>
+              </svg>
+            </div>
+            <div class="mock-chart-labels" style="position:absolute;bottom:0;left:0;right:0;">
+              <span>LA '27</span>
+              <span>Pasadena '27</span>
+              <span>Training</span>
+              <span>LA '28</span>
+            </div>
+          </div>
+          <div class="mock-chart-summary"><span>18 months tracked &middot; 1,247 miles</span><br>Estimated relative risk reduction: <span style="color:var(--gold);">28%</span></div>
+          <div class="mock-chart-note">Your sustained activity pattern over multiple events builds the most complete picture of long-term cognitive benefit.</div>
+        </div>
+        <div class="mockup-label">Returning runner</div>
+      </div>
+
+      <!-- Screen 5: Research Feed -->
+      <div class="mockup-wrap">
+        <div class="mockup-frame">
+          <div class="mock-feed-title">Research Updates</div>
+          <div class="mock-feed-card">
+            <div class="mock-feed-label">New Study</div>
+            <div class="mock-feed-headline">Exercise slows tau accumulation even at moderate levels</div>
+            <div class="mock-feed-meta">Nature Medicine, 2025 &middot; 2 days ago</div>
+          </div>
+          <div class="mock-feed-card">
+            <div class="mock-feed-label">Foundation Update</div>
+            <div class="mock-feed-headline">McCourt Foundation Neurological Symposium: Key Findings</div>
+            <div class="mock-feed-meta">1 week ago</div>
+          </div>
+          <div class="mock-feed-card">
+            <div class="mock-feed-label">Your Data</div>
+            <div class="mock-feed-headline">Your anonymized activity data is contributing to longitudinal research at MGH</div>
+            <div class="mock-feed-link">Learn more &#8594;</div>
+          </div>
+        </div>
+        <div class="mockup-label">Research feed</div>
+      </div>
+
+    </div>
+    <div class="swipe-hint-mockup">Swipe to explore &#8594;</div>
+  </div>
+</section>
+
+<div class="section-blend section-blend--to-alt"></div>
+
+<!-- ======================== SECTION 03: EVENT INTEGRATION ======================== -->
+<section id="integration" class="section-wrap" style="background:var(--deep-alt);">
+  <div class="ambient-orb ambient-orb--1"></div>
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 03</div>
+    <h2 class="section-heading fade-up fade-up-d1">Wired into the events the Foundation already runs</h2>
+    <p class="body-text fade-up fade-up-d2" style="margin-bottom:3rem;">The platform is not a standalone app. It connects directly to the Foundation's event infrastructure&#8202;&#8212;&#8202;race registration, chip timing, and year-over-year participation history. Runners enter the brain health ecosystem the moment they register. Their training data feeds the model for months before race day. Their finish feeds it on race day. Their continued activity feeds it for the months and years after. Every returning participant builds a longitudinal brain health record that grows more valuable with each event.</p>
+
+    <div class="event-timeline fade-up">
+      <div class="timeline-track">
+        <div class="timeline-node">
+          <div class="timeline-node-title">Register</div>
+          <div class="timeline-node-desc">Account created. Apple Health / Garmin / Strava connected. Baseline brain health score calculated.</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-node-title">Train</div>
+          <div class="timeline-node-desc">Weekly activity feeds the cognitive reserve model. Monthly brain health summaries. Training milestones tied to neuroprotection data.</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-node-title">Race Day</div>
+          <div class="timeline-node-desc">Live splits from chip timing. Collective impact dashboard: 25,000 runners generating 112,000 hours of neuroprotective activity.</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-node-title">Post-Race</div>
+          <div class="timeline-node-desc">Finish summary with cumulative brain health contribution. Year-over-year comparison for returning runners.</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-node-title">Off-Season</div>
+          <div class="timeline-node-desc">Continued activity tracking. Research updates. Foundation content. Nudges for upcoming events.</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-node-title">Next Event</div>
+          <div class="timeline-node-desc">Pasadena Half registration prompt based on activity level. Longitudinal trajectory grows with each race.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="body-text fade-up" style="margin-top:3rem;margin-bottom:0;">A runner who completes the LA Marathon in 2027 and returns for the Pasadena Half later that year has 10+ months of continuous brain health data. By the 2028 LA Marathon, the app shows them an 18-month trajectory&#8202;&#8212;&#8202;not a snapshot, but a trend. That longitudinal view is the retention mechanism. It is also, with proper consent and IRB approval, the beginning of a population-level research dataset that the Foundation's partners at MGH and Brigham and Women's can build on.</p>
+
+    <div class="key-finding fade-up" style="margin-top:3rem;">
+      <div class="key-finding-label">Methodology</div>
+      <p>The brain health model&#8202;&#8212;&#8202;translating published population-level hazard ratios into individual-level estimates&#8202;&#8212;&#8202;will be developed in collaboration with the Foundation's research partners and published as a methodology document. This is what separates the platform from a wellness score. The science is the product.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-blend section-blend--to-deep"></div>
+
+<!-- ======================== SECTION 04: STRATEGIC LOGIC ======================== -->
+<section id="logic" class="section-wrap" style="background:var(--deep);">
+  <div class="ambient-orb ambient-orb--2"></div>
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 04</div>
+    <h2 class="section-heading fade-up fade-up-d1">What the Foundation gains</h2>
+
+    <div class="strategy-card fade-up">
+      <div class="strategy-anchor">365</div>
+      <div class="strategy-title">Year-Round Relationship</div>
+      <p class="strategy-lead">The Foundation currently touches a marathon participant for 4&#8211;6 hours once a year. <span class="sw">The app makes it 365 days.</span></p>
+      <p class="strategy-detail">Every interaction reinforces the Foundation's brand, its science, and its mission. Push notifications for new research findings. Monthly brain health summaries. Event countdown integrations. The runner never forgets who is behind the platform.</p>
+    </div>
+
+    <div class="strategy-card fade-up fade-up-d1">
+      <div class="strategy-anchor">200K+</div>
+      <div class="strategy-title">Direct Audience</div>
+      <p class="strategy-lead">The Foundation's events reach hundreds of thousands of runners annually. <span class="sw">Right now, there is no owned channel to reach them after they cross the finish line.</span></p>
+      <p class="strategy-detail">The app creates a first-party audience the Foundation controls&#8202;&#8212;&#8202;not dependent on social media algorithms, email open rates, or media coverage. That audience is a donor pipeline, a research recruitment pool, and a public health messaging platform.</p>
+    </div>
+
+    <div class="strategy-card fade-up fade-up-d2">
+      <div class="strategy-anchor">$0</div>
+      <div class="strategy-title">Donor Conversion Engine</div>
+      <p class="strategy-lead">"We have 200,000 active users tracking the brain health impact of their physical activity, powered by the research we fund." <span class="sw">That is a sentence that raises money.</span></p>
+      <p class="strategy-detail">The app gives the Foundation a tangible product to show donors&#8202;&#8212;&#8202;not a grant report, not a white paper, but a living platform with active users and measurable impact. That is a fundamentally different fundraising conversation.</p>
+    </div>
+
+    <div class="strategy-card fade-up fade-up-d3">
+      <div class="strategy-anchor">IRB</div>
+      <div class="strategy-title">Research Data Asset</div>
+      <p class="strategy-lead">Aggregated, anonymized physical activity data from hundreds of thousands of runners, correlated with the brain health model. <span class="sw">MGH and Brigham would find that dataset genuinely valuable.</span></p>
+      <p class="strategy-detail">With opt-in consent and IRB approval, the app becomes a passive longitudinal data collection instrument. The Foundation moves from funding other people's research to generating its own data&#8202;&#8212;&#8202;a permanent upgrade in institutional capability.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-blend section-blend--to-alt"></div>
+
+<!-- ======================== SECTION 05: ROADMAP ======================== -->
+<section id="roadmap" class="section-wrap" style="background:var(--deep-alt);">
+  <div class="ambient-orb ambient-orb--1"></div>
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 05</div>
+    <h2 class="section-heading fade-up fade-up-d1">How it gets built</h2>
+
+    <div class="fade-up fade-up-d2">
+      <div class="roadmap-phase">
+        <div class="roadmap-timeframe">Months 1&#8211;6</div>
+        <div class="roadmap-title">Phase 1&#8202;&#8212;&#8202;Foundation</div>
+        <ul class="roadmap-list">
+          <li>Apple Health + Google Fit integration</li>
+          <li>Brain health metric based on published Framingham hazard ratios</li>
+          <li>Event integration: LA Marathon, Pasadena, Santa Monica</li>
+          <li>Scientific citations visible and linked for every calculation</li>
+          <li>iOS and Android</li>
+        </ul>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="roadmap-timeframe">Months 7&#8211;12</div>
+        <div class="roadmap-title">Phase 2&#8202;&#8212;&#8202;Community</div>
+        <ul class="roadmap-list">
+          <li>Foundation events and Neurological Symposium content feed</li>
+          <li>Aggregate impact dashboards (collective miles, collective risk reduction)</li>
+          <li>Research updates and new study notifications</li>
+          <li>Social sharing of brain health milestones (not leaderboards&#8202;&#8212;&#8202;the science says consistency matters more than peak performance)</li>
+        </ul>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="roadmap-timeframe">Year 2</div>
+        <div class="roadmap-title">Phase 3&#8202;&#8212;&#8202;Research</div>
+        <ul class="roadmap-list">
+          <li>Opt-in anonymized data sharing with research partners</li>
+          <li>IRB-approved data pipeline to MGH and Brigham</li>
+          <li>Longitudinal tracking features for returning participants across multiple race years</li>
+          <li>Integration with Foundation's broader neurological disease research agenda</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="body-text fade-up" style="margin-top:2rem;">Phase 1 is a focused build&#8202;&#8212;&#8202;an iOS and Android app with a clear thesis, clean execution, and no feature bloat. It proves the concept. Phases 2 and 3 expand only after the core product demonstrates engagement. Estimated build cost for Phase 1: $300K&#8211;$500K with an external development partner. Annual maintenance: $100K&#8211;$150K.</p>
+  </div>
+</section>
+
+<div class="section-blend section-blend--to-deep"></div>
+
+<!-- ======================== CLOSING ======================== -->
+<section id="platform-closing" class="section-wrap" style="background:var(--deep);">
+  <div class="closing-glow"></div>
+  <div class="section-inner">
+    <h2 class="fade-up">The question is not whether the science supports it.</h2>
+    <div class="closing-lines">
+      <p class="fade-up fade-up-d1">The evidence is published. The events exist. The partnerships are operational.</p>
+      <p class="fade-up fade-up-d2">The question is whether the Foundation wants to be a grantmaker that funds other people's platforms&#8202;&#8212;&#8202;or the organization that builds its own.</p>
+    </div>
+    <div class="closing-rule fade-up fade-up-d3"></div>
+    <div class="closing-colophon fade-up fade-up-d4">McCourt Foundation &middot; Confidential &middot; 2026</div>
+  </div>
+</section>
+
+</div><!-- end #content -->
+
+<script>
+// ======================== PASSCODE GATE ========================
+(function() {
+  const gate = document.getElementById('gate');
+  const input = document.getElementById('gate-input');
+  const content = document.getElementById('content');
+  const PASSCODE = 'mccourt2026';
+
+  // Check session
+  if (sessionStorage.getItem('platform-unlocked') === 'true') {
+    gate.classList.add('unlocked');
+    content.classList.add('visible');
+    document.body.style.overflow = '';
+    initPage();
+    return;
+  }
+
+  document.body.style.overflow = 'hidden';
+
+  input.addEventListener('input', function() {
+    const val = input.value;
+    if (val === PASSCODE) {
+      sessionStorage.setItem('platform-unlocked', 'true');
+      gate.classList.add('unlocked');
+      content.classList.add('visible');
+      document.body.style.overflow = '';
+      setTimeout(initPage, 500);
+    } else if (val.length >= PASSCODE.length && val !== PASSCODE) {
+      input.classList.add('shake');
+      setTimeout(() => {
+        input.classList.remove('shake');
+        input.value = '';
+      }, 500);
+    }
+  });
+})();
+
+// ======================== PAGE INIT ========================
+function initPage() {
+  // Scroll animations
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+
+  // Ambient orbs
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      entry.target.classList.toggle('in-view', entry.isIntersecting);
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.section-wrap').forEach(el => sectionObserver.observe(el));
+
+  // Progress bar
+  const progressBar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    progressBar.style.width = progress + '%';
+    if (scrollTop > 100) progressBar.classList.add('active');
+    else progressBar.classList.remove('active');
+  }, { passive: true });
+
+  // Hero animations
+  setTimeout(() => {
+    document.querySelectorAll('#platform-hero .fade-up').forEach(el => el.classList.add('visible'));
+  }, 300);
+}
+</script>
+</body>
+</html>
