@@ -274,9 +274,15 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   border-radius: 40px;
   border: 1px solid rgba(232,228,221,0.08);
   padding: clamp(1.5rem, 4vw, 2rem);
+  padding-top: 50px;
   position: relative; overflow: hidden;
   box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(232,228,221,0.04);
   display: flex; flex-direction: column;
+  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+}
+.mockup-frame:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(232,228,221,0.04);
 }
 .mockup-frame::before {
   content: '';
@@ -309,31 +315,224 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   .swipe-hint-mockup { display: none; }
 }
 
+/* ---- Phone Status Bar ---- */
+.mock-statusbar {
+  position: absolute;
+  top: 22px; left: 24px; right: 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 2;
+  pointer-events: none;
+}
+.mock-statusbar-time {
+  font-family: var(--sans);
+  font-size: 0.5rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+}
+.mock-statusbar-icons {
+  display: flex; align-items: center; gap: 4px;
+}
+.mock-statusbar-signal {
+  display: flex; align-items: flex-end; gap: 1px; height: 8px;
+}
+.mock-statusbar-signal span {
+  display: block;
+  width: 2px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 0.5px;
+}
+.mock-statusbar-signal span:nth-child(1) { height: 3px; }
+.mock-statusbar-signal span:nth-child(2) { height: 5px; }
+.mock-statusbar-signal span:nth-child(3) { height: 7px; }
+.mock-statusbar-battery {
+  width: 16px; height: 8px;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 2px;
+  position: relative;
+  margin-left: 2px;
+}
+.mock-statusbar-battery::before {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px; bottom: 2px;
+  width: 60%;
+  background: rgba(255,255,255,0.4);
+  border-radius: 0.5px;
+}
+.mock-statusbar-battery::after {
+  content: '';
+  position: absolute;
+  right: -3px; top: 50%; transform: translateY(-50%);
+  width: 2px; height: 4px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 0 1px 1px 0;
+}
+
+/* ---- Bottom Nav Bar ---- */
+.mock-navbar {
+  height: 44px;
+  border-top: 1px solid rgba(232,228,221,0.06);
+  display: flex; align-items: center; justify-content: space-around;
+  margin-top: auto;
+  padding-top: 4px;
+}
+.mock-navbar-item {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.mock-navbar-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--text-dim);
+}
+.mock-navbar-item.active .mock-navbar-dot {
+  background: var(--gold);
+}
+.mock-navbar-label {
+  font-family: var(--sans); font-size: 0.38rem;
+  color: var(--text-dim); letter-spacing: 0.02em;
+}
+.mock-navbar-item.active .mock-navbar-label {
+  color: var(--gold);
+}
+
+/* ---- Weekly Activity Bars ---- */
+.mock-weekly-chart {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  height: 40px; gap: 6px;
+  margin-bottom: 1rem;
+  padding: 0 4px;
+}
+.mock-weekly-bar-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  flex: 1;
+}
+.mock-weekly-bar {
+  width: 100%;
+  border-radius: 2px;
+  background: rgba(201,168,76,0.25);
+  min-height: 2px;
+}
+.mock-weekly-bar.today {
+  background: var(--gold);
+}
+.mock-weekly-bar-label {
+  font-family: var(--mono); font-size: 0.38rem;
+  color: rgba(232,228,221,0.3);
+}
+
+/* ---- Pulsing LIVE indicator ---- */
+.mock-live-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #e74c3c;
+  margin-right: 6px;
+  vertical-align: middle;
+  animation: pulse-live 2s infinite;
+  box-shadow: 0 0 4px rgba(231,76,60,0.5);
+}
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px rgba(231,76,60,0.5); }
+  50% { opacity: 0.5; box-shadow: 0 0 10px rgba(231,76,60,0.8); }
+}
+
+/* ---- Heart Rate Zone Bar ---- */
+.mock-hr-zones {
+  display: flex;
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  gap: 1px;
+}
+.mock-hr-zone {
+  flex: 1;
+  border-radius: 1px;
+}
+.mock-hr-zone:nth-child(1) { background: rgba(20,60,120,0.7); }
+.mock-hr-zone:nth-child(2) { background: rgba(40,100,80,0.7); }
+.mock-hr-zone:nth-child(3) { background: rgba(201,168,76,0.7); }
+.mock-hr-zone:nth-child(4) { background: rgba(180,120,50,0.7); }
+.mock-hr-zone:nth-child(5) { background: rgba(160,60,50,0.6); }
+.mock-hr-zone-label {
+  font-family: var(--sans); font-size: 0.48rem;
+  color: rgba(232,228,221,0.3); margin-bottom: 0.75rem;
+}
+
+/* ---- Map Placeholder ---- */
+.mock-map {
+  width: 100%;
+  height: 80px;
+  background: rgba(232,228,221,0.03);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.85rem;
+  position: relative;
+}
+.mock-map svg {
+  width: 100%; height: 100%;
+}
+
+/* ---- Feed Card Touch ---- */
+.mock-feed-card {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(232,228,221,0.05);
+  transition: background 0.3s ease;
+  border-radius: 4px;
+  padding-left: 4px; padding-right: 4px;
+  cursor: pointer;
+}
+.mock-feed-card.touched {
+  background: rgba(201,168,76,0.04);
+}
+.mock-feed-card.touched .mock-feed-label {
+  color: var(--gold-light);
+}
+.mock-feed-card:last-child { border-bottom: none; }
+
+/* ---- Chart Draw Animation ---- */
+.mock-chart-path {
+  transition: stroke-dashoffset 2s var(--ease-out-expo);
+}
+.mock-chart-dot {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.mock-chart-dot.visible {
+  opacity: 1;
+}
+
 /* Mockup inner elements */
 .mock-greeting {
   font-family: var(--sans); font-size: 0.75rem;
-  color: var(--text-dim); margin-top: 1.25rem; margin-bottom: 1.5rem;
+  color: var(--text-dim); margin-bottom: 1.5rem;
 }
 .mock-ring {
   width: 140px; height: 140px;
-  border-radius: 50%;
-  border: 3px solid rgba(201,168,76,0.15);
   position: relative;
   margin: 0 auto 0.75rem;
   display: flex; align-items: center; justify-content: center;
 }
-.mock-ring::after {
-  content: '';
+.mock-ring-svg {
   position: absolute; inset: 0;
-  border-radius: 50%;
-  border: 3px solid transparent;
-  border-top-color: var(--gold);
-  border-right-color: var(--gold);
-  transform: rotate(-30deg);
+  width: 140px; height: 140px;
+  transform: rotate(-90deg);
+}
+.mock-ring-track {
+  fill: none;
+  stroke: rgba(201,168,76,0.12);
+  stroke-width: 3;
+}
+.mock-ring-progress {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.5s var(--ease-out-expo);
 }
 .mock-ring-value {
   font-family: var(--serif); font-size: 2.2rem; font-weight: 700;
   color: var(--gold);
+  position: relative; z-index: 1;
 }
 .mock-ring-unit {
   font-family: var(--sans); font-size: 0.6rem;
@@ -346,7 +545,6 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 }
 .mock-stats-row {
   display: flex; justify-content: space-between; gap: 0.5rem;
-  margin-top: auto;
 }
 .mock-stat-block { text-align: center; flex: 1; }
 .mock-stat-val {
@@ -361,7 +559,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 /* Activity Detail screen */
 .mock-date {
   font-family: var(--sans); font-size: 0.7rem;
-  color: var(--text-dim); margin-top: 1.25rem; margin-bottom: 1rem;
+  color: var(--text-dim); margin-bottom: 1rem;
 }
 .mock-run-stats {
   font-family: var(--sans); font-size: 1rem;
@@ -393,7 +591,8 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 .mock-event-label {
   font-family: var(--mono); font-size: 0.6rem;
   letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--gold); margin-top: 1.25rem; margin-bottom: 2rem;
+  color: var(--gold); margin-bottom: 2rem;
+  display: flex; align-items: center;
 }
 .mock-collective-num {
   font-family: var(--serif); font-size: 1.8rem; font-weight: 700;
@@ -429,7 +628,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 /* Returning Runner screen */
 .mock-trajectory-title {
   font-family: var(--sans); font-size: 0.7rem;
-  color: var(--gold); margin-top: 1.25rem; margin-bottom: 1.5rem;
+  color: var(--gold); margin-bottom: 1.5rem;
   font-weight: 500;
 }
 .mock-chart {
@@ -463,18 +662,14 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 /* Research Feed screen */
 .mock-feed-title {
   font-family: var(--sans); font-size: 0.85rem;
-  color: var(--text); margin-top: 1.25rem; margin-bottom: 1.25rem;
+  color: var(--text); margin-bottom: 1.25rem;
   font-weight: 500;
 }
-.mock-feed-card {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid rgba(232,228,221,0.05);
-}
-.mock-feed-card:last-child { border-bottom: none; }
 .mock-feed-label {
   font-family: var(--sans); font-size: 0.5rem;
   color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase;
   font-weight: 600; margin-bottom: 0.35rem;
+  transition: color 0.3s ease;
 }
 .mock-feed-headline {
   font-family: var(--sans); font-size: 0.72rem;
@@ -751,13 +946,57 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       <!-- Screen 1: Dashboard -->
       <div class="mockup-wrap">
         <div class="mockup-frame">
+          <div class="mock-statusbar">
+            <span class="mock-statusbar-time">9:41</span>
+            <span class="mock-statusbar-icons">
+              <span class="mock-statusbar-signal"><span></span><span></span><span></span></span>
+              <span class="mock-statusbar-battery"></span>
+            </span>
+          </div>
           <div class="mock-greeting">Good morning, Sarah</div>
           <div class="mock-ring">
+            <svg class="mock-ring-svg" viewBox="0 0 140 140">
+              <circle class="mock-ring-track" cx="70" cy="70" r="64"/>
+              <circle class="mock-ring-progress" cx="70" cy="70" r="64"
+                stroke-dasharray="402.12"
+                stroke-dashoffset="402.12"
+                data-target="265.4"/>
+            </svg>
             <div class="mock-ring-value">34%</div>
           </div>
           <div class="mock-ring-unit">Estimated relative risk reduction</div>
           <div class="mock-ring-source">Based on your activity over the past 12 months</div>
-          <div style="font-family:var(--mono);font-size:0.42rem;color:rgba(232,228,221,0.22);text-align:center;margin-bottom:auto;">Framingham Heart Study cohort model</div>
+          <div style="font-family:var(--mono);font-size:0.42rem;color:rgba(232,228,221,0.22);text-align:center;margin-bottom:0.75rem;">Framingham Heart Study cohort model</div>
+          <div class="mock-weekly-chart">
+            <div class="mock-weekly-bar-wrap">
+              <div class="mock-weekly-bar" style="height:60%"></div>
+              <div class="mock-weekly-bar-label">M</div>
+            </div>
+            <div class="mock-weekly-bar-wrap">
+              <div class="mock-weekly-bar" style="height:80%"></div>
+              <div class="mock-weekly-bar-label">T</div>
+            </div>
+            <div class="mock-weekly-bar-wrap">
+              <div class="mock-weekly-bar" style="height:45%"></div>
+              <div class="mock-weekly-bar-label">W</div>
+            </div>
+            <div class="mock-weekly-bar-wrap">
+              <div class="mock-weekly-bar today" style="height:100%"></div>
+              <div class="mock-weekly-bar-label">T</div>
+            </div>
+            <div class="mock-weekly-bar-wrap">
+              <div class="mock-weekly-bar" style="height:30%"></div>
+              <div class="mock-weekly-bar-label">F</div>
+            </div>
+            <div class="mock-weekly-bar-wrap">
+              <div class="mock-weekly-bar" style="height:70%"></div>
+              <div class="mock-weekly-bar-label">S</div>
+            </div>
+            <div class="mock-weekly-bar-wrap">
+              <div class="mock-weekly-bar" style="height:55%"></div>
+              <div class="mock-weekly-bar-label">S</div>
+            </div>
+          </div>
           <div class="mock-stats-row">
             <div class="mock-stat-block">
               <div class="mock-stat-val">847 mi</div>
@@ -772,6 +1011,12 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
               <div class="mock-stat-label">this week</div>
             </div>
           </div>
+          <div class="mock-navbar">
+            <div class="mock-navbar-item active"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Home</div></div>
+            <div class="mock-navbar-item"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Activity</div></div>
+            <div class="mock-navbar-item"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Events</div></div>
+            <div class="mock-navbar-item"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Research</div></div>
+          </div>
         </div>
         <div class="mockup-label">Dashboard</div>
       </div>
@@ -779,8 +1024,29 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       <!-- Screen 2: Activity Detail -->
       <div class="mockup-wrap">
         <div class="mockup-frame">
+          <div class="mock-statusbar">
+            <span class="mock-statusbar-time">9:41</span>
+            <span class="mock-statusbar-icons">
+              <span class="mock-statusbar-signal"><span></span><span></span><span></span></span>
+              <span class="mock-statusbar-battery"></span>
+            </span>
+          </div>
           <div class="mock-date">Tuesday, March 14</div>
+          <div class="mock-map">
+            <svg viewBox="0 0 240 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+              <path d="M20 55 C40 50, 50 30, 70 25 C90 20, 100 40, 120 35 C140 30, 150 15, 170 20 C190 25, 200 45, 220 40" stroke="rgba(201,168,76,0.15)" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M220 40 C215 38, 210 50, 200 55 C190 60, 180 52, 170 55 C160 58, 140 65, 120 60" stroke="rgba(201,168,76,0.1)" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
           <div class="mock-run-stats">5.3 mi &middot; 48:12 &middot; 9:05/mi</div>
+          <div class="mock-hr-zones">
+            <div class="mock-hr-zone"></div>
+            <div class="mock-hr-zone"></div>
+            <div class="mock-hr-zone"></div>
+            <div class="mock-hr-zone"></div>
+            <div class="mock-hr-zone"></div>
+          </div>
+          <div class="mock-hr-zone-label">Avg HR 142 &middot; Zone 3</div>
           <div class="mock-contrib-card">
             <div class="mock-contrib-text">This run contributed an estimated +0.03% to your cumulative cognitive reserve score.</div>
             <div class="mock-contrib-source">Based on moderate-intensity aerobic activity duration &#215; Framingham HR model</div>
@@ -793,8 +1059,15 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       <!-- Screen 3: Race Day -->
       <div class="mockup-wrap">
         <div class="mockup-frame">
-          <div class="mock-event-label">LA Marathon 2027</div>
-          <div class="mock-collective-num">25,000</div>
+          <div class="mock-statusbar">
+            <span class="mock-statusbar-time">9:41</span>
+            <span class="mock-statusbar-icons">
+              <span class="mock-statusbar-signal"><span></span><span></span><span></span></span>
+              <span class="mock-statusbar-battery"></span>
+            </span>
+          </div>
+          <div class="mock-event-label"><span class="mock-live-dot"></span>LA Marathon 2027</div>
+          <div class="mock-collective-num mock-counter" data-start="24847" data-end="25012">25,000</div>
           <div class="mock-collective-label">runners</div>
           <div class="mock-collective-desc">Generating an estimated 112,000 hours of neuroprotective activity today</div>
           <div class="mock-progress-bar"><div class="mock-progress-fill"></div></div>
@@ -809,15 +1082,22 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       <!-- Screen 4: Returning Runner -->
       <div class="mockup-wrap">
         <div class="mockup-frame">
+          <div class="mock-statusbar">
+            <span class="mock-statusbar-time">9:41</span>
+            <span class="mock-statusbar-icons">
+              <span class="mock-statusbar-signal"><span></span><span></span><span></span></span>
+              <span class="mock-statusbar-battery"></span>
+            </span>
+          </div>
           <div class="mock-trajectory-title">Your Brain Health Trajectory</div>
           <div class="mock-chart">
             <div class="mock-chart-line">
               <svg viewBox="0 0 220 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 65 Q30 60 55 48 Q80 36 100 32 Q130 28 155 22 Q180 16 220 8" stroke="rgba(201,168,76,0.5)" stroke-width="1.5" fill="none"/>
-                <circle cx="55" cy="48" r="4" fill="#c9a84c"/>
-                <circle cx="100" cy="32" r="4" fill="#c9a84c"/>
-                <circle cx="155" cy="22" r="3" fill="rgba(201,168,76,0.4)"/>
-                <circle cx="220" cy="8" r="4" fill="#c9a84c"/>
+                <path class="mock-chart-path" d="M0 65 Q30 60 55 48 Q80 36 100 32 Q130 28 155 22 Q180 16 220 8" stroke="rgba(201,168,76,0.5)" stroke-width="1.5" fill="none" stroke-dasharray="260" stroke-dashoffset="260"/>
+                <circle class="mock-chart-dot" cx="55" cy="48" r="4" fill="#c9a84c"/>
+                <circle class="mock-chart-dot" cx="100" cy="32" r="4" fill="#c9a84c"/>
+                <circle class="mock-chart-dot" cx="155" cy="22" r="3" fill="rgba(201,168,76,0.4)"/>
+                <circle class="mock-chart-dot" cx="220" cy="8" r="4" fill="#c9a84c"/>
               </svg>
             </div>
             <div class="mock-chart-labels" style="position:absolute;bottom:0;left:0;right:0;">
@@ -829,6 +1109,12 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
           </div>
           <div class="mock-chart-summary"><span>18 months tracked &middot; 1,247 miles</span><br>Estimated relative risk reduction: <span style="color:var(--gold);">28%</span></div>
           <div class="mock-chart-note">Your sustained activity pattern over multiple events builds the most complete picture of long-term cognitive benefit.</div>
+          <div class="mock-navbar">
+            <div class="mock-navbar-item active"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Home</div></div>
+            <div class="mock-navbar-item"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Activity</div></div>
+            <div class="mock-navbar-item"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Events</div></div>
+            <div class="mock-navbar-item"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Research</div></div>
+          </div>
         </div>
         <div class="mockup-label">Returning runner</div>
       </div>
@@ -836,6 +1122,13 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
       <!-- Screen 5: Research Feed -->
       <div class="mockup-wrap">
         <div class="mockup-frame">
+          <div class="mock-statusbar">
+            <span class="mock-statusbar-time">9:41</span>
+            <span class="mock-statusbar-icons">
+              <span class="mock-statusbar-signal"><span></span><span></span><span></span></span>
+              <span class="mock-statusbar-battery"></span>
+            </span>
+          </div>
           <div class="mock-feed-title">Research Updates</div>
           <div class="mock-feed-card">
             <div class="mock-feed-label">New Study</div>
@@ -851,6 +1144,12 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
             <div class="mock-feed-label">Your Data</div>
             <div class="mock-feed-headline">Your anonymized activity data is contributing to longitudinal research at MGH</div>
             <div class="mock-feed-link">Learn more &#8594;</div>
+          </div>
+          <div class="mock-navbar">
+            <div class="mock-navbar-item"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Home</div></div>
+            <div class="mock-navbar-item"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Activity</div></div>
+            <div class="mock-navbar-item"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Events</div></div>
+            <div class="mock-navbar-item active"><div class="mock-navbar-dot"></div><div class="mock-navbar-label">Research</div></div>
           </div>
         </div>
         <div class="mockup-label">Research feed</div>
@@ -1087,6 +1386,89 @@ function initPage() {
   setTimeout(() => {
     document.querySelectorAll('#platform-hero .fade-up').forEach(el => el.classList.add('visible'));
   }, 300);
+
+  // ======================== MOCKUP ENHANCEMENTS ========================
+
+  // 1. Ring animation observer
+  const ringObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const circle = entry.target.querySelector('.mock-ring-progress');
+        if (circle) {
+          const target = circle.getAttribute('data-target');
+          setTimeout(() => {
+            circle.style.strokeDashoffset = target;
+          }, 200);
+        }
+        ringObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.mock-ring-svg').forEach(el => {
+    ringObserver.observe(el.closest('.mockup-frame') || el);
+  });
+
+  // 2. Counter animation
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const start = parseInt(el.getAttribute('data-start'), 10);
+        const end = parseInt(el.getAttribute('data-end'), 10);
+        const duration = 3000;
+        const startTime = performance.now();
+
+        function tick(now) {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          // ease-out
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = Math.round(start + (end - start) * eased);
+          el.textContent = current.toLocaleString();
+          if (progress < 1) {
+            requestAnimationFrame(tick);
+          }
+        }
+        requestAnimationFrame(tick);
+        counterObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.mock-counter').forEach(el => counterObserver.observe(el));
+
+  // 3. Chart draw animation
+  const chartObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const paths = entry.target.querySelectorAll('.mock-chart-path');
+        const dots = entry.target.querySelectorAll('.mock-chart-dot');
+
+        paths.forEach(path => {
+          path.style.strokeDashoffset = '0';
+        });
+
+        dots.forEach((dot, i) => {
+          setTimeout(() => {
+            dot.classList.add('visible');
+          }, 1500 + i * 150);
+        });
+
+        chartObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.mock-chart').forEach(el => chartObserver.observe(el));
+
+  // 4. Feed card touch feedback
+  document.querySelectorAll('.mock-feed-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.add('touched');
+      setTimeout(() => card.classList.remove('touched'), 300);
+    });
+  });
 }
 </script>
 </body>
