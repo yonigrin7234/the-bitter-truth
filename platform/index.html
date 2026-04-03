@@ -688,52 +688,66 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 .event-timeline {
   position: relative;
   padding: 2rem 0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
 }
-.event-timeline::-webkit-scrollbar { display: none; }
 .timeline-track {
   display: flex;
-  min-width: max-content;
+  flex-direction: column;
   position: relative;
-  padding: 0 1rem;
+  padding-left: 2rem;
 }
 .timeline-track::before {
   content: '';
   position: absolute;
-  top: 8px; left: 1rem; right: 1rem;
-  height: 1px;
-  background: linear-gradient(90deg, var(--gold), rgba(201,168,76,0.3));
+  top: 0; bottom: 0; left: 7px;
+  width: 1px;
+  background: linear-gradient(180deg, var(--gold), rgba(201,168,76,0.2));
 }
 .timeline-node {
-  flex: 0 0 clamp(120px, 18vw, 160px);
   position: relative;
-  padding-top: 2rem;
+  padding-bottom: clamp(1.5rem, 4vw, 2rem);
+  padding-left: 0;
 }
+.timeline-node:last-child { padding-bottom: 0; }
 .timeline-node::before {
   content: '';
   position: absolute; top: 2px;
-  left: 0;
+  left: -2rem;
   width: 14px; height: 14px;
   border-radius: 50%;
-  background: var(--deep);
+  background: var(--deep-alt);
   border: 2px solid var(--gold);
 }
 .timeline-node-title {
   font-family: var(--sans);
-  font-size: clamp(0.62rem, 1.5vw, 0.68rem);
+  font-size: clamp(0.72rem, 2vw, 0.82rem);
   color: var(--text);
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 .timeline-node-desc {
   font-family: var(--sans);
-  font-size: clamp(0.55rem, 1.3vw, 0.6rem);
+  font-size: clamp(0.7rem, 1.8vw, 0.78rem);
   color: var(--text-dim);
-  line-height: 1.55;
+  line-height: 1.6;
   font-weight: 300;
-  padding-right: 1rem;
+}
+@media (min-width: 768px) {
+  .timeline-track {
+    flex-direction: row; padding-left: 1rem;
+  }
+  .timeline-track::before {
+    top: 8px; bottom: auto; left: 1rem; right: 1rem;
+    width: auto; height: 1px;
+    background: linear-gradient(90deg, var(--gold), rgba(201,168,76,0.3));
+  }
+  .timeline-node {
+    flex: 1; padding-top: 2rem; padding-bottom: 0; padding-left: 0;
+  }
+  .timeline-node::before {
+    left: 0; top: 2px;
+  }
+  .timeline-node-title { font-size: clamp(0.62rem, 1.5vw, 0.68rem); }
+  .timeline-node-desc { font-size: clamp(0.55rem, 1.3vw, 0.6rem); padding-right: 1rem; }
 }
 
 /* ======================== KEY FINDING ======================== */
