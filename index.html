@@ -785,8 +785,68 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 }
 .research-card .rc-link:hover { border-color: var(--gold); }
 
-/* ======================== SECTION 08: OPPORTUNITY ======================== */
-#opportunity { background: var(--deep-alt); }
+/* ======================== SECTION 08: THE STRATEGIC CASE ======================== */
+#strategic { background: var(--deep-alt); }
+#strategic .section-inner { max-width: 900px; margin: 0 auto; }
+#strategic h2 {
+  font-size: clamp(2rem, 7vw, 3.4rem); margin-bottom: 2.5rem;
+  letter-spacing: -0.025em;
+}
+.strategy-card {
+  padding: clamp(1.75rem, 5vw, 2.25rem) 0;
+  border-top: 1px solid rgba(232,228,221,0.08);
+}
+.strategy-card:last-child { border-bottom: 1px solid rgba(232,228,221,0.08); }
+.strategy-anchor {
+  font-family: var(--serif);
+  font-size: clamp(2.75rem, 10vw, 4rem);
+  font-weight: 700;
+  color: rgba(201,168,76,0.2);
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+.strategy-card:nth-child(5) .strategy-anchor {
+  font-size: clamp(2.1rem, 7.5vw, 3.2rem);
+}
+.strategy-title {
+  font-family: var(--sans);
+  font-size: clamp(0.65rem, 1.7vw, 0.75rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.strategy-lead {
+  font-family: var(--sans);
+  font-size: clamp(0.92rem, 2.5vw, 1rem);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-weight: 300;
+  margin-bottom: 0.75rem;
+}
+.strategy-lead .sw { color: var(--text); font-weight: 500; }
+.strategy-detail {
+  font-family: var(--sans);
+  font-size: clamp(0.82rem, 2.2vw, 0.88rem);
+  color: var(--text-dim);
+  line-height: 1.75;
+  font-weight: 300;
+}
+.strategy-source {
+  font-family: var(--mono);
+  font-size: clamp(0.55rem, 1.3vw, 0.62rem);
+  color: rgba(232,228,221,0.28);
+  margin-top: 0.75rem;
+  letter-spacing: 0.02em;
+}
+@media (min-width: 640px) {
+  .strategy-card-inner { padding-left: 56px; position: relative; }
+  .strategy-anchor { position: absolute; left: 0; top: 0; }
+}
+
+/* ======================== SECTION 09: OPPORTUNITY ======================== */
+#opportunity { background: var(--deep); }
 #opportunity .section-inner { max-width: 900px; margin: 0 auto; }
 #opportunity h2 {
   font-size: clamp(2rem, 7vw, 3.4rem); margin-bottom: 1.75rem;
@@ -1127,6 +1187,7 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
   <div class="nav-dot" data-section="prevention" data-label="Prevention"></div>
   <div class="nav-dot" data-section="movement" data-label="Movement"></div>
   <div class="nav-dot" data-section="research-foundation" data-label="Research"></div>
+  <div class="nav-dot" data-section="strategic" data-label="Strategic"></div>
   <div class="nav-dot" data-section="opportunity" data-label="Opportunity"></div>
   <div class="nav-dot" data-section="closing" data-label="Closing"></div>
 </nav>
@@ -1725,12 +1786,74 @@ h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.15;
 
 <div class="section-blend section-blend--to-alt"></div>
 
-<!-- ======================== SECTION 08: THE OPPORTUNITY ======================== -->
+<!-- ======================== SECTION 08: THE STRATEGIC CASE ======================== -->
+<section id="strategic" class="section-wrap">
+  <div class="ambient-orb ambient-orb--1"></div>
+  <div class="ambient-orb ambient-orb--2"></div>
+  <div class="section-inner">
+    <div class="section-num fade-up">Section 08</div>
+    <h2 class="fade-up fade-up-d1">The Strategic Case</h2>
+
+    <div class="strategy-card fade-up">
+      <div class="strategy-anchor">45%</div>
+      <div class="strategy-card-inner">
+        <div class="strategy-title">The LA Marathon as a Health Asset</div>
+        <p class="strategy-lead">The LA Marathon is the only major endurance event in the world operated by a neurological disease foundation. That combination&#8202;&#8212;&#8202;peer-reviewed neuroprotection data plus an existing mass-participation platform plus a mission already focused on the brain&#8202;&#8212;&#8202;<span class="sw">is a competitive position no other organization can assemble by acquisition.</span></p>
+        <p class="strategy-detail">Late-life physical activity reduces dementia risk by up to 45% (Framingham Heart Study, 4,300+ participants, JAMA 2025). Exercise directly slows tau protein accumulation (Nature Medicine, 2025). The Foundation's events are already generating this effect at population scale. What's missing is the branding, the sponsor narrative, and the public health framing that converts a race into an institutional asset.</p>
+        <div class="strategy-source">Marino et al., JAMA Netw Open 2025 &#183; Nature Medicine 2025</div>
+      </div>
+    </div>
+
+    <div class="strategy-card fade-up fade-up-d1">
+      <div class="strategy-anchor">580K+</div>
+      <div class="strategy-card-inner">
+        <div class="strategy-title">Mission Amplification</div>
+        <p class="strategy-lead">No major foundation, research institution, or public health organization has established itself as the authority on dietary sugar and neurodegeneration. The evidence base&#8202;&#8212;&#8202;580,000+ participants across four independent cohorts, consensus reached between 2023 and 2025&#8202;&#8212;&#8202;<span class="sw">is sitting unclaimed. The Foundation that plants its flag here defines the category.</span></p>
+        <p class="strategy-detail">The UK Biobank found no safe consumption threshold across 210,832 participants. Rush identified fructose at 2.8&#215; risk. The BMC Medicine analysis confirmed dose-response across the entire intake spectrum. This is not a pivot from the Foundation's mission. It is the sharpest version of it&#8202;&#8212;&#8202;prevention-focused, evidence-based, and unoccupied.</p>
+        <div class="strategy-source">UK Biobank 2025 &#183; Rush 2023 &#183; BMC Medicine 2024 &#183; Aging &amp; Mental Health 2025</div>
+      </div>
+    </div>
+
+    <div class="strategy-card fade-up fade-up-d2">
+      <div class="strategy-anchor">45%</div>
+      <div class="strategy-card-inner">
+        <div class="strategy-title">Donor &amp; Philanthropic Positioning</div>
+        <p class="strategy-lead">Of dementia cases are attributable to modifiable risk factors&#8202;&#8212;&#8202;the Lancet Commission's 2024 finding across 14 identified factors. Prevention is where major philanthropic capital is moving. <span class="sw">Donors who write eight- and nine-figure checks are looking for organizations that can credibly claim they are stopping a disease, not managing it.</span></p>
+        <p class="strategy-detail">The Foundation that leads on prevention-focused Alzheimer's science becomes the answer to a question the largest donors in the world are already asking. Sugar reduction is now an explicit Lancet Commission recommendation for population-level dementia prevention. The Type 3 Diabetes framework provides a mechanistic thesis that institutional partners and family offices can underwrite.</p>
+        <div class="strategy-source">Livingston et al., Lancet 2024;404:572&#8211;628</div>
+      </div>
+    </div>
+
+    <div class="strategy-card fade-up fade-up-d3">
+      <div class="strategy-anchor">309</div>
+      <div class="strategy-card-inner">
+        <div class="strategy-title">Research Leverage</div>
+        <p class="strategy-lead">Participants across 35+ clinical sites over 2 years. The MIND Study generated a decade of mechanistic data on nicotine&#8211;receptor dynamics that the research community will build on. <span class="sw">The Foundation that funds the follow-on work owns the intellectual lineage of whatever comes next.</span></p>
+        <p class="strategy-detail">The trial did not meet its primary endpoint&#8202;&#8212;&#8202;that is established and acknowledged. What it produced is a dataset on receptor dynamics, biomarker responses, and dose-response relationships that is now informing next-generation cholinergic therapy design. The 39-trial systematic review of nAChR agonists confirmed the neuroprotective signal. MGH and Brigham and Women's partnerships are already operational. The infrastructure exists. What's missing is the decision to use it.</p>
+        <div class="strategy-source">MIND Study NCT02720445 &#183; Cells 2024;13(10):844</div>
+      </div>
+    </div>
+
+    <div class="strategy-card fade-up fade-up-d4">
+      <div class="strategy-anchor">2023&#8211;25</div>
+      <div class="strategy-card-inner">
+        <div class="strategy-title">Timing</div>
+        <p class="strategy-lead">The 24-month window in which the four largest sugar&#8211;neurodegeneration studies reached publication. The Framingham exercise data and the Nature Medicine tau findings landed in the same period. <span class="sw">The research community has converged. Public awareness has not.</span></p>
+        <p class="strategy-detail">Scientific consensus moves slowly. Institutional positioning moves fast. The Foundation is reading this research before it reaches mainstream awareness&#8202;&#8212;&#8202;before the New York Times writes about it, before another foundation builds a program around it. That window between scientific convergence and public understanding is where first-mover advantage lives. It will not stay open indefinitely.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-blend section-blend--to-deep"></div>
+
+<!-- ======================== SECTION 09: THE OPPORTUNITY ======================== -->
 <section id="opportunity" class="section-wrap">
   <div class="ambient-orb ambient-orb--2"></div>
   <div class="ambient-orb ambient-orb--3"></div>
   <div class="section-inner">
-    <div class="section-num fade-up">Section 08</div>
+    <div class="section-num fade-up">Section 09</div>
     <h2 class="fade-up fade-up-d1">The Opportunity</h2>
     <p class="body-text fade-up fade-up-d2" style="margin-bottom:3rem;">The convergence of metabolic science, prevention evidence, and existing organizational infrastructure creates a rare strategic opening to lead the fight against neurodegeneration.</p>
 
